@@ -52,23 +52,5 @@ export const clinicLocations: ClinicLocation[] = [
       "Advanced Cosmetic Suite",
       "Dedicated Orthodontic Clinic"
     ]
-  },
-  {
-    id: "branch-3",
-    tag: "BRANCH 3",
-    name: "Branch 3 — City Care Lounge",
-    isFlagship: false,
-    addressLine1: "Location announcement in progress",
-    addressLine2: "Official address will be updated shortly",
-    cityState: "Kerala",
-    phone: "+91 98470 12345",
-    whatsapp: "919847012345",
-    hours: "Opening Q4 2026",
-    mapsUrl: "#",
-    status: "upcoming",
-    features: [
-      "Express Dental Checkups",
-      "Clear Aligner Studio"
-    ]
   }
 ];

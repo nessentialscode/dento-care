@@ -21,27 +21,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
     <header className="w-full pt-4 sm:pt-5 lg:pt-6 px-6 sm:px-10 lg:px-12 relative z-30">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
-        {/* LEFT: Dento Care Logo + Brand */}
-        <a href="#" className="flex items-center gap-2 group select-none">
-          {/* Minimal Tooth Icon matching the lime outline from reference */}
-          <div className="relative w-7 h-7 flex items-center justify-center">
-            <svg
-              viewBox="0 0 24 24"
-              className="w-6 h-6 stroke-[#E5FE40] fill-none transition-transform duration-300 group-hover:scale-110"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M12 2C8.5 2 6 4.5 6 8.5c0 3.2 1.4 5.2 2 8.5.5 3 2 5 4 5s3.5-2 4-5c.6-3.3 2-5.3 2-8.5 0-4-2.5-6.5-6-6.5z" />
-              <path d="M10 9c.5.5 1.5.9 2 .9s1.5-.4 2-.9" />
-            </svg>
+        {/* LEFT: Dento Care Logo + Brand (Exact logo icon & distinctive typography) */}
+        <a href="#" className="flex items-center gap-2.5 sm:gap-3 group select-none">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+            <img
+              src="/images/dento-care-icon.png"
+              alt="Dento Care Icon"
+              className="w-full h-full object-contain"
+            />
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg sm:text-xl lg:text-[22px] font-bold tracking-tight text-white leading-none">
-              Dento Care
-            </span>
-            <span className="text-[9.5px] uppercase tracking-widest text-sky-100 font-semibold leading-none mt-0.5 opacity-90">
-              Dental Clinic
+          <div className="flex flex-col justify-center">
+            <img
+              src="/images/dento-care-text-white.png"
+              alt="DENTO CARE"
+              className="h-[17px] sm:h-[19px] lg:h-[21px] w-auto object-contain select-none"
+            />
+            <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
+              DENTAL CLINIC
             </span>
           </div>
         </a>
