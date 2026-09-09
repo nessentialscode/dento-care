@@ -85,7 +85,6 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick }) => {
               Navigation
             </span>
             <ul className="space-y-2 text-sm text-slate-300">
-              <li><a href="#about" className="hover:text-white transition-colors">About Clinic</a></li>
               <li><a href="#treatments" className="hover:text-white transition-colors">Treatments</a></li>
               <li><a href="#locations" className="hover:text-white transition-colors">Locations</a></li>
               <li><a href="#doctors" className="hover:text-white transition-colors">Specialist Doctors</a></li>

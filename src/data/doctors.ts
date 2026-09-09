@@ -37,7 +37,7 @@ export const clinicDoctors: DoctorProfile[] = [
     reviewCount: 142,
     image: "/images/doctor-specialist.jpg",
     branch: "Ponnani & Consulting Clinics",
-    bio: "Specializing in discreet smile realignment using modern clear aligner technology and self-ligating braces for teenagers and adults."
+    bio: "Specializing in discreet smile realignment using modern clear aligner technology and self-ligating braces for teenagers and adults — feel unreal and seems natural."
   },
   {
     id: "dr-consultant-endo",

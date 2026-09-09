@@ -6,7 +6,6 @@ import { LocationsSection } from './components/LocationsSection';
 import { DoctorsSection } from './components/DoctorsSection';
 import { ReviewsSection } from './components/ReviewsSection';
 import { GallerySection } from './components/GallerySection';
-import { AboutSection } from './components/AboutSection';
 import { AppointmentModal } from './components/AppointmentModal';
 import { Footer } from './components/Footer';
 
@@ -64,10 +63,7 @@ export const App: React.FC = () => {
       {/* 7. CLINIC PHOTOGRAPHY GALLERY */}
       <GallerySection />
 
-      {/* 8. ABOUT DENTO CARE & CLINICAL PHILOSOPHY */}
-      <AboutSection />
-
-      {/* 9. DARK LUXURY FOOTER */}
+      {/* 8. DARK LUXURY FOOTER */}
       <Footer onBookClick={() => handleOpenBooking()} />
 
       {/* INTERACTIVE APPOINTMENT MODAL */}

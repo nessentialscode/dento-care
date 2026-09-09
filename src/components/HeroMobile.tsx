@@ -11,7 +11,6 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'About', href: '#about' },
     { label: 'Treatments', href: '#treatments' },
     { label: 'Locations', href: '#locations' },
     { label: 'Doctors', href: '#doctors' },
@@ -155,7 +154,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
           />
 
           {/* Signature Circular Lime Booking CTA Centered RIGHT IN THE MIDDLE OF THE TEETH IMAGE */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-[24%] min-[390px]:bottom-[25%] sm:bottom-[26%] z-30">
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-[17%] min-[390px]:bottom-[18%] sm:bottom-[19%] z-30">
             <CircularBookingCTA
               onClick={onBookClick}
               size="md"
