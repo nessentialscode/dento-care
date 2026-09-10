@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CircularBookingCTA } from './CircularBookingCTA';
-import { ArrowUpRight, X, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, X, MessageCircle, ChevronRight, Phone, MapPin } from 'lucide-react';
 import { clinicInfo } from '../data/clinicInfo';
 
 interface HeroMobileProps {
@@ -10,12 +10,32 @@ interface HeroMobileProps {
 export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Lock body scroll and handle Escape key when mobile menu is open
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
-    { label: 'Treatments', href: '#treatments' },
-    { label: 'Locations', href: '#locations' },
-    { label: 'Doctors', href: '#doctors' },
-    { label: 'Reviews', href: '#reviews' },
-    { label: 'Gallery', href: '#gallery' },
+    { label: 'Treatments', href: '#treatments', note: 'Specialties' },
+    { label: 'Locations', href: '#locations', note: 'Ponnani' },
+    { label: 'Specialist Doctors', href: '#doctors', note: 'Team' },
+    { label: 'Patient Reviews', href: '#reviews', note: '4.9 ★' },
+    { label: 'Clinic Gallery', href: '#gallery', note: 'Inside View' },
   ];
 
   return (
@@ -54,19 +74,15 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
             {/* RIGHT: Three very thin short horizontal lines as a minimal decorative divider & menu toggle */}
             <button
               type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 text-white/90 hover:text-white transition-colors cursor-pointer"
-              aria-label="Toggle navigation menu"
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-1.5 text-white/90 hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-white/10"
+              aria-label="Open navigation menu"
             >
-              {mobileMenuOpen ? (
-                <X size={22} strokeWidth={2} className="text-white" />
-              ) : (
-                <div className="flex flex-col gap-[3.5px] items-end py-1">
-                  <span className="w-5 h-[1.5px] bg-white/90 rounded-full"></span>
-                  <span className="w-3 h-[1.5px] bg-white/75 rounded-full"></span>
-                  <span className="w-4.5 h-[1.5px] bg-white/90 rounded-full"></span>
-                </div>
-              )}
+              <div className="flex flex-col gap-[3.5px] items-end py-1">
+                <span className="w-5 h-[1.5px] bg-white/90 rounded-full"></span>
+                <span className="w-3 h-[1.5px] bg-white/75 rounded-full"></span>
+                <span className="w-4.5 h-[1.5px] bg-white/90 rounded-full"></span>
+              </div>
             </button>
           </div>
 
@@ -74,32 +90,122 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
           <div className="w-full h-[1px] bg-white/20" />
         </header>
 
-        {/* MOBILE NAVIGATION DRAWER */}
-        {mobileMenuOpen && (
-          <div className="relative z-40 mx-5 mt-2 bg-white/95 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-sky-100 flex flex-col gap-3 animate-in fade-in slide-in-from-top-3 duration-200">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-slate-800 font-semibold text-[15px] hover:text-blue-600 transition-colors py-1"
+        {/* PROFESSIONAL MOBILE NAVIGATION DRAWER (Slide-over with backdrop blur, zero layout shift) */}
+        <div
+          className={`fixed inset-0 z-50 transition-all duration-300 ${
+            mobileMenuOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
+          }`}
+          aria-hidden={!mobileMenuOpen}
+        >
+          {/* Backdrop Overlay */}
+          <div
+            className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Slide-over White Drawer */}
+          <div
+            className={`absolute top-0 right-0 bottom-0 w-[86%] max-w-[340px] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-7 overflow-y-auto transition-transform duration-300 ease-out ${
+              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
+          >
+            {/* Top Drawer Header & Navigation */}
+            <div>
+              {/* Header row: Brand + Close button */}
+              <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+                <div className="flex items-center gap-2.5 select-none">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/80 flex items-center justify-center p-1.5 flex-shrink-0">
+                    <img
+                      src="/images/dento-care-icon.png"
+                      alt="Dento Care Icon"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <img
+                      src="/images/dento-care-text-blue.png"
+                      alt="DENTO CARE"
+                      className="h-[17px] w-auto object-contain select-none"
+                    />
+                    <span className="text-[8.5px] uppercase tracking-[0.22em] text-blue-600 font-bold leading-none mt-1 select-none">
+                      DENTAL CLINIC
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+                  aria-label="Close navigation menu"
+                >
+                  <X size={18} strokeWidth={2.2} />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="py-5 flex flex-col gap-1">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="group flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/70 font-semibold text-[15px] transition-all"
+                  >
+                    <span>{link.label}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-medium text-slate-400 group-hover:text-blue-500 transition-colors">
+                        {link.note}
+                      </span>
+                      <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* Bottom Drawer Actions */}
+            <div className="pt-4 border-t border-slate-100 space-y-3.5">
+              {/* Quick Contact buttons */}
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href={`tel:${clinicInfo.phone}`}
+                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors"
+                >
+                  <Phone size={13} className="text-blue-600" />
+                  <span>Call Clinic</span>
+                </a>
+                <a
+                  href={`https://wa.me/${clinicInfo.whatsapp}?text=Hello%20Dento%20Care,%20I%20would%20like%20to%20consult%20with%20a%20dentist.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold border border-emerald-200 transition-colors"
+                >
+                  <MessageCircle size={13} className="text-emerald-600" />
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+
+              {/* Primary Booking CTA */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onBookClick();
+                }}
+                className="w-full py-3.5 rounded-full bg-[#E5FE40] text-slate-900 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-lime-400/20 cursor-pointer hover:bg-lime-300 transition-all active:scale-[0.98]"
               >
-                {link.label}
-              </a>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onBookClick();
-              }}
-              className="w-full mt-2 py-3 rounded-full bg-[#E5FE40] text-slate-900 font-bold text-center flex items-center justify-center gap-2 shadow-md cursor-pointer hover:bg-lime-300 transition-colors"
-            >
-              <span>Book Appointment</span>
-              <ArrowUpRight size={18} />
-            </button>
+                <span>Book Appointment</span>
+                <ArrowUpRight size={17} strokeWidth={2.2} />
+              </button>
+
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
+                <MapPin size={11} className="text-slate-400" />
+                <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
 
         {/* 2. GRAND EDITORIAL HEADLINE (Preserving line breaks, clean thin font style, significantly increased) */}
         <div className="px-5 sm:px-6 pt-3 min-[390px]:pt-4">

@@ -21,8 +21,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* LEFT: Dento Care Logo + Brand (Exact logo icon & distinctive typography) */}
-        <a href="#" className="flex items-center gap-2.5 sm:gap-3 group select-none">
-          <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+        <a href="#" className="flex items-center gap-2.5 sm:gap-3.5 group select-none">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
             <img
               src="/images/dento-care-icon.png"
               alt="Dento Care Icon"
@@ -33,21 +33,21 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
             <img
               src="/images/dento-care-text-white.png"
               alt="DENTO CARE"
-              className="h-[17px] sm:h-[19px] lg:h-[21px] w-auto object-contain select-none"
+              className="h-[17px] sm:h-[19px] lg:h-[23px] w-auto object-contain select-none"
             />
-            <span className="text-[8.5px] sm:text-[9.5px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
+            <span className="text-[8.5px] sm:text-[9.5px] lg:text-[10px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
               DENTAL CLINIC
             </span>
           </div>
         </a>
 
         {/* CENTER: Minimal Navigation Links (Desktop) */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 2xl:gap-9">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="text-white/90 hover:text-white text-[14px] font-medium transition-all duration-200 hover:-translate-y-0.5"
+              className="text-white/90 hover:text-white text-[14px] lg:text-[15px] font-medium transition-all duration-200 hover:-translate-y-0.5"
             >
               {link.label}
             </a>
@@ -59,11 +59,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
           <button
             type="button"
             onClick={onBookClick}
-            className="group inline-flex items-center gap-2 pl-5 pr-1.5 py-1.5 rounded-full bg-white text-slate-800 text-[13px] font-semibold shadow-md shadow-sky-950/15 hover:shadow-lg hover:bg-white/95 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+            className="group inline-flex items-center gap-2.5 pl-5 pr-1.5 py-1.5 lg:pl-6 lg:pr-2 lg:py-2 rounded-full bg-white text-slate-800 text-[13px] lg:text-[14px] font-semibold shadow-md shadow-sky-950/15 hover:shadow-lg hover:bg-white/95 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
           >
             <span>Book Appointment</span>
-            <div className="w-7 h-7 rounded-full bg-[#E5FE40] flex items-center justify-center text-slate-900 group-hover:rotate-45 transition-transform duration-300">
-              <ArrowUpRight size={15} strokeWidth={2.6} />
+            <div className="w-7 h-7 lg:w-7.5 lg:h-7.5 rounded-full bg-[#E5FE40] flex items-center justify-center text-slate-900 group-hover:rotate-45 transition-transform duration-300">
+              <ArrowUpRight size={16} strokeWidth={2.6} />
             </div>
           </button>
         </div>

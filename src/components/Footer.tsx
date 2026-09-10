@@ -52,21 +52,25 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick }) => {
           
           {/* BRAND COLUMN (Span 4) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 flex items-center justify-center">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="w-7 h-7 stroke-[#E5FE40] fill-none"
-                  strokeWidth="2.2"
-                >
-                  <path d="M12 2C8.5 2 6 4.5 6 8.5c0 3.2 1.4 5.2 2 8.5.5 3 2 5 4 5s3.5-2 4-5c.6-3.3 2-5.3 2-8.5 0-4-2.5-6.5-6-6.5z" />
-                  <path d="M10 9c.5.5 1.5.9 2 .9s1.5-.4 2-.9" />
-                </svg>
+            <a href="#" className="inline-flex items-center gap-2.5 sm:gap-3 group select-none">
+              <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <img
+                  src="/images/dento-care-icon.png"
+                  alt="Dento Care Icon"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="text-2xl font-bold tracking-tight text-white">
-                Dento Care
-              </span>
-            </div>
+              <div className="flex flex-col justify-center">
+                <img
+                  src="/images/dento-care-text-white.png"
+                  alt="DENTO CARE"
+                  className="h-[18px] sm:h-[20px] w-auto object-contain select-none"
+                />
+                <span className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
+                  DENTAL CLINIC
+                </span>
+              </div>
+            </a>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
               Premium multi-location dental clinic providing advanced oral implantology, microscopic root canal treatments, and cosmetic smile restorations.

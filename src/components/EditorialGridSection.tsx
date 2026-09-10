@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Sparkles, UserCheck, Cpu, Heart, ShieldCheck } from 'lucide-react';
 
 interface EditorialGridSectionProps {
   onBookClick: () => void;
@@ -33,20 +33,20 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
         {/* UNIFIED ASYMMETRIC GRID MATCHING REFERENCE IMAGE 2 */}
         <div className="grid grid-cols-1 lg:grid-cols-12 lg:grid-rows-2 gap-6 sm:gap-8">
           
-          {/* 1. LEFT CARD: WHY CHOOSE DENTO CARE (Spans 5 cols, 2 rows) */}
-          <div className="lg:col-span-5 lg:row-span-2 relative w-full h-full min-h-[580px] sm:min-h-[640px] bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] p-7 sm:p-9 lg:p-11 flex flex-col justify-between overflow-hidden shadow-xl shadow-sky-950/15 group">
+          {/* 1. LEFT CARD: WHY PATIENTS TRUST DENTO CARE (Spans 5 cols, 2 rows) */}
+          <div className="lg:col-span-5 lg:row-span-2 relative w-full h-full min-h-[580px] sm:min-h-[640px] bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] p-6 sm:p-8 lg:p-10 flex flex-col justify-between overflow-hidden shadow-xl shadow-sky-950/15 group">
             
             {/* Background ambient lighting */}
             <div className="absolute inset-0 bg-gradient-to-br from-[#68A7ED] via-[#5B9DE6] to-[#488FD8]" />
 
             {/* Subtle decorative glow orb */}
-            <div className="absolute top-1/3 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute top-1/4 -right-16 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
 
-            {/* TOP HEADER / PILL BADGE */}
+            {/* TOP HEADER / EYEBROW */}
             <div className="relative z-20 flex items-center justify-between w-full">
               <span className="px-3.5 py-1.5 rounded-full bg-white/20 text-white text-[11px] sm:text-xs font-bold tracking-wider uppercase backdrop-blur-md border border-white/20 shadow-sm flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#E5FE40]" />
-                WHY CHOOSE DENTO CARE
+                WHY PATIENTS TRUST DENTO CARE
               </span>
               <button
                 type="button"
@@ -58,110 +58,85 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
               </button>
             </div>
 
-            {/* MAIN EDITORIAL HEADLINE & VISUAL COMPOSITION */}
-            <div className="relative z-20 my-auto py-2 sm:py-3 flex flex-col justify-between flex-grow">
+            {/* MAIN EDITORIAL HEADLINE & SUPPORTING TEXT */}
+            <div className="relative z-20 my-auto py-3 sm:py-4 flex flex-col justify-between flex-grow">
               <div>
-                <h3 className="text-white text-3xl sm:text-4xl lg:text-[40px] xl:text-[44px] font-light tracking-[-0.035em] leading-[1.05]">
-                  Why patients<br />
-                  <span className="font-normal text-white">choose Dento Care</span>
+                <h3 className="text-white text-2xl sm:text-3xl lg:text-[32px] xl:text-[36px] font-light tracking-[-0.03em] leading-[1.12]">
+                  Exceptional dentistry,<br />
+                  <span className="font-normal text-white">with care you can trust.</span>
                 </h3>
-                <p className="text-white/85 text-xs sm:text-sm font-medium mt-2 max-w-sm leading-relaxed">
-                  Precision digital dentistry delivered with personalized care, painless techniques, and lasting clinical outcomes.
+                <p className="text-white/90 text-xs sm:text-[13px] font-normal mt-2.5 max-w-md leading-relaxed">
+                  From preventive care to advanced dental procedures, our team combines modern technology, experienced specialists, and a patient-first approach to deliver comfortable, precise treatment.
                 </p>
               </div>
 
-              {/* ASYMMETRIC COMPOSITION: PATIENT SHOWING TEETH + 4 COHESIVE TRUST STAT CARDS */}
-              <div className="relative w-full my-3 sm:my-4">
+              {/* FOUR BENEFIT CARDS: 2x2 ON DESKTOP / TABLET, CLEAN BALANCED STACK ON SMALL MOBILE */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 my-4 sm:my-5 relative z-20">
                 
-                {/* CENTRAL PROMINENT DENTAL VISUAL: 3-PATIENT JOURNEY TRIO (NO square card container) */}
-                <div className="relative w-full flex items-center justify-center py-1 sm:py-2">
-                  <div className="relative w-full max-w-[480px] sm:max-w-[520px] md:max-w-[560px] flex items-center justify-center pointer-events-none">
-                    <img
-                      src="/images/patients-trio.png"
-                      alt="Three patient stages: damaged teeth on right, dental pain in middle, restored perfect smile on left"
-                      className="relative z-10 w-full h-auto object-contain drop-shadow-[0_16px_32px_rgba(0,0,0,0.25)] transform group-hover:scale-[1.02] transition-transform duration-500"
-                    />
+                {/* CARD 1: Experienced Specialists */}
+                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                  <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
+                    <UserCheck size={18} strokeWidth={2.2} />
                   </div>
+                  <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                    Experienced Specialists
+                  </h4>
+                  <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
+                    Skilled dental professionals focused on precise, personalized treatment.
+                  </p>
                 </div>
 
-                {/* 4 UNIFIED, NEAT & PROFESSIONAL TRUST CARDS */}
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5 relative z-20 mt-2 sm:mt-3">
-                  
-                  {/* 1. 15k+ Happy Patients */}
-                  <div className="bg-white rounded-2xl p-3 sm:p-3.5 shadow-lg shadow-sky-950/15 border border-white/95 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-extrabold text-[#2563EB] tracking-tight leading-none">
-                        15k+
-                      </div>
-                      <div className="text-xs sm:text-[13px] font-bold text-slate-900 leading-tight mt-1.5">
-                        Happy Patients
-                      </div>
-                    </div>
-                    <div className="text-[10px] sm:text-[10.5px] font-medium text-slate-500 mt-1">
-                      Lifetime Smile Care
-                    </div>
+                {/* CARD 2: Advanced Technology */}
+                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                  <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
+                    <Cpu size={18} strokeWidth={2.2} />
                   </div>
+                  <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                    Advanced Technology
+                  </h4>
+                  <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
+                    Modern digital diagnostics and treatment techniques for better accuracy.
+                  </p>
+                </div>
 
-                  {/* 2. 4.9 ★ Google Rating */}
-                  <div className="bg-white rounded-2xl p-3 sm:p-3.5 shadow-lg shadow-sky-950/15 border border-white/95 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-2xl sm:text-3xl font-extrabold text-[#2563EB] tracking-tight leading-none">
-                          4.9
-                        </span>
-                        <div className="flex text-amber-400 text-xs">
-                          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                        </div>
-                      </div>
-                      <div className="text-xs sm:text-[13px] font-bold text-slate-900 leading-tight mt-1.5">
-                        Google Rating
-                      </div>
-                    </div>
-                    <div className="text-[10px] sm:text-[10.5px] font-medium text-slate-500 mt-1">
-                      500+ Verified Reviews
-                    </div>
+                {/* CARD 3: Comfort-First Care */}
+                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                  <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
+                    <Heart size={18} strokeWidth={2.2} />
                   </div>
+                  <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                    Comfort-First Care
+                  </h4>
+                  <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
+                    A calm, gentle approach designed around your comfort at every visit.
+                  </p>
+                </div>
 
-                  {/* 3. 100% Painless Tech */}
-                  <div className="bg-white rounded-2xl p-3 sm:p-3.5 shadow-lg shadow-sky-950/15 border border-white/95 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-extrabold text-[#2563EB] tracking-tight leading-none">
-                        100%
-                      </div>
-                      <div className="text-xs sm:text-[13px] font-bold text-slate-900 leading-tight mt-1.5">
-                        Painless Care
-                      </div>
-                    </div>
-                    <div className="text-[10px] sm:text-[10.5px] font-medium text-slate-500 mt-1">
-                      Digital 3D Guided Scanning
-                    </div>
+                {/* CARD 4: Safety & Sterilization */}
+                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                  <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
+                    <ShieldCheck size={18} strokeWidth={2.2} />
                   </div>
-
-                  {/* 4. Top Tier Senior Faculty */}
-                  <div className="bg-white rounded-2xl p-3 sm:p-3.5 shadow-lg shadow-sky-950/15 border border-white/95 hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                      <div className="text-2xl sm:text-3xl font-extrabold text-[#2563EB] tracking-tight leading-none">
-                        Top Tier
-                      </div>
-                      <div className="text-xs sm:text-[13px] font-bold text-slate-900 leading-tight mt-1.5">
-                        Senior Specialists
-                      </div>
-                    </div>
-                    <div className="text-[10px] sm:text-[10.5px] font-medium text-slate-500 mt-1">
-                      MES Dental College Faculty
-                    </div>
-                  </div>
-
+                  <h4 className="text-[13.5px] sm:text-[14.5px] font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                    Safety & Sterilization
+                  </h4>
+                  <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
+                    Rigorous clinical hygiene and sterilization protocols for your safety.
+                  </p>
                 </div>
 
               </div>
-
             </div>
 
-            {/* BOTTOM TAGLINE / CLINICAL NOTE */}
-            <div className="relative z-20 flex items-center gap-2.5 pt-2 text-white/90 text-xs font-medium border-t border-white/15">
-              <span className="w-2 h-2 rounded-full bg-[#E5FE40]" />
-              <span>Certified ISO 9001:2015 Clinical Sterilization Protocols</span>
+            {/* HORIZONTAL TRUST STRIP */}
+            <div className="relative z-20 flex flex-wrap items-center justify-between gap-y-2 gap-x-2 pt-3 border-t border-white/20 text-white/95 text-[10.5px] sm:text-[11.5px] font-medium tracking-tight">
+              <span className="whitespace-nowrap">Modern Technology</span>
+              <span className="w-1 h-1 rounded-full bg-white/40 hidden sm:inline-block" />
+              <span className="whitespace-nowrap">Experienced Care</span>
+              <span className="w-1 h-1 rounded-full bg-white/40 hidden sm:inline-block" />
+              <span className="whitespace-nowrap">Patient-Centred Approach</span>
+              <span className="w-1 h-1 rounded-full bg-white/40 hidden sm:inline-block" />
+              <span className="whitespace-nowrap">Strict Sterilization</span>
             </div>
 
           </div>
@@ -230,22 +205,36 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
           {/* 3. RIGHT BOTTOM CARD: DOCTOR PROFILES — DR. LIJEESH & DR. ABDULLAH MUFEED (Spans 7 cols, 1 row) */}
           <div
             onClick={onDoctorClick}
-            className="lg:col-span-7 lg:row-span-1 relative w-full h-full bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-sky-950/15 cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex items-end min-h-[350px] sm:min-h-[370px]"
+            className="lg:col-span-7 lg:row-span-1 relative w-full h-full bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-sky-950/15 cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between min-h-[350px] sm:min-h-[370px] lg:min-h-[380px]"
           >
             {/* Card Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#4B90DE] via-[#5B9DE6] to-[#6FAAED]" />
 
-            {/* DOCTOR PHOTOGRAPHS (BIGGER SIZE, GROUNDED ON LEFT) */}
-            <div className="absolute left-0 sm:left-1 lg:left-2 bottom-0 w-[64%] min-[400px]:w-[66%] sm:w-[62%] md:w-[60%] lg:w-[58%] xl:w-[56%] max-w-[420px] sm:max-w-[460px] lg:max-w-[480px] h-auto pointer-events-none z-10 flex items-end">
+            {/* Subtle ambient lighting accent */}
+            <div className="absolute top-0 left-1/4 w-60 h-60 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+
+            {/* TOP HEADER / EYEBROW & ACTION (Matches Dental Implants card above) */}
+            <div className="relative z-20 w-full p-6 sm:p-7 lg:p-8 flex items-start justify-between pointer-events-none">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/20 text-white text-[11px] sm:text-xs font-bold tracking-wider uppercase backdrop-blur-md border border-white/25 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E5FE40]" />
+                Senior Clinical Faculty
+              </span>
+              <div className="w-9 h-9 rounded-full bg-white text-slate-900 flex items-center justify-center group-hover:bg-[#E5FE40] group-hover:rotate-45 transition-all duration-300 shadow-md pointer-events-auto">
+                <ArrowUpRight size={18} strokeWidth={2.4} />
+              </div>
+            </div>
+
+            {/* DOCTOR PHOTOGRAPHS (Desktop: height-fitted so heads are never cut off; Mobile: original width scaling preserved) */}
+            <div className="absolute left-0 sm:left-1 lg:left-6 xl:left-8 bottom-0 w-[64%] min-[400px]:w-[66%] sm:w-[62%] md:w-[60%] lg:w-auto lg:h-[86%] xl:h-[90%] pointer-events-none z-10 flex items-end">
               <img
                 src="/images/doctors-duo.png"
                 alt="Dr. Lijeesh & Dr. Abdullah Mufeed - Senior Dental Faculty"
-                className="w-full h-auto object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.22)] transform group-hover:scale-[1.02] transition-transform duration-500"
+                className="w-full lg:w-auto h-auto lg:h-full object-contain object-bottom drop-shadow-[0_16px_30px_rgba(0,0,0,0.25)] transform group-hover:scale-[1.02] transition-transform duration-500"
               />
             </div>
 
-            {/* FLOATING PILL-SHAPED CARD & RATING: PUSHED FURTHER TO THE VERY END */}
-            <div className="absolute right-2 sm:right-3 lg:right-4 bottom-3 sm:bottom-4 z-20 flex flex-col items-end w-fit max-w-[185px] min-[400px]:max-w-[195px] sm:max-w-[215px] lg:max-w-[225px]">
+            {/* FLOATING PILL-SHAPED CARD & RATING */}
+            <div className="absolute right-3 sm:right-4 lg:right-6 xl:right-8 bottom-3 sm:bottom-4 lg:bottom-6 z-20 flex flex-col items-end w-fit max-w-[185px] min-[400px]:max-w-[195px] sm:max-w-[215px] lg:max-w-[230px]">
               
               {/* Pill-shaped card with soft rounded corners */}
               <div className="bg-white rounded-[22px_22px_22px_12px] sm:rounded-[24px_24px_24px_14px] p-3 sm:p-3.5 lg:p-4 shadow-2xl shadow-sky-950/20 border border-white/90 transform group-hover:-translate-y-1 transition-transform text-left">
