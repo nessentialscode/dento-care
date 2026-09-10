@@ -13,7 +13,7 @@ export const clinicReviews: PatientReview[] = [
   {
     id: "rev-1",
     author: "Mohammed Fasil",
-    source: "Google Verified Review",
+    source: "Google Verified Review • Ponnani",
     rating: 5,
     timeAgo: "2 weeks ago",
     treatment: "Dental Implant & Crown",
@@ -21,9 +21,29 @@ export const clinicReviews: PatientReview[] = [
     verified: true
   },
   {
+    id: "rev-vel-1",
+    author: "Patient Feedback",
+    source: "Google Verified Review • Veliyancode",
+    rating: 5,
+    timeAgo: "Recently",
+    treatment: "Dental Care & Treatment",
+    quote: "Very good service and good doctors. The clinic at Aspel Medcity is well maintained with gentle, experienced specialists.",
+    verified: true
+  },
+  {
+    id: "rev-vel-2",
+    author: "Verified Patient",
+    source: "Google Verified Review • Veliyancode",
+    rating: 5,
+    timeAgo: "Recently",
+    treatment: "General Consultation",
+    quote: "Good treatment Good Experience. Highly recommend Dento Care Multispeciality Dental Clinic for family dental needs.",
+    verified: true
+  },
+  {
     id: "rev-2",
     author: "Aysha R.",
-    source: "Google Verified Review",
+    source: "Google Verified Review • Ponnani",
     rating: 5,
     timeAgo: "1 month ago",
     treatment: "Root Canal Treatment",
@@ -33,7 +53,7 @@ export const clinicReviews: PatientReview[] = [
   {
     id: "rev-3",
     author: "Sujith Kumar",
-    source: "Google Verified Review",
+    source: "Google Verified Review • Ponnani",
     rating: 5,
     timeAgo: "2 months ago",
     treatment: "Teeth Whitening & Cleaning",
@@ -43,7 +63,7 @@ export const clinicReviews: PatientReview[] = [
   {
     id: "rev-4",
     author: "Fathima Noor",
-    source: "Google Verified Review",
+    source: "Google Verified Review • Ponnani",
     rating: 5,
     timeAgo: "3 months ago",
     treatment: "Orthodontic Consultation",
@@ -54,7 +74,7 @@ export const clinicReviews: PatientReview[] = [
 
 export const reviewStats = {
   averageRating: 4.9,
-  totalCount: 32,
+  totalCount: 48,
   platform: "Google Rating",
   recommendPercent: 98
 };

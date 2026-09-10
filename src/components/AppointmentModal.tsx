@@ -58,12 +58,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
   if (!isOpen) return null;
 
+  const selectedLocation = clinicLocations.find(l => l.name === branch || l.shortName === branch);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
   };
 
   const handleWhatsAppBooking = () => {
+    const targetWhatsapp = selectedLocation?.whatsapp || clinicInfo.whatsapp;
     const text = encodeURIComponent(
       `Hello Dento Care,\nI would like to schedule a dental appointment:\n\n` +
       `• Patient Name: ${fullName || 'Guest'}\n` +
@@ -74,7 +77,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       `• Preferred Time: ${preferredTime}\n` +
       `${message ? `• Note: ${message}` : ''}`
     );
-    window.open(`https://wa.me/${clinicInfo.whatsapp}?text=${text}`, '_blank');
+    window.open(`https://wa.me/${targetWhatsapp}?text=${text}`, '_blank');
   };
 
   return (
@@ -108,7 +111,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
             Book Your Dental Visit
           </h3>
           <p className="text-white/85 text-xs sm:text-sm mt-1 max-w-md">
-            Ponnani Flagship Clinic • KK Junction near ISS School
+            {selectedLocation ? `${selectedLocation.name} • ${selectedLocation.addressLine1}` : 'Ponnani Flagship & Veliyancode Medcity Branches'}
           </p>
         </div>
 

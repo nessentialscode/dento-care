@@ -113,25 +113,44 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick }) => {
           </div>
 
           {/* CONTACT INFO (Span 3) */}
-          <div className="lg:col-span-3 space-y-3 text-sm">
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-2">
-              Ponnani Flagship
-            </span>
-            <div className="flex items-start gap-2.5 text-slate-300">
-              <MapPin size={16} className="mt-1 text-[#E5FE40] flex-shrink-0" />
-              <span>KK Junction, near ISS School, Ponnani, Kerala 679577</span>
+          <div className="lg:col-span-3 space-y-4 text-xs sm:text-sm">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#E5FE40] block mb-1">
+                Ponnani Flagship Clinic
+              </span>
+              <div className="flex items-start gap-2 text-slate-300 text-xs mb-1">
+                <MapPin size={13} className="mt-0.5 text-[#E5FE40] flex-shrink-0" />
+                <span>KK Junction, near ISS School, Ponnani, Kerala 679577</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <Phone size={13} className="text-[#E5FE40]" />
+                <a href="tel:+919847012345" className="hover:text-white transition-colors">+91 98470 12345</a>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5 text-slate-300">
-              <Phone size={16} className="text-[#E5FE40] flex-shrink-0" />
-              <a href={`tel:${clinicInfo.phone}`} className="hover:text-white transition-colors">{clinicInfo.phone}</a>
+
+            <div className="pt-2 border-t border-slate-800">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#E5FE40] block mb-1">
+                Veliyancode Clinic
+              </span>
+              <div className="flex items-start gap-2 text-slate-300 text-xs mb-1">
+                <MapPin size={13} className="mt-0.5 text-[#E5FE40] flex-shrink-0" />
+                <span>Medcity hospital, Veliyancode, Ponnani 679579</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <Phone size={13} className="text-[#E5FE40]" />
+                <a href="tel:07025215151" className="hover:text-white transition-colors">070252 15151</a>
+              </div>
             </div>
-            <div className="flex items-center gap-2.5 text-slate-300">
-              <Mail size={16} className="text-[#E5FE40] flex-shrink-0" />
-              <a href={`mailto:${clinicInfo.email}`} className="hover:text-white transition-colors">{clinicInfo.email}</a>
-            </div>
-            <div className="flex items-center gap-2.5 text-slate-300 pt-1">
-              <Clock size={16} className="text-[#E5FE40] flex-shrink-0" />
-              <span className="text-xs">{clinicInfo.workingHours}</span>
+
+            <div className="pt-2 border-t border-slate-800 space-y-1.5 text-xs text-slate-400">
+              <div className="flex items-center gap-2 text-slate-300">
+                <Mail size={13} className="text-[#E5FE40]" />
+                <a href={`mailto:${clinicInfo.email}`} className="hover:text-white transition-colors">{clinicInfo.email}</a>
+              </div>
+              <div className="flex items-center gap-2 text-slate-300">
+                <Clock size={13} className="text-[#E5FE40]" />
+                <span>Mon – Sat: 9AM – 8PM (Veliyancode: Closes 7PM)</span>
+              </div>
             </div>
           </div>
 
