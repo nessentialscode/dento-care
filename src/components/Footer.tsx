@@ -124,7 +124,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick }) => {
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone size={13} className="text-[#E5FE40]" />
-                <a href="tel:+919847012345" className="hover:text-white transition-colors">+91 98470 12345</a>
+                <a href={`tel:${clinicInfo.phone.replace(/\s+/g, '')}`} className="hover:text-white transition-colors">{clinicInfo.phone}</a>
               </div>
             </div>
 

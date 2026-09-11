@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, Sparkles, UserCheck, Cpu, Heart, ShieldCheck } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { InView } from './core/in-view';
 
 interface EditorialGridSectionProps {
   onBookClick: () => void;
@@ -12,6 +14,25 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
   onServiceClick,
   onDoctorClick,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+
+  const cardVariants = {
+    hidden: {
+      opacity: shouldReduceMotion ? 1 : 0,
+      y: shouldReduceMotion ? 0 : 50,
+      scale: shouldReduceMotion ? 1 : 0.94,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 1.0,
+        ease: [0.25, 0.1, 0.25, 1] as const,
+      },
+    },
+  };
+
   return (
     <section className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-20">
       <div className="max-w-[1680px] 2xl:max-w-[1760px] mx-auto">
@@ -71,10 +92,25 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
               </div>
 
               {/* FOUR BENEFIT CARDS: 2x2 ON DESKTOP / TABLET, CLEAN BALANCED STACK ON SMALL MOBILE */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 my-4 sm:my-5 relative z-20">
-                
+              <InView
+                as="div"
+                className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 my-4 sm:my-5 relative z-20"
+                viewOptions={{ once: true }}
+                once={true}
+                variants={{
+                  hidden: {},
+                  visible: {
+                    transition: {
+                      staggerChildren: shouldReduceMotion ? 0 : 0.25,
+                    },
+                  },
+                }}
+              >
                 {/* CARD 1: Experienced Specialists */}
-                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                <motion.div
+                  variants={cardVariants}
+                  className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left"
+                >
                   <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
                     <UserCheck size={18} strokeWidth={2.2} />
                   </div>
@@ -84,10 +120,13 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
                   <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
                     Skilled dental professionals focused on precise, personalized treatment.
                   </p>
-                </div>
+                </motion.div>
 
                 {/* CARD 2: Advanced Technology */}
-                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                <motion.div
+                  variants={cardVariants}
+                  className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left"
+                >
                   <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
                     <Cpu size={18} strokeWidth={2.2} />
                   </div>
@@ -97,10 +136,13 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
                   <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
                     Modern digital diagnostics and treatment techniques for better accuracy.
                   </p>
-                </div>
+                </motion.div>
 
                 {/* CARD 3: Comfort-First Care */}
-                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                <motion.div
+                  variants={cardVariants}
+                  className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left"
+                >
                   <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
                     <Heart size={18} strokeWidth={2.2} />
                   </div>
@@ -110,10 +152,13 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
                   <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
                     A calm, gentle approach designed around your comfort at every visit.
                   </p>
-                </div>
+                </motion.div>
 
                 {/* CARD 4: Safety & Sterilization */}
-                <div className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left">
+                <motion.div
+                  variants={cardVariants}
+                  className="bg-white rounded-2xl p-3.5 sm:p-4 border border-white/95 shadow-md shadow-sky-950/10 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-start text-left"
+                >
                   <div className="w-8 h-8 rounded-xl bg-sky-50 text-[#2563EB] flex items-center justify-center mb-2.5 flex-shrink-0">
                     <ShieldCheck size={18} strokeWidth={2.2} />
                   </div>
@@ -123,9 +168,9 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
                   <p className="text-[11px] sm:text-[11.5px] text-slate-600 font-normal leading-relaxed">
                     Rigorous clinical hygiene and sterilization protocols for your safety.
                   </p>
-                </div>
+                </motion.div>
 
-              </div>
+              </InView>
             </div>
 
             {/* HORIZONTAL TRUST STRIP */}

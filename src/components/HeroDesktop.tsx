@@ -49,7 +49,7 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                         />
                         <img
                           className="inline-block h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 xl:h-11 xl:w-11 rounded-full ring-2 ring-white object-cover shadow-md"
-                          src="/images/doctor-reed.jpg"
+                          src="/images/doctor-lijeesh.jpg"
                           alt="Doctor profile"
                         />
                       </span>

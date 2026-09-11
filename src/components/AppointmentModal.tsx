@@ -4,6 +4,7 @@ import { clinicInfo } from '../data/clinicInfo';
 import { clinicLocations } from '../data/locations';
 import { clinicServices } from '../data/services';
 import { clinicDoctors } from '../data/doctors';
+import { submitAppointment } from '../services/appointmentService';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -24,23 +25,48 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const [service, setService] = useState(initialService || 'Dental Implants');
   const [doctor, setDoctor] = useState(initialDoctor || 'Any Available Specialist');
   const [preferredDate, setPreferredDate] = useState('');
-  const [preferredTime, setPreferredTime] = useState('Morning (10:00 AM - 1:00 PM)');
+  const [preferredTime, setPreferredTime] = useState('Morning (9:00 AM - 1:00 PM)');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState('');
 
-  useEffect(() => {
+  const handleClose = React.useCallback(() => {
+    setSubmitted(false);
+    setIsSubmitting(false);
+    setErrorMessage(null);
+    setHoneypot('');
+    onClose();
+  }, [onClose]);
+
+  const [prevProps, setPrevProps] = useState({ initialService, initialDoctor, initialBranch, isOpen });
+
+  if (
+    prevProps.isOpen !== isOpen ||
+    prevProps.initialService !== initialService ||
+    prevProps.initialDoctor !== initialDoctor ||
+    prevProps.initialBranch !== initialBranch
+  ) {
+    setPrevProps({ initialService, initialDoctor, initialBranch, isOpen });
+    if (isOpen && !prevProps.isOpen) {
+      setSubmitted(false);
+      setIsSubmitting(false);
+      setErrorMessage(null);
+      setHoneypot('');
+    }
     if (initialService) setService(initialService);
     if (initialDoctor) setDoctor(initialDoctor);
     if (initialBranch) setBranch(initialBranch);
-  }, [initialService, initialDoctor, initialBranch]);
+  }
 
   // Lock body scroll and handle Escape key when modal is open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        handleClose();
       }
     };
 
@@ -54,15 +80,38 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   const selectedLocation = clinicLocations.find(l => l.name === branch || l.shortName === branch);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setErrorMessage(null);
+    setIsSubmitting(true);
+
+    try {
+      await submitAppointment({
+        fullName,
+        phone,
+        branch,
+        service,
+        doctor,
+        preferredDate,
+        preferredTime,
+        message,
+        website: honeypot,
+        botCheck: '',
+        _hp: '',
+      });
+      setSubmitted(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unable to submit appointment. Please try again.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleWhatsAppBooking = () => {
@@ -85,7 +134,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       {/* BACKDROP */}
       <div
         className="fixed inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity"
-        onClick={onClose}
+        onClick={handleClose}
       />
 
       {/* MODAL CARD */}
@@ -95,7 +144,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         <div className="bg-[#5B9DE6] p-6 sm:p-8 text-white relative">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="absolute top-6 right-6 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
             aria-label="Close modal"
           >
@@ -140,7 +189,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="px-6 py-3 rounded-full bg-slate-100 text-slate-800 font-semibold text-sm hover:bg-slate-200"
                 >
                   Done
@@ -152,10 +201,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
               
               {/* BRANCH SELECTION */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                <label htmlFor="modal-branch" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   Clinic Branch
                 </label>
                 <select
+                  id="modal-branch"
                   value={branch}
                   onChange={(e) => setBranch(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
@@ -170,10 +220,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
               {/* TREATMENT SELECTION */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                <label htmlFor="modal-service" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   Desired Treatment / Consultation
                 </label>
                 <select
+                  id="modal-service"
                   value={service}
                   onChange={(e) => setService(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
@@ -190,10 +241,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
               {/* DOCTOR SELECTION */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                <label htmlFor="modal-doctor" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   Preferred Doctor / Specialist
                 </label>
                 <select
+                  id="modal-doctor"
                   value={doctor}
                   onChange={(e) => setDoctor(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
@@ -210,21 +262,25 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
               {/* DATE & TIME PREFERENCE */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
-                    Preferred Date
+                  <label htmlFor="modal-date" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                    Preferred Date *
                   </label>
                   <input
+                    id="modal-date"
                     type="date"
+                    required
+                    min={new Date().toISOString().split('T')[0]}
                     value={preferredDate}
                     onChange={(e) => setPreferredDate(e.target.value)}
                     className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <label htmlFor="modal-time" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                     Preferred Time Slot
                   </label>
                   <select
+                    id="modal-time"
                     value={preferredTime}
                     onChange={(e) => setPreferredTime(e.target.value)}
                     className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
@@ -239,10 +295,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
               {/* PATIENT NAME & PHONE */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <label htmlFor="modal-fullname" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                     Full Name *
                   </label>
                   <input
+                    id="modal-fullname"
                     type="text"
                     required
                     placeholder="e.g. Rahul Nair"
@@ -252,13 +309,14 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                  <label htmlFor="modal-phone" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                     Contact Phone / WhatsApp *
                   </label>
                   <input
+                    id="modal-phone"
                     type="tel"
                     required
-                    placeholder="+91 98470 XXXXX"
+                    placeholder="+91 75103 XXXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
@@ -268,10 +326,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
               {/* OPTIONAL NOTE */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                <label htmlFor="modal-notes" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
                   Symptoms or Treatment Notes (Optional)
                 </label>
                 <textarea
+                  id="modal-notes"
                   rows={2}
                   placeholder="Describe any symptoms, previous treatments, or specific requests..."
                   value={message}
@@ -280,13 +339,35 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 />
               </div>
 
+              {/* ANTI-ABUSE HONEYPOT (HIDDEN) */}
+              <div className="hidden" aria-hidden="true">
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
+
+              {/* ERROR MESSAGE ALERT */}
+              {errorMessage && (
+                <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                  {errorMessage}
+                </div>
+              )}
+
               {/* ACTION BUTTONS */}
               <div className="pt-3 space-y-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-6 rounded-full bg-[#5B9DE6] hover:bg-blue-600 text-white font-bold text-sm shadow-lg shadow-sky-900/15 transition-all cursor-pointer"
+                  disabled={isSubmitting}
+                  className={`w-full py-3.5 px-6 rounded-full bg-[#5B9DE6] hover:bg-blue-600 text-white font-bold text-sm shadow-lg shadow-sky-900/15 transition-all cursor-pointer ${
+                    isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                  }`}
                 >
-                  Confirm Appointment Request
+                  {isSubmitting ? 'Submitting Appointment...' : 'Confirm Appointment Request'}
                 </button>
 
                 <button

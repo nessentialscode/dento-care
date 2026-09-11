@@ -201,7 +201,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
                 <MapPin size={11} className="text-slate-400" />
-                <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
+                <span>Ponnani Flagship • Mon–Sat 9AM–8PM</span>
               </div>
             </div>
           </div>
@@ -227,7 +227,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
                   />
                   <img
                     className="inline-block h-8 w-8 min-[390px]:h-9 min-[390px]:w-9 sm:h-10 sm:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
-                    src="/images/doctor-reed.jpg"
+                    src="/images/doctor-lijeesh.jpg"
                     alt="Doctor profile"
                   />
                 </span>

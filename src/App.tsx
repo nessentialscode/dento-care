@@ -39,7 +39,7 @@ export const App: React.FC = () => {
             el?.scrollIntoView({ behavior: 'smooth' });
           }
         }}
-        onDoctorClick={() => handleOpenBooking(undefined, 'Dr. Reed')}
+        onDoctorClick={() => handleOpenBooking(undefined, 'Dr. Lijeesh Kadambil')}
       />
 
       {/* 3. TREATMENTS & CLINICAL CARE */}
