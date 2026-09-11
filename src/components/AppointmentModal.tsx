@@ -12,6 +12,7 @@ interface AppointmentModalProps {
   initialService?: string;
   initialDoctor?: string;
   initialBranch?: string;
+  onPrivacyClick?: () => void;
 }
 
 export const AppointmentModal: React.FC<AppointmentModalProps> = ({
@@ -19,7 +20,8 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   onClose,
   initialService,
   initialDoctor,
-  initialBranch
+  initialBranch,
+  onPrivacyClick
 }) => {
   const [branch, setBranch] = useState(initialBranch || 'Dento Care — Ponnani Clinic');
   const [service, setService] = useState(initialService || 'Dental Implants');
@@ -380,6 +382,22 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 </button>
               </div>
 
+              <p className="text-center text-[11px] text-slate-500 pt-1">
+                By submitting, you agree to our{' '}
+                <a
+                  href="/privacy-policy"
+                  onClick={(e) => {
+                    if (onPrivacyClick) {
+                      e.preventDefault();
+                      handleClose();
+                      onPrivacyClick();
+                    }
+                  }}
+                  className="text-[#5B9DE6] hover:underline font-semibold"
+                >
+                  Privacy Policy
+                </a>.
+              </p>
             </form>
           )}
         </div>

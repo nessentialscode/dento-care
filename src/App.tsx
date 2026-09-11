@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HeroDesktop } from './components/HeroDesktop';
 import { EditorialGridSection } from './components/EditorialGridSection';
 import { ServicesSection } from './components/ServicesSection';
@@ -8,12 +8,34 @@ import { ReviewsSection } from './components/ReviewsSection';
 import { GallerySection } from './components/GallerySection';
 import { AppointmentModal } from './components/AppointmentModal';
 import { Footer } from './components/Footer';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 
 export const App: React.FC = () => {
+  const [currentPath, setCurrentPath] = useState(
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [modalService, setModalService] = useState<string | undefined>(undefined);
   const [modalDoctor, setModalDoctor] = useState<string | undefined>(undefined);
   const [modalBranch, setModalBranch] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateTo = (path: string) => {
+    if (path !== window.location.pathname) {
+      window.history.pushState({}, '', path);
+      setCurrentPath(path);
+    } else {
+      setCurrentPath(path);
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
 
   const handleOpenBooking = (service?: string, doctor?: string, branch?: string) => {
     setModalService(service);
@@ -21,6 +43,25 @@ export const App: React.FC = () => {
     setModalBranch(branch);
     setModalOpen(true);
   };
+
+  if (currentPath === '/privacy-policy') {
+    return (
+      <>
+        <PrivacyPolicyPage
+          onNavigateHome={() => navigateTo('/')}
+          onBookClick={() => handleOpenBooking()}
+        />
+        <AppointmentModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialService={modalService}
+          initialDoctor={modalDoctor}
+          initialBranch={modalBranch}
+          onPrivacyClick={() => navigateTo('/privacy-policy')}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#D8EEE1] text-slate-900 flex flex-col selection:bg-[#E5FE40] selection:text-slate-900">
@@ -64,7 +105,10 @@ export const App: React.FC = () => {
       <GallerySection />
 
       {/* 8. DARK LUXURY FOOTER */}
-      <Footer onBookClick={() => handleOpenBooking()} />
+      <Footer
+        onBookClick={() => handleOpenBooking()}
+        onPrivacyClick={() => navigateTo('/privacy-policy')}
+      />
 
       {/* INTERACTIVE APPOINTMENT MODAL */}
       <AppointmentModal
@@ -73,6 +117,7 @@ export const App: React.FC = () => {
         initialService={modalService}
         initialDoctor={modalDoctor}
         initialBranch={modalBranch}
+        onPrivacyClick={() => navigateTo('/privacy-policy')}
       />
     </div>
   );
