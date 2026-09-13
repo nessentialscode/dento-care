@@ -467,11 +467,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
             <button
               type="button"
               onClick={onNavigateHome}
-              title="View Public Website"
-              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+              title="Redirect to Public Website"
+              aria-label="Redirect to Public Website"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg border border-slate-200 transition-colors cursor-pointer"
             >
-              <ExternalLink size={14} />
-              <span>Public Website</span>
+              <ExternalLink size={14} className="text-blue-600" />
+              <span className="hidden sm:inline">Public Website</span>
+              <span className="sm:hidden text-[11px]">Site</span>
             </button>
 
             <button

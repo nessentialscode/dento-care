@@ -30,11 +30,11 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
             <Navbar onBookClick={onBookClick} />
 
             {/* HERO CONTENT AREA */}
-            <div className="relative z-10 px-6 sm:px-10 lg:px-12 xl:px-14 pt-2.5 sm:pt-3 lg:pt-3.5 pb-4 sm:pb-5 lg:pb-6 flex-grow flex flex-col justify-between">
+            <div className="relative z-10 px-6 sm:px-10 lg:px-12 xl:px-14 pt-2 sm:pt-2.5 lg:pt-3 pb-0 flex-grow flex flex-col justify-between min-h-0">
               
-              {/* TOP/LEFT: EDITORIAL HEADLINE & SUPPORTING COPY (Scaled up by ~1.1x to match 110% zoom richness at 100% screen) */}
-              <div className="relative z-20 max-w-xl lg:max-w-2xl xl:max-w-[800px] space-y-2.5 lg:space-y-3.5">
-                <h1 className="text-white text-[3rem] sm:text-[3.85rem] lg:text-[4.4rem] xl:text-[5.3rem] 2xl:text-[6.05rem] font-light tracking-[-0.035em] leading-[0.92] select-none">
+              {/* TOP/LEFT: EDITORIAL HEADLINE & SUPPORTING COPY (Tuned to exactly match 90% zoom reference at 100% zoom) */}
+              <div className="relative z-20 max-w-xl lg:max-w-2xl xl:max-w-[740px] space-y-2 lg:space-y-2.5">
+                <h1 className="text-white text-[2.75rem] sm:text-[3.4rem] lg:text-[3.9rem] xl:text-[4.7rem] 2xl:text-[5.35rem] font-light tracking-[-0.035em] leading-[0.92] select-none">
                   Restore<br />
                   Your True<br />
                   <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap">
@@ -43,17 +43,17 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                     <span className="inline-flex items-center align-middle my-1">
                       <span className="inline-flex -space-x-2 overflow-hidden p-0.5">
                         <img
-                          className="inline-block h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 xl:h-11 xl:w-11 rounded-full ring-2 ring-white object-cover shadow-md"
+                          className="inline-block h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
                           src="/images/hero-patient.jpg"
                           alt="Patient review"
                         />
                         <img
-                          className="inline-block h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 xl:h-11 xl:w-11 rounded-full ring-2 ring-white object-cover shadow-md"
+                          className="inline-block h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
                           src="/images/doctor-lijeesh.jpg"
                           alt="Doctor profile"
                         />
                       </span>
-                      <span className="ml-1 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs sm:text-[13px] font-semibold tracking-normal border border-white/30">
+                      <span className="ml-1 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs sm:text-[12px] font-semibold tracking-normal border border-white/30">
                         +2k
                       </span>
                     </span>
@@ -61,29 +61,28 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                 </h1>
 
                 {/* SUPPORTING TEXT */}
-                <p className="text-white/90 text-sm sm:text-[15px] lg:text-[16px] xl:text-[17px] font-normal max-w-lg leading-relaxed pt-1">
+                <p className="text-white/90 text-[13.5px] sm:text-[14px] lg:text-[15px] xl:text-[15.5px] font-normal max-w-md lg:max-w-lg leading-relaxed pt-1">
                   Using advanced technology, we deliver comprehensive treatments for a healthy, confident smile.
                 </p>
               </div>
 
-              {/* LOWER-LEFT COMPOSITION: INTEGRATED CELEBRATING PATIENT CUTOUT (Shifted slightly higher, clear of text above) */}
-              <div className="relative z-20 mt-auto flex items-end pb-1 sm:pb-2 lg:pb-2">
-                {/* Emerging joyous woman in blue sweater (Raised higher as requested, preserving comfortable spacing below text) */}
-                <div className="relative w-52 sm:w-64 md:w-72 lg:w-[315px] xl:w-[360px] 2xl:w-[395px] pointer-events-none select-none z-20 mb-4 sm:mb-5 lg:mb-6 ml-6 sm:ml-12 lg:ml-16 xl:ml-20">
+              {/* LOWER-LEFT COMPOSITION: INTEGRATED CELEBRATING PATIENT CUTOUT (Flushed to bottom edge of canvas, zero gap) */}
+              <div className="relative z-20 mt-auto flex items-end pb-0">
+                <div className="relative w-48 sm:w-56 md:w-64 lg:w-[280px] xl:w-[325px] 2xl:w-[355px] pointer-events-none select-none z-20 mb-0 ml-4 sm:ml-8 lg:ml-12 xl:ml-16">
                   <img
                     src="/images/hero-patient.png"
                     alt="Happy confident dental patient celebrating"
-                    className="w-full h-auto object-contain object-bottom drop-shadow-xl"
+                    className="w-full h-auto object-contain object-bottom drop-shadow-xl block -mb-px"
                   />
                 </div>
               </div>
 
-              {/* CENTER / RIGHT REGION: DOMINANT HERO DENTAL ARTWORK (Scaled up to reach near navbar and touch bottom edge) */}
-              <div className="mt-8 lg:mt-0 lg:absolute lg:right-1 xl:right-3 2xl:right-6 lg:bottom-2 xl:bottom-3 2xl:bottom-4 lg:w-[58%] xl:w-[62%] 2xl:w-[65%] lg:h-[91%] xl:h-[94%] 2xl:h-[96%] flex items-end justify-center lg:justify-end pointer-events-none z-10">
+              {/* CENTER / RIGHT REGION: DOMINANT HERO DENTAL ARTWORK (Flushed to bottom edge of canvas, zero gap) */}
+              <div className="mt-8 lg:mt-0 lg:absolute lg:right-1 xl:right-3 2xl:right-6 lg:top-14 xl:top-16 2xl:top-16 lg:bottom-0 xl:bottom-0 2xl:bottom-0 lg:w-[58%] xl:w-[61%] 2xl:w-[64%] flex items-end justify-center lg:justify-end pointer-events-none z-10">
                 <img
                   src="/images/hero-tooth-specialists.png"
                   alt="Precision dental implant crown crafted by specialist technicians"
-                  className="w-full h-full object-contain object-bottom drop-shadow-2xl"
+                  className="w-full h-full object-contain object-bottom drop-shadow-2xl block -mb-px"
                 />
               </div>
             </div>

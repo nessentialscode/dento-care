@@ -159,7 +159,7 @@ export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick 
                             : 'bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.7)]'
                         }`}
                       />
-                      <span>{isClinicActive ? 'ACTIVE' : 'INACTIVE'}</span>
+                      <span>{isClinicActive ? 'OPENED' : 'CLOSED'}</span>
                     </span>
                   </div>
 

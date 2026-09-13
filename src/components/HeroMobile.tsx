@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { CircularBookingCTA } from './CircularBookingCTA';
 import { ArrowUpRight, X, MessageCircle, ChevronRight, Phone, MapPin, ShieldCheck } from 'lucide-react';
 import { clinicInfo } from '../data/clinicInfo';
@@ -119,134 +120,140 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
           <div className="w-full h-[1px] bg-white/20" />
         </header>
 
-        {/* PROFESSIONAL MOBILE NAVIGATION DRAWER (Slide-over with backdrop blur, zero layout shift) */}
-        <div
-          className={`fixed inset-0 z-50 transition-all duration-300 ${
-            mobileMenuOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
-          }`}
-          aria-hidden={!mobileMenuOpen}
-        >
-          {/* Backdrop Overlay */}
-          <div
-            className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity"
-            onClick={() => setMobileMenuOpen(false)}
-            onTouchMove={(e) => e.preventDefault()}
-          />
+        {/* PROFESSIONAL MOBILE NAVIGATION DRAWER (Portaled to body, full viewport height, zero stacking issues) */}
+        {typeof document !== 'undefined' &&
+          createPortal(
+            <div
+              className={`fixed inset-0 z-[9999] transition-all duration-300 ${
+                mobileMenuOpen ? 'opacity-100 pointer-events-auto visible' : 'opacity-0 pointer-events-none invisible'
+              }`}
+              aria-hidden={!mobileMenuOpen}
+            >
+              {/* Backdrop Overlay covering entire viewport */}
+              <div
+                className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm transition-opacity"
+                onClick={() => setMobileMenuOpen(false)}
+                onTouchMove={(e) => e.preventDefault()}
+              />
 
-          {/* Slide-over White Drawer */}
-          <div
-            className={`absolute top-0 right-0 bottom-0 w-[86%] max-w-[340px] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-7 overflow-y-auto overscroll-contain transition-transform duration-300 ease-out ${
-              mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}
-          >
-            {/* Top Drawer Header & Navigation */}
-            <div>
-              {/* Header row: Brand + Close button */}
-              <div className="flex items-center justify-between pb-5 border-b border-slate-100">
-                <div className="flex items-center gap-2.5 select-none">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/80 flex items-center justify-center p-1.5 flex-shrink-0">
-                    <img
-                      src="/images/dento-care-icon.png"
-                      alt="Dento Care Icon"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div className="flex flex-col justify-center">
-                    <img
-                      src="/images/dento-care-text-blue.png"
-                      alt="DENTO CARE"
-                      className="h-[17px] w-auto object-contain select-none"
-                    />
-                    <span className="text-[8.5px] uppercase tracking-[0.22em] text-blue-600 font-bold leading-none mt-1 select-none">
-                      DENTAL CLINIC
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
-                  aria-label="Close navigation menu"
-                >
-                  <X size={18} strokeWidth={2.2} />
-                </button>
-              </div>
-
-              {/* Navigation Links */}
-              <nav className="py-5 flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="group flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/70 font-semibold text-[15px] transition-all"
-                  >
-                    <span>{link.label}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-medium text-slate-400 group-hover:text-blue-500 transition-colors">
-                        {link.note}
-                      </span>
-                      <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </a>
-                ))}
-              </nav>
-            </div>
-
-            {/* Bottom Drawer Actions */}
-            <div className="pt-4 border-t border-slate-100 space-y-3.5">
-              {/* Quick Contact buttons */}
-              <div className="grid grid-cols-2 gap-2">
-                <a
-                  href="tel:+917510355355"
-                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors"
-                >
-                  <Phone size={13} className="text-blue-600" />
-                  <span>Call Clinic</span>
-                </a>
-                <a
-                  href={`https://wa.me/${clinicInfo.whatsapp}?text=Hello%20Dento%20Care,%20I%20would%20like%20to%20consult%20with%20a%20dentist.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold border border-emerald-200 transition-colors"
-                >
-                  <MessageCircle size={13} className="text-emerald-600" />
-                  <span>WhatsApp</span>
-                </a>
-              </div>
-
-              {/* Primary Booking CTA */}
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onBookClick();
-                }}
-                className="w-full py-3.5 rounded-full bg-[#E5FE40] text-slate-900 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-lime-400/20 cursor-pointer hover:bg-lime-300 transition-all active:scale-[0.98]"
+              {/* Slide-over White Drawer spanning full 100dvh viewport height */}
+              <div
+                className={`fixed top-0 right-0 bottom-0 h-full h-[100dvh] max-h-[100dvh] w-[86%] max-w-[340px] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-7 overflow-y-auto overscroll-contain transition-transform duration-300 ease-out z-10 ${
+                  mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}
               >
-                <span>Book Appointment</span>
-                <ArrowUpRight size={17} strokeWidth={2.2} />
-              </button>
+                {/* Top Drawer Header & Navigation */}
+                <div>
+                  {/* Header row: Brand + Close button */}
+                  <div className="flex items-center justify-between pb-5 border-b border-slate-100">
+                    <div className="flex items-center gap-2.5 select-none">
+                      <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100/80 flex items-center justify-center p-1.5 flex-shrink-0">
+                        <img
+                          src="/images/dento-care-icon.png"
+                          alt="Dento Care Icon"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <img
+                          src="/images/dento-care-text-blue.png"
+                          alt="DENTO CARE"
+                          className="h-[17px] w-auto object-contain select-none"
+                        />
+                        <span className="text-[8.5px] uppercase tracking-[0.22em] text-blue-600 font-bold leading-none mt-1 select-none">
+                          DENTAL CLINIC
+                        </span>
+                      </div>
+                    </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5 px-1">
-                <div className="flex items-center gap-1">
-                  <MapPin size={11} className="text-slate-400" />
-                  <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
+                    <button
+                      type="button"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer"
+                      aria-label="Close navigation menu"
+                    >
+                      <X size={18} strokeWidth={2.2} />
+                    </button>
+                  </div>
+
+                  {/* Navigation Links */}
+                  <nav className="py-5 flex flex-col gap-1">
+                    {navLinks.map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="group flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/70 font-semibold text-[15px] transition-all"
+                      >
+                        <span>{link.label}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-medium text-slate-400 group-hover:text-blue-500 transition-colors">
+                            {link.note}
+                          </span>
+                          <ChevronRight size={16} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
+                        </div>
+                      </a>
+                    ))}
+                  </nav>
                 </div>
-                <a
-                  href="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="inline-flex items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors"
-                  title="Staff Portal"
-                >
-                  <ShieldCheck size={11} />
-                  <span>Staff</span>
-                </a>
+
+                {/* Bottom Drawer Actions */}
+                <div className="pt-4 border-t border-slate-100 space-y-3.5">
+                  {/* Quick Contact buttons */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href="tel:+917510355355"
+                      className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors"
+                    >
+                      <Phone size={13} className="text-blue-600" />
+                      <span>Call Clinic</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/${clinicInfo.whatsapp}?text=Hello%20Dento%20Care,%20I%20would%20like%20to%20consult%20with%20a%20dentist.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold border border-emerald-200 transition-colors"
+                    >
+                      <MessageCircle size={13} className="text-emerald-600" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
+
+                  {/* Primary Booking CTA */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onBookClick();
+                    }}
+                    className="w-full py-3.5 rounded-full bg-[#E5FE40] text-slate-900 font-bold text-sm text-center flex items-center justify-center gap-2 shadow-lg shadow-lime-400/20 cursor-pointer hover:bg-lime-300 transition-all active:scale-[0.98]"
+                  >
+                    <span>Book Appointment</span>
+                    <ArrowUpRight size={17} strokeWidth={2.2} />
+                  </button>
+
+                  {/* Bottom Clinic Info & Admin Entry */}
+                  <div className="pt-2 flex items-center justify-between gap-2 border-t border-slate-100/80">
+                    <div className="flex items-center gap-1 text-[11px] text-slate-400 min-w-0">
+                      <MapPin size={11} className="text-slate-400 flex-shrink-0" />
+                      <span className="truncate">Ponnani Flagship • Mon–Sat</span>
+                    </div>
+                    <a
+                      href="/admin"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-all active:scale-95 flex-shrink-0 cursor-pointer"
+                      title="Admin Portal"
+                      aria-label="Admin Portal"
+                    >
+                      <ShieldCheck size={13} className="text-[#E5FE40]" />
+                      <span>Admin</span>
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </div>,
+            document.body
+          )}
 
         {/* 2. GRAND EDITORIAL HEADLINE (Preserving line breaks, clean thin font style, significantly increased) */}
         <div className="px-5 sm:px-6 pt-3 min-[390px]:pt-4">
