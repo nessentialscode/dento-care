@@ -40,6 +40,9 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({
         return;
       }
 
+      // Leeway to ensure token iat is strictly <= PostgREST server clock
+      await new Promise((res) => setTimeout(res, 500));
+
       onSuccess();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : '';
@@ -47,6 +50,8 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({
         setError('Invalid administrator email or password. Please try again.');
       } else if (msg.includes('Email not confirmed')) {
         setError('Your email address has not been confirmed yet.');
+      } else if (msg.includes('JWT issued at future')) {
+        setError('Clock synchronization in progress. Please try logging in again.');
       } else {
         setError(msg || 'An authentication error occurred. Please verify your connection.');
       }

@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { executeAdminOperation } from './adminQueryHelper';
 
 export type FeedbackStatus = 'pending' | 'approved' | 'rejected';
 
@@ -67,17 +68,12 @@ export async function fetchApprovedFeedback(): Promise<FeedbackItem[]> {
  * Fetches all feedback for the Admin Portal.
  */
 export async function fetchAllFeedbackForAdmin(): Promise<FeedbackItem[]> {
-  const { data, error } = await supabase
-    .from('feedback')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching feedback for admin:', error);
-    throw new Error('Failed to load feedback records.');
-  }
-
-  return (data || []) as FeedbackItem[];
+  return executeAdminOperation<FeedbackItem[]>('Fetch feedback for admin', async () => {
+    return await supabase
+      .from('feedback')
+      .select('*')
+      .order('created_at', { ascending: false });
+  });
 }
 
 /**
@@ -87,20 +83,15 @@ export async function moderateFeedback(
   id: string,
   status: 'approved' | 'rejected'
 ): Promise<FeedbackItem> {
-  const { data, error } = await supabase
-    .from('feedback')
-    .update({
-      status,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error moderating feedback:', error);
-    throw new Error(error.message || 'Failed to moderate feedback.');
-  }
-
-  return data as FeedbackItem;
+  return executeAdminOperation<FeedbackItem>('Moderate feedback', async () => {
+    return await supabase
+      .from('feedback')
+      .update({
+        status,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+  });
 }

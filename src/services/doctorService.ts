@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { executeAdminOperation } from './adminQueryHelper';
 
 export interface DoctorRecord {
   id: string;
@@ -30,17 +31,12 @@ export async function fetchDoctorAvailability(): Promise<DoctorRecord[]> {
  * Fetches all doctor records for the admin portal.
  */
 export async function fetchAllDoctorsForAdmin(): Promise<DoctorRecord[]> {
-  const { data, error } = await supabase
-    .from('doctors')
-    .select('*')
-    .order('name', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching doctors for admin:', error);
-    throw new Error('Failed to fetch doctor management records.');
-  }
-
-  return (data || []) as DoctorRecord[];
+  return executeAdminOperation<DoctorRecord[]>('Fetch doctors for admin', async () => {
+    return await supabase
+      .from('doctors')
+      .select('*')
+      .order('name', { ascending: true });
+  });
 }
 
 /**
@@ -50,20 +46,15 @@ export async function updateDoctorPresence(
   id: string,
   is_present: boolean
 ): Promise<DoctorRecord> {
-  const { data, error } = await supabase
-    .from('doctors')
-    .update({
-      is_present,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error updating doctor presence:', error);
-    throw new Error(error.message || 'Failed to update doctor presence.');
-  }
-
-  return data as DoctorRecord;
+  return executeAdminOperation<DoctorRecord>('Update doctor presence', async () => {
+    return await supabase
+      .from('doctors')
+      .update({
+        is_present,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+  });
 }

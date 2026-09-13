@@ -51,6 +51,7 @@ import {
 import { clinicLocations } from '../data/locations';
 import { clinicDoctors } from '../data/doctors';
 import { clinicServices } from '../data/services';
+import { clearInvalidSession } from '../services/authService';
 
 interface AdminDashboardPageProps {
   adminEmail?: string;
@@ -815,13 +816,30 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 <p className="text-xs mt-1 text-red-700">{error}</p>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={loadData}
-              className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
-            >
-              Retry
-            </button>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                type="button"
+                onClick={loadData}
+                className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
+              >
+                Retry
+              </button>
+              {(error.toLowerCase().includes('jwt') ||
+                error.toLowerCase().includes('token') ||
+                error.toLowerCase().includes('session') ||
+                error.toLowerCase().includes('auth')) && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await clearInvalidSession();
+                    onLogout();
+                  }}
+                  className="px-3 py-1.5 bg-white hover:bg-red-50 text-red-700 border border-red-300 rounded-lg text-xs font-semibold shadow-sm transition-colors"
+                >
+                  Re-authenticate
+                </button>
+              )}
+            </div>
           </div>
         )}
 

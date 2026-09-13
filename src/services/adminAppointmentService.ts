@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { executeAdminOperation } from './adminQueryHelper';
 
 export type AppointmentStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
 
@@ -40,16 +41,12 @@ export interface DashboardMetrics {
  * Filtering and searching can be performed server-side or client-side.
  */
 export async function fetchAppointments(): Promise<Appointment[]> {
-  const { data, error } = await supabase
-    .from('appointments')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    throw new Error(error.message || 'Failed to fetch appointments from database.');
-  }
-
-  return (data as Appointment[]) || [];
+  return executeAdminOperation<Appointment[]>('Fetch appointments', async () => {
+    return await supabase
+      .from('appointments')
+      .select('*')
+      .order('created_at', { ascending: false });
+  });
 }
 
 /**
@@ -61,36 +58,49 @@ export async function updateAppointmentStatus(
   newStatus: AppointmentStatus,
   currentStatus?: AppointmentStatus
 ): Promise<Appointment> {
-  let query = supabase
-    .from('appointments')
-    .update({
-      status: newStatus,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id);
+  return executeAdminOperation<Appointment>('Update appointment status', async () => {
+    let query = supabase
+      .from('appointments')
+      .update({
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id);
 
-  if (currentStatus) {
-    query = query.eq('status', currentStatus);
-  }
-
-  const { data, error } = await query.select().single();
-
-  if (error) {
-    if (
-      error.code === 'PGRST116' ||
-      error.message?.includes('Invalid appointment status transition') ||
-      error.message?.includes('check_violation')
-    ) {
-      throw new Error('This appointment status has already changed. Please refresh and try again.');
+    if (currentStatus) {
+      query = query.eq('status', currentStatus);
     }
-    throw new Error(error.message || `Failed to update appointment status to ${newStatus}.`);
-  }
 
-  if (!data) {
-    throw new Error('This appointment status has already changed. Please refresh and try again.');
-  }
+    const { data, error } = await query.select().single();
 
-  return data as Appointment;
+    if (error) {
+      if (
+        error.code === 'PGRST116' ||
+        error.message?.includes('Invalid appointment status transition') ||
+        error.message?.includes('check_violation')
+      ) {
+        return {
+          data: null,
+          error: {
+            message: 'This appointment status has already changed. Please refresh and try again.',
+            code: error.code,
+          },
+        };
+      }
+      return { data: null, error };
+    }
+
+    if (!data) {
+      return {
+        data: null,
+        error: {
+          message: 'This appointment status has already changed. Please refresh and try again.',
+        },
+      };
+    }
+
+    return { data: data as Appointment, error: null };
+  });
 }
 
 /**

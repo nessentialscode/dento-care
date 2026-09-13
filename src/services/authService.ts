@@ -45,11 +45,48 @@ export async function signOutAdmin(): Promise<void> {
 }
 
 /**
+ * Safely clears any invalid or corrupted session from Supabase storage.
+ */
+export async function clearInvalidSession(): Promise<void> {
+  try {
+    await supabase.auth.signOut();
+  } catch {
+    // ignore signout errors
+  }
+  if (typeof window !== 'undefined') {
+    try {
+      for (const key of Object.keys(localStorage)) {
+        if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+          localStorage.removeItem(key);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+}
+
+/**
+ * Refreshes the current administrator session with Supabase Auth to obtain a fresh JWT.
+ */
+export async function refreshAdminSession(): Promise<Session | null> {
+  try {
+    const { data, error } = await supabase.auth.refreshSession();
+    if (error) {
+      return null;
+    }
+    return data.session;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Retrieves the current session, if one exists.
  */
 export async function getAdminSession(): Promise<Session | null> {
   const { data, error } = await supabase.auth.getSession();
-  if (error) {
+  if (error || !data.session) {
     return null;
   }
   return data.session;

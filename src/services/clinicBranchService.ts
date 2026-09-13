@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+import { executeAdminOperation } from './adminQueryHelper';
 
 export interface ClinicBranch {
   id: string;
@@ -32,16 +33,12 @@ export async function fetchActiveClinicBranches(): Promise<ClinicBranch[]> {
  * Requires authenticated administrator session (enforced by RLS).
  */
 export async function fetchAllClinicBranchesForAdmin(): Promise<ClinicBranch[]> {
-  const { data, error } = await supabase
-    .from('clinic_branches')
-    .select('*')
-    .order('name', { ascending: true });
-
-  if (error) {
-    throw new Error(error.message || 'Failed to fetch clinic branches.');
-  }
-
-  return (data as ClinicBranch[]) || [];
+  return executeAdminOperation<ClinicBranch[]>('Fetch clinic branches for admin', async () => {
+    return await supabase
+      .from('clinic_branches')
+      .select('*')
+      .order('name', { ascending: true });
+  });
 }
 
 /**
@@ -52,19 +49,15 @@ export async function updateClinicBranchAvailability(
   id: string,
   isActive: boolean
 ): Promise<ClinicBranch> {
-  const { data, error } = await supabase
-    .from('clinic_branches')
-    .update({
-      is_active: isActive,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('id', id)
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message || `Failed to update branch availability.`);
-  }
-
-  return data as ClinicBranch;
+  return executeAdminOperation<ClinicBranch>('Update clinic branch availability', async () => {
+    return await supabase
+      .from('clinic_branches')
+      .update({
+        is_active: isActive,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+  });
 }
