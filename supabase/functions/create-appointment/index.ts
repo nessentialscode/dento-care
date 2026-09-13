@@ -140,6 +140,44 @@ function isValidDate(dateStr: string): boolean {
 }
 
 /**
+ * Checks if a YYYY-MM-DD date string falls on a Sunday.
+ * Official clinic hours are Monday-Saturday (Sunday: Closed).
+ */
+function isSundayDate(dateStr: string): boolean {
+  const [yearStr, monthStr, dayStr] = dateStr.split("-");
+  const year = parseInt(yearStr, 10);
+  const month = parseInt(monthStr, 10);
+  const day = parseInt(dayStr, 10);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCDay() === 0;
+}
+
+// In-isolate sliding window rate limiter (anti-spam protection)
+const ipRequestHistory = new Map<string, number[]>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 60 seconds
+const MAX_REQUESTS_PER_WINDOW = 5;
+
+function isRateLimited(clientIp: string): boolean {
+  if (!clientIp) return false;
+  const now = Date.now();
+  const timestamps = ipRequestHistory.get(clientIp) || [];
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  if (recent.length >= MAX_REQUESTS_PER_WINDOW) {
+    return true;
+  }
+  recent.push(now);
+  ipRequestHistory.set(clientIp, recent);
+  if (ipRequestHistory.size > 1000) {
+    for (const [k, v] of ipRequestHistory.entries()) {
+      if (v.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) {
+        ipRequestHistory.delete(k);
+      }
+    }
+  }
+  return false;
+}
+
+/**
  * Validates preferred appointment time slot against the approved clinic time slots.
  */
 function isValidTimeSlot(timeStr: string): boolean {
@@ -282,6 +320,20 @@ Deno.serve(async (req: Request) => {
       405,
       origin,
       { Allow: "POST, OPTIONS" }
+    );
+  }
+
+  // Anti-abuse rate limiting (5 requests/minute per client IP)
+  const clientIp = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
+  if (clientIp && isRateLimited(clientIp)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Too many appointment requests. Please try again in a few minutes or book via WhatsApp.",
+      },
+      429,
+      origin,
+      { "Retry-After": "60" }
     );
   }
 
@@ -586,6 +638,18 @@ Deno.serve(async (req: Request) => {
       {
         success: false,
         error: "Preferred appointment date is required in YYYY-MM-DD format.",
+      },
+      400,
+      origin
+    );
+  }
+
+  // Clinic Sunday closure enforcement (Monday-Saturday: 10:00 AM - 7:00 PM, Sunday: Closed)
+  if (isSundayDate(rawDate)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "The clinic is closed on Sundays. Please select Monday–Saturday.",
       },
       400,
       origin

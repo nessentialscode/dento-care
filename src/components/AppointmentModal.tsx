@@ -44,15 +44,33 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const [honeypot, setHoneypot] = useState('');
   const [consentGiven, setConsentGiven] = useState(false);
   const [consentError, setConsentError] = useState(false);
+  const [dateError, setDateError] = useState<string | null>(null);
+
+  const triggerRef = React.useRef<HTMLElement | null>(null);
+  const modalCardRef = React.useRef<HTMLDivElement | null>(null);
+
+  // Helper to determine if a date string is Sunday
+  const isSunday = (dateStr: string): boolean => {
+    if (!dateStr) return false;
+    const [y, m, d] = dateStr.split('-').map(Number);
+    if (!y || !m || !d) return false;
+    const dateObj = new Date(y, m - 1, d);
+    return dateObj.getDay() === 0;
+  };
 
   const handleClose = React.useCallback(() => {
     setSubmitted(false);
     setIsSubmitting(false);
     setErrorMessage(null);
+    setDateError(null);
     setHoneypot('');
     setConsentGiven(false);
     setConsentError(false);
     onClose();
+    // Return focus to triggering element
+    setTimeout(() => {
+      triggerRef.current?.focus();
+    }, 0);
   }, [onClose]);
 
   const [prevProps, setPrevProps] = useState({ initialService, initialDoctor, initialBranch, isOpen });
@@ -68,6 +86,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       setSubmitted(false);
       setIsSubmitting(false);
       setErrorMessage(null);
+      setDateError(null);
       setHoneypot('');
       setConsentGiven(false);
       setConsentError(false);
@@ -77,21 +96,69 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     if (initialBranch) setBranch(initialBranch);
   }
 
-  // Lock body scroll and handle Escape key when modal is open
+  // Capture active trigger element on open
   useEffect(() => {
+    if (isOpen) {
+      triggerRef.current = document.activeElement as HTMLElement | null;
+    }
+  }, [isOpen]);
+
+  // Lock body scroll, trap focus, and handle Escape key when modal is open
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Focus the first interactive element inside the modal on open
+    const focusTimer = setTimeout(() => {
+      if (modalCardRef.current) {
+        const focusables = Array.from(
+          modalCardRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+        if (focusables.length > 0) {
+          focusables[0].focus();
+        }
+      }
+    }, 50);
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         handleClose();
+        return;
+      }
+
+      // Keyboard focus trap inside modal
+      if (e.key === 'Tab' && modalCardRef.current) {
+        const focusables = Array.from(
+          modalCardRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetParent !== null);
+
+        if (focusables.length === 0) return;
+
+        const firstEl = focusables[0];
+        const lastEl = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstEl) {
+            e.preventDefault();
+            lastEl.focus();
+          }
+        } else {
+          if (document.activeElement === lastEl) {
+            e.preventDefault();
+            firstEl.focus();
+          }
+        }
       }
     };
 
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
+      clearTimeout(focusTimer);
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
@@ -161,6 +228,14 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     e.preventDefault();
     setErrorMessage(null);
 
+    // Validate Sunday closure
+    if (isSunday(preferredDate)) {
+      const sundayMsg = 'The clinic is closed on Sundays. Please select Monday–Saturday.';
+      setDateError(sundayMsg);
+      setErrorMessage(sundayMsg);
+      return;
+    }
+
     if (!consentGiven) {
       setConsentError(true);
       return;
@@ -215,7 +290,13 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       />
 
       {/* MODAL CARD */}
-      <div className="relative w-full max-w-2xl bg-white rounded-[36px] sm:rounded-[44px] shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 border border-sky-100">
+      <div
+        ref={modalCardRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        className="relative w-full max-w-2xl bg-white rounded-[36px] sm:rounded-[44px] shadow-2xl overflow-hidden z-10 animate-in fade-in zoom-in-95 duration-200 border border-sky-100"
+      >
         
         {/* TOP HEADER */}
         <div className="bg-[#5B9DE6] p-6 sm:p-8 text-white relative">
@@ -233,7 +314,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
             <span>Schedule Consultation</span>
           </div>
 
-          <h3 className="text-2xl sm:text-4xl font-light tracking-tight text-white">
+          <h3 id="modal-title" className="text-2xl sm:text-4xl font-light tracking-tight text-white">
             Book Your Dental Visit
           </h3>
           <p className="text-white/85 text-xs sm:text-sm mt-1 max-w-md">
@@ -389,9 +470,23 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                     required
                     min={new Date().toISOString().split('T')[0]}
                     value={preferredDate}
-                    onChange={(e) => setPreferredDate(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (isSunday(val)) {
+                        setDateError('The clinic is closed on Sundays. Please select Monday–Saturday.');
+                        setPreferredDate('');
+                      } else {
+                        setDateError(null);
+                        setPreferredDate(val);
+                      }
+                    }}
                     className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                   />
+                  {dateError && (
+                    <p role="alert" className="text-xs font-semibold text-rose-600 mt-1">
+                      {dateError}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="modal-time" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dentocaredental.com/sitemap.xml
+Sitemap: https://dentocareofficial.com/sitemap.xml

@@ -13,6 +13,7 @@ import { TermsOfUsePage } from './pages/TermsOfUsePage';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 import { getAdminSession, onAdminAuthStateChange, isAuthorizedAdmin, signOutAdmin } from './services/authService';
 import type { Session } from '@supabase/supabase-js';
 import { ShieldAlert, RefreshCw, ArrowLeft, LogOut } from 'lucide-react';
@@ -205,11 +206,14 @@ export const App: React.FC = () => {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#D8EEE1] text-slate-900 flex flex-col selection:bg-[#E5FE40] selection:text-slate-900">
-      
-      {/* 1. HERO DESKTOP / MAIN CANVAS (Faithful to Reference Image 1) */}
-      <HeroDesktop onBookClick={() => handleOpenBooking()} />
+  const isHomeRoute = currentPath === '/' || currentPath === '' || currentPath === '/index.html';
+
+  if (isHomeRoute) {
+    return (
+      <div className="min-h-screen bg-[#D8EEE1] text-slate-900 flex flex-col selection:bg-[#E5FE40] selection:text-slate-900">
+        
+        {/* 1. HERO DESKTOP / MAIN CANVAS (Faithful to Reference Image 1) */}
+        <HeroDesktop onBookClick={() => handleOpenBooking()} />
 
       {/* 2. EDITORIAL GRID & MOBILE LAYOUT SECTION (Faithful to Reference Image 2) */}
       <EditorialGridSection
@@ -253,7 +257,26 @@ export const App: React.FC = () => {
         onTermsClick={() => navigateTo('/terms')}
       />
 
-      {/* INTERACTIVE APPOINTMENT MODAL */}
+        {/* INTERACTIVE APPOINTMENT MODAL */}
+        <AppointmentModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialService={modalService}
+          initialDoctor={modalDoctor}
+          initialBranch={modalBranch}
+          onPrivacyClick={() => navigateTo('/privacy-policy')}
+        />
+      </div>
+    );
+  }
+
+  // 404 ROUTE HANDLER FOR UNKNOWN PATHS
+  return (
+    <>
+      <NotFoundPage
+        onNavigateHome={() => navigateTo('/')}
+        onBookClick={() => handleOpenBooking()}
+      />
       <AppointmentModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -262,7 +285,7 @@ export const App: React.FC = () => {
         initialBranch={modalBranch}
         onPrivacyClick={() => navigateTo('/privacy-policy')}
       />
-    </div>
+    </>
   );
 };
 

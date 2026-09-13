@@ -124,7 +124,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@dentocaredental.com"
+                  placeholder="admin@dentocareofficial.com"
                   disabled={loading}
                   className="w-full pl-10 pr-4 py-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5B9DE6] focus:bg-white transition-all text-slate-900 placeholder:text-slate-400 disabled:opacity-60"
                 />

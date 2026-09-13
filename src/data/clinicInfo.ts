@@ -23,7 +23,7 @@ export const clinicInfo: ClinicInfo = {
   loyalPatientsPercent: 98,
   phone: "+91 7510355355",
   whatsapp: "917510355355",
-  email: "care@dentocaredental.com",
+  email: "dentocareponnani@gmail.com",
   mainAddress: "KK Junction, near ISS School, Ponnani, Kerala",
   workingHours: "Mon – Sat: 10:00 AM – 7:00 PM | Sunday: Closed",
 };

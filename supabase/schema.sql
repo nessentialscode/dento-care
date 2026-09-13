@@ -60,7 +60,10 @@ WITH CHECK (
 -- Terminal states: completed, cancelled.
 
 CREATE OR REPLACE FUNCTION public.enforce_appointment_status_transition()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+SET search_path = public, pg_temp
+LANGUAGE plpgsql
+AS $$
 BEGIN
   -- Validate only when status is modified
   IF OLD.status IS DISTINCT FROM NEW.status THEN
@@ -91,7 +94,7 @@ BEGIN
   NEW.updated_at = now();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 DROP TRIGGER IF EXISTS trg_enforce_appointment_status_transition ON public.appointments;
 
