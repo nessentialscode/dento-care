@@ -119,19 +119,19 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
             <div
               ref={scrollRef}
               onScroll={handleScroll}
-              className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none w-full p-2 -m-2"
+              className="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none w-full p-2 -m-2"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {carouselDoctors.map((doc: DoctorProfile) => (
                 <div
                   key={doc.id}
-                  className="w-full flex-shrink-0 snap-center px-1"
+                  className="w-full flex-shrink-0 snap-center px-1 flex flex-col"
                 >
                     <div
-                      className="relative rounded-[34px] sm:rounded-[44px] overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-xl group hover:shadow-2xl bg-white text-slate-800 border border-slate-200 shadow-slate-900/5"
+                      className="relative rounded-[34px] sm:rounded-[44px] overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-xl group hover:shadow-2xl bg-white text-slate-800 border border-slate-200 shadow-slate-900/5 h-full flex-grow"
                     >
                       {/* DOCTOR IMAGE HEADER */}
-                      <div className="relative w-full h-72 sm:h-80 overflow-hidden bg-slate-100">
+                      <div className="relative w-full h-72 sm:h-80 overflow-hidden bg-slate-100 flex-shrink-0">
                         <img
                           src={doc.image}
                           alt={doc.name}
@@ -154,42 +154,42 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
 
                       {/* DOCTOR DETAILS */}
                       <div className="p-6 sm:p-8 flex flex-col justify-between flex-grow">
-                        <div>
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                        <div className="flex flex-col flex-grow">
+                          <div className="flex items-center justify-between gap-2 mb-1.5 min-h-[1.5rem]">
+                            <span className="text-xs font-bold uppercase tracking-wider text-sky-600 line-clamp-1">
                               {doc.specialization}
                             </span>
                             <span
-                              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 ${
                                 isDocPresent(doc.name)
                                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
-                                  : 'bg-slate-100 text-slate-500 border border-slate-200'
+                                  : 'bg-rose-50 text-rose-700 border border-rose-200/80'
                               }`}
                             >
                               <span
                                 className={`w-1.5 h-1.5 rounded-full ${
-                                  isDocPresent(doc.name) ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                                  isDocPresent(doc.name) ? 'bg-emerald-500' : 'bg-rose-500'
                                 }`}
                               />
-                              <span>{isDocPresent(doc.name) ? '● Present' : '○ Absent'}</span>
+                              <span>{isDocPresent(doc.name) ? 'Present' : 'Absent'}</span>
                             </span>
                           </div>
 
-                          <h3 className="text-2xl sm:text-3xl font-light tracking-tight mb-2 text-slate-900">
+                          <h3 className="text-2xl sm:text-3xl font-light tracking-tight mb-2 text-slate-900 min-h-[2rem] sm:min-h-[2.25rem] flex items-center">
                             {doc.name}
                           </h3>
 
-                          <p className="text-xs font-semibold mb-3 text-slate-500">
+                          <p className="text-xs font-semibold mb-3 text-slate-500 min-h-[2rem] flex items-center">
                             {doc.degrees && doc.experience ? `${doc.degrees} • ${doc.experience}` : (doc.degrees || doc.experience)}
                           </p>
 
-                          <p className="text-xs sm:text-sm leading-relaxed mb-6 text-slate-600">
+                          <p className="text-xs sm:text-sm leading-relaxed mb-6 text-slate-600 flex-grow min-h-[4.5rem]">
                             {doc.bio}
                           </p>
                         </div>
 
                         {/* ACTION CTA */}
-                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto flex-shrink-0">
                           <div className="flex items-center gap-1.5 text-xs font-medium">
                             <ShieldCheck size={16} className="text-blue-500" />
                             <span className="text-slate-600">Verified Specialist</span>
@@ -261,14 +261,14 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
         </div>
 
         {/* DESKTOP: PROFESSIONAL 2-GRID LAYOUT (Side-by-side) */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-8 xl:gap-10 max-w-[1060px] xl:max-w-[1140px] mx-auto">
+        <div className="hidden lg:grid lg:grid-cols-2 gap-8 xl:gap-10 max-w-[1060px] xl:max-w-[1140px] mx-auto items-stretch">
           {carouselDoctors.map((doc: DoctorProfile) => (
             <div
               key={`desktop-${doc.id}`}
               className="relative rounded-[38px] xl:rounded-[44px] overflow-hidden flex flex-col justify-between transition-all duration-300 shadow-xl group hover:shadow-2xl hover:-translate-y-1.5 bg-white text-slate-800 border border-slate-200/80 shadow-slate-900/5 h-full"
             >
               {/* DOCTOR IMAGE HEADER */}
-              <div className="relative w-full h-80 xl:h-88 overflow-hidden bg-slate-100">
+              <div className="relative w-full h-80 xl:h-88 overflow-hidden bg-slate-100 flex-shrink-0">
                 <img
                   src={doc.image}
                   alt={doc.name}
@@ -291,42 +291,42 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
 
               {/* DOCTOR DETAILS */}
               <div className="p-7 xl:p-8 flex flex-col justify-between flex-grow">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                <div className="flex flex-col flex-grow">
+                  <div className="flex items-center justify-between gap-2 mb-1.5 min-h-[1.5rem]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-sky-600 line-clamp-1">
                       {doc.specialization}
                     </span>
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold flex-shrink-0 ${
                         isDocPresent(doc.name)
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
-                          : 'bg-slate-100 text-slate-500 border border-slate-200'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200/80'
                       }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full ${
-                          isDocPresent(doc.name) ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                          isDocPresent(doc.name) ? 'bg-emerald-500' : 'bg-rose-500'
                         }`}
                       />
-                      <span>{isDocPresent(doc.name) ? '● Present' : '○ Absent'}</span>
+                      <span>{isDocPresent(doc.name) ? 'Present' : 'Absent'}</span>
                     </span>
                   </div>
 
-                  <h3 className="text-2xl xl:text-3xl font-light tracking-tight mb-2 text-slate-900">
+                  <h3 className="text-2xl xl:text-3xl font-light tracking-tight mb-2 text-slate-900 min-h-[2.25rem] flex items-center">
                     {doc.name}
                   </h3>
 
-                  <p className="text-xs font-semibold mb-3 text-slate-500">
+                  <p className="text-xs font-semibold mb-3 text-slate-500 min-h-[2rem] flex items-center">
                     {doc.degrees && doc.experience ? `${doc.degrees} • ${doc.experience}` : (doc.degrees || doc.experience)}
                   </p>
 
-                  <p className="text-xs sm:text-sm leading-relaxed mb-6 text-slate-600">
+                  <p className="text-xs sm:text-sm leading-relaxed mb-6 text-slate-600 flex-grow min-h-[4.5rem]">
                     {doc.bio}
                   </p>
                 </div>
 
                 {/* ACTION CTA */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto">
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between mt-auto flex-shrink-0">
                   <div className="flex items-center gap-1.5 text-xs font-medium">
                     <ShieldCheck size={16} className="text-blue-500" />
                     <span className="text-slate-600">Verified Specialist</span>

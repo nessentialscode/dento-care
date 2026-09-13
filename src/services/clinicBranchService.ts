@@ -29,6 +29,24 @@ export async function fetchActiveClinicBranches(): Promise<ClinicBranch[]> {
 }
 
 /**
+ * Fetches all clinic branches with their active status for public card display.
+ * Accessible to public anon client to show real-time ACTIVE / INACTIVE status badges.
+ */
+export async function fetchAllClinicBranchesPublic(): Promise<ClinicBranch[]> {
+  const { data, error } = await supabase
+    .from('clinic_branches')
+    .select('id, name, location, is_active, created_at, updated_at')
+    .order('name', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching public clinic branches:', error);
+    throw new Error(error.message || 'Failed to fetch clinic branches.');
+  }
+
+  return (data as ClinicBranch[]) || [];
+}
+
+/**
  * Fetches all clinic branches (both active and inactive) for administrative management.
  * Requires authenticated administrator session (enforced by RLS).
  */

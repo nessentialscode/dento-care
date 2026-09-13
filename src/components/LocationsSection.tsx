@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MapPin,
   Phone,
@@ -17,7 +17,8 @@ import {
   X,
 } from 'lucide-react';
 import { clinicLocations, type ClinicLocation } from '../data/locations';
-import { fetchActiveClinicBranches } from '../services/clinicBranchService';
+import { fetchActiveClinicBranches, fetchAllClinicBranchesPublic, type ClinicBranch } from '../services/clinicBranchService';
+import { supabase } from '../services/supabaseClient';
 
 interface LocationsSectionProps {
   onBookClick: (branch?: string) => void;
@@ -26,6 +27,55 @@ interface LocationsSectionProps {
 export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick }) => {
   const [checkingBranchId, setCheckingBranchId] = useState<string | null>(null);
   const [inactiveAlertBranchId, setInactiveAlertBranchId] = useState<string | null>(null);
+  const [branchesData, setBranchesData] = useState<ClinicBranch[]>([]);
+
+  // Load public clinic branches with active status and subscribe to live changes
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadBranches = async () => {
+      try {
+        const branches = await fetchAllClinicBranchesPublic();
+        if (isMounted) {
+          setBranchesData(branches);
+        }
+      } catch (err) {
+        console.warn('Could not fetch clinic branches status:', err);
+      }
+    };
+
+    loadBranches();
+
+    // Subscribe to clinic branch updates so admin active/inactive changes reflect instantly
+    const channel = supabase
+      .channel('public:clinic_branches_status')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'clinic_branches' },
+        () => {
+          loadBranches();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const getBranchIsActive = (location: ClinicLocation): boolean => {
+    if (branchesData.length === 0) {
+      // Default to active while initial load happens if static status says active
+      return location.status === 'active';
+    }
+    const matched = branchesData.find(
+      (b) =>
+        b.name.toLowerCase().includes(location.shortName.toLowerCase()) ||
+        location.name.toLowerCase().includes(b.name.toLowerCase())
+    );
+    return matched ? matched.is_active : true;
+  };
 
   const handleClinicBook = async (location: ClinicLocation) => {
     setCheckingBranchId(location.id);
@@ -77,6 +127,7 @@ export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick 
         {/* LOCATIONS GRID (2 COLUMNS) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {clinicLocations.map((location) => {
+            const isClinicActive = getBranchIsActive(location);
             return (
               <div
                 key={location.id}
@@ -86,30 +137,49 @@ export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick 
                 <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-sky-400/20 rounded-full blur-3xl pointer-events-none" />
 
-                {/* TOP TAG, RATING & BADGE */}
+                {/* TOP ROW: TAG & CORNER ACTIVE/INACTIVE STATUS PILL */}
                 <div className="relative z-10">
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
+                  <div className="flex items-center justify-between gap-3 mb-4">
                     <span className="text-xs font-bold tracking-widest px-3.5 py-1.5 rounded-full bg-[#E5FE40] text-slate-900 shadow-sm">
                       [ {location.tag} ]
                     </span>
 
-                    <div className="flex items-center gap-2">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
-                        <Star size={13} className="fill-amber-300 text-amber-300" />
-                        <span>{location.rating}</span>
-                        <span className="text-white/70">({location.reviewsCount})</span>
-                      </div>
-
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20">
-                        {location.badge}
-                      </span>
-                    </div>
+                    {/* Compact real-time clinic status pill */}
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide shadow-sm transition-colors ${
+                        isClinicActive
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-rose-50 text-rose-700 border border-rose-200'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isClinicActive
+                            ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)]'
+                            : 'bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.7)]'
+                        }`}
+                      />
+                      <span>{isClinicActive ? 'ACTIVE' : 'INACTIVE'}</span>
+                    </span>
                   </div>
 
-                  {/* BRANCH TITLE */}
+                  {/* BRANCH TITLE / LOCATION LINE */}
                   <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-white mb-2 leading-tight">
                     {location.name}
                   </h3>
+
+                  {/* RATING & BADGE PILLS (MATCHING VELIYANCODE STRUCTURE) */}
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
+                      <Star size={13} className="fill-amber-300 text-amber-300" />
+                      <span>{location.rating}</span>
+                      <span className="text-white/70">({location.reviewsCount})</span>
+                    </div>
+
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/20">
+                      {location.badge}
+                    </span>
+                  </div>
 
                   {/* LOCATED IN CHIP (IF APPLICABLE) */}
                   {location.locatedIn && (

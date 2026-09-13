@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CircularBookingCTA } from './CircularBookingCTA';
-import { ArrowUpRight, X, MessageCircle, ChevronRight, Phone, MapPin } from 'lucide-react';
+import { ArrowUpRight, X, MessageCircle, ChevronRight, Phone, MapPin, ShieldCheck } from 'lucide-react';
 import { clinicInfo } from '../data/clinicInfo';
 
 interface HeroMobileProps {
@@ -10,7 +10,7 @@ interface HeroMobileProps {
 export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Lock body scroll and handle Escape key when mobile menu is open
+  // Lock body/page scroll completely and handle Escape key when mobile menu is open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -19,13 +19,42 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
     };
 
     if (mobileMenuOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
     } else {
+      const topStr = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (topStr) {
+        const scrollY = parseInt(topStr || '0', 10) * -1;
+        window.scrollTo(0, scrollY);
+      }
     }
     return () => {
+      const topStr = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (topStr) {
+        const scrollY = parseInt(topStr || '0', 10) * -1;
+        window.scrollTo(0, scrollY);
+      }
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [mobileMenuOpen]);
@@ -101,11 +130,12 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
           <div
             className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm transition-opacity"
             onClick={() => setMobileMenuOpen(false)}
+            onTouchMove={(e) => e.preventDefault()}
           />
 
           {/* Slide-over White Drawer */}
           <div
-            className={`absolute top-0 right-0 bottom-0 w-[86%] max-w-[340px] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-7 overflow-y-auto transition-transform duration-300 ease-out ${
+            className={`absolute top-0 right-0 bottom-0 w-[86%] max-w-[340px] bg-white text-slate-900 shadow-2xl flex flex-col justify-between p-6 sm:p-7 overflow-y-auto overscroll-contain transition-transform duration-300 ease-out ${
               mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
           >
@@ -199,9 +229,20 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
                 <ArrowUpRight size={17} strokeWidth={2.2} />
               </button>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
-                <MapPin size={11} className="text-slate-400" />
-                <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5 px-1">
+                <div className="flex items-center gap-1">
+                  <MapPin size={11} className="text-slate-400" />
+                  <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
+                </div>
+                <a
+                  href="/admin"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="inline-flex items-center gap-1 text-slate-400 hover:text-slate-600 transition-colors"
+                  title="Staff Portal"
+                >
+                  <ShieldCheck size={11} />
+                  <span>Staff</span>
+                </a>
               </div>
             </div>
           </div>
