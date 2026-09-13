@@ -1,12 +1,55 @@
-import React from 'react';
-import { Star, CheckCircle, Quote } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, CheckCircle, Quote, Plus } from 'lucide-react';
 import { clinicReviews, reviewStats } from '../data/reviews';
+import { fetchApprovedFeedback, type FeedbackItem } from '../services/feedbackService';
 
-export const ReviewsSection: React.FC = () => {
+interface ReviewsSectionProps {
+  onNavigateFeedback?: () => void;
+}
+
+export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ onNavigateFeedback }) => {
+  const [approvedFeedback, setApprovedFeedback] = useState<FeedbackItem[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+    fetchApprovedFeedback()
+      .then((items) => {
+        if (mounted) setApprovedFeedback(items);
+      })
+      .catch((err) => {
+        console.error('Failed to load approved feedback:', err);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <section id="reviews" className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-20">
       <div className="max-w-[1520px] mx-auto">
         
+        {/* SECTION HEADER & ADD FEEDBACK CTA */}
+        <div className="px-4 mb-8 sm:mb-12 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]" />
+            <h2
+              onClick={onNavigateFeedback}
+              className="text-2xl sm:text-4xl font-light tracking-tight text-slate-900 cursor-pointer hover:text-slate-700 transition-colors"
+            >
+              Patient Feedback
+            </h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={onNavigateFeedback}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200 text-xs font-bold shadow-sm transition-all cursor-pointer group"
+          >
+            <Plus size={14} className="text-[#3B82F6] group-hover:text-[#E5FE40] transition-colors" />
+            <span>Add Feedback</span>
+          </button>
+        </div>
+
         {/* OVERALL RATING BANNER */}
         <div className="bg-[#5B9DE6] rounded-[34px] sm:rounded-[48px] p-8 sm:p-14 mb-10 sm:mb-16 text-white shadow-2xl shadow-sky-900/15 relative overflow-hidden">
           
@@ -55,7 +98,7 @@ export const ReviewsSection: React.FC = () => {
 
         </div>
 
-        {/* ADDITIONAL VERIFIED REVIEWS GRID */}
+        {/* REVIEWS GRID (Curated + Approved Patient Submissions) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {clinicReviews.slice(1).map((rev) => (
             <div
@@ -84,6 +127,41 @@ export const ReviewsSection: React.FC = () => {
                 </div>
                 <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
                   Verified
+                </span>
+              </div>
+            </div>
+          ))}
+
+          {/* DYNAMIC APPROVED SUBMISSIONS */}
+          {approvedFeedback.map((fb) => (
+            <div
+              key={fb.id}
+              className="bg-white rounded-[30px] p-7 shadow-lg shadow-slate-900/5 border border-sky-100 flex flex-col justify-between hover:shadow-xl transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-1 text-amber-400">
+                    {[...Array(fb.rating)].map((_, i) => (
+                      <Star key={i} size={16} className="fill-amber-400" />
+                    ))}
+                  </div>
+                  <span className="text-[11px] text-slate-400 font-medium">Recent</span>
+                </div>
+
+                <p className="text-slate-700 text-sm leading-relaxed mb-6 font-normal">
+                  "{fb.message}"
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <div>
+                  <span className="text-sm font-bold text-slate-900 block">{fb.full_name}</span>
+                  <span className="text-xs text-[#3B82F6] font-medium">
+                    {fb.treatment || fb.branch || 'Patient Consultation'}
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-md">
+                  Patient Review
                 </span>
               </div>
             </div>

@@ -29,41 +29,41 @@ export const GallerySection: React.FC = () => {
           </div>
         </div>
 
-        {/* ASYMMETRIC GALLERY GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+        {/* ASYMMETRIC EDITORIAL GALLERY GRID (~60% LOUNGE / ~40% OPERATORY ON DESKTOP) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
           
-          {/* LARGE MAIN IMAGE: TREATMENT SUITE (SPAN 7) */}
-          <div className="md:col-span-7 relative bg-white rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 group min-h-[380px] sm:min-h-[460px]">
+          {/* CARD 1 (FIRST): CONSULTATION LOUNGE & RECEPTION (~60% WIDE ON DESKTOP) */}
+          <div className="lg:col-span-7 relative bg-white rounded-[32px] sm:rounded-[40px] lg:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 border border-white/60 group h-[390px] min-[420px]:h-[440px] md:h-[500px] lg:h-[560px] xl:h-[600px]">
             <img
-              src="/images/clinic-treatment-room.jpg"
-              alt="Dento Care state-of-the-art treatment operatory and dental chair"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              src="/images/clinic-lounge-dento-care.jpg"
+              alt="Dento Care reception desk with branded wooden wall logo and comfortable patient consultation lounge"
+              className="w-full h-full object-cover object-[center_28%] group-hover:scale-105 transition-transform duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-            <div className="absolute bottom-6 left-6 right-6 text-white">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#E5FE40] block mb-1">
-                Operatory Suite 01
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />
+            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 text-white">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#E5FE40] block mb-1.5 drop-shadow-sm">
+                Consultation Lounge
               </span>
-              <h3 className="text-xl sm:text-2xl font-light">
-                Ergonomic Patient Suite with Digital 3D Imaging
+              <h3 className="text-xl sm:text-2xl lg:text-[1.7rem] font-light leading-snug text-white">
+                Comfortable, Calming Patient Welcome Area
               </h3>
             </div>
           </div>
 
-          {/* SECONDARY IMAGE: RECEPTION & LOUNGE (SPAN 5) */}
-          <div className="md:col-span-5 relative bg-white rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 group min-h-[380px] sm:min-h-[460px]">
+          {/* CARD 2 (SECOND): OPERATORY SUITE (~40% REMAINING DESKTOP SPACE) */}
+          <div className="lg:col-span-5 relative bg-white rounded-[32px] sm:rounded-[40px] lg:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 border border-white/60 group h-[390px] min-[420px]:h-[440px] md:h-[500px] lg:h-[560px] xl:h-[600px]">
             <img
-              src="/images/clinic-reception.jpg"
-              alt="Warm welcoming contemporary clinic reception and waiting lounge"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              src="/images/clinic-operatory-dento-care.jpg"
+              alt="Dento Care state-of-the-art treatment operatory and ergonomic dental chair with panoramic palm tree view"
+              className="w-full h-full object-cover object-[center_35%] group-hover:scale-105 transition-transform duration-700 ease-out"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-            <div className="absolute bottom-6 left-6 right-6 text-white">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[#E5FE40] block mb-1">
-                Consultation Lounge
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />
+            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 right-6 sm:right-8 text-white">
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#E5FE40] block mb-1.5 drop-shadow-sm">
+                Operatory Suite 01
               </span>
-              <h3 className="text-xl sm:text-2xl font-light">
-                Comfortable, Calming Patient Welcome Area
+              <h3 className="text-xl sm:text-2xl lg:text-[1.7rem] font-light leading-snug text-white">
+                Ergonomic Patient Suite with Digital 3D Imaging
               </h3>
             </div>
           </div>

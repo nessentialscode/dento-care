@@ -1,12 +1,59 @@
-import React from 'react';
-import { MapPin, Phone, MessageCircle, Clock, ArrowUpRight, Navigation, Globe, Star, Quote, Building2, ExternalLink, Image as ImageIcon } from 'lucide-react';
-import { clinicLocations } from '../data/locations';
+import React, { useState } from 'react';
+import {
+  MapPin,
+  Phone,
+  MessageCircle,
+  Clock,
+  ArrowUpRight,
+  Navigation,
+  Globe,
+  Star,
+  Quote,
+  Building2,
+  ExternalLink,
+  Image as ImageIcon,
+  AlertCircle,
+  RefreshCw,
+  X,
+} from 'lucide-react';
+import { clinicLocations, type ClinicLocation } from '../data/locations';
+import { fetchActiveClinicBranches } from '../services/clinicBranchService';
 
 interface LocationsSectionProps {
   onBookClick: (branch?: string) => void;
 }
 
 export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick }) => {
+  const [checkingBranchId, setCheckingBranchId] = useState<string | null>(null);
+  const [inactiveAlertBranchId, setInactiveAlertBranchId] = useState<string | null>(null);
+
+  const handleClinicBook = async (location: ClinicLocation) => {
+    setCheckingBranchId(location.id);
+    setInactiveAlertBranchId(null);
+
+    try {
+      // Live server check against clinic_branches (Authoritative, handles race conditions)
+      const activeBranches = await fetchActiveClinicBranches();
+      const isActive = activeBranches.some(
+        (b) =>
+          b.name.toLowerCase().includes(location.shortName.toLowerCase()) ||
+          location.name.toLowerCase().includes(b.name.toLowerCase())
+      );
+
+      if (isActive) {
+        onBookClick(location.name);
+      } else {
+        // Inactive: Fail closed and show clinical warning
+        setInactiveAlertBranchId(location.id);
+      }
+    } catch (error) {
+      console.error('Error verifying clinic availability:', error);
+      // Fail closed on error
+      setInactiveAlertBranchId(location.id);
+    } finally {
+      setCheckingBranchId(null);
+    }
+  };
   return (
     <section id="locations" className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-20">
       <div className="max-w-[1520px] mx-auto">
@@ -167,13 +214,52 @@ export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick 
 
                 {/* BOTTOM ACTION BUTTONS */}
                 <div className="relative z-10 space-y-2.5 pt-2">
+                  {inactiveAlertBranchId === location.id && (
+                    <div
+                      role="alert"
+                      className="p-3.5 rounded-2xl bg-rose-950/85 backdrop-blur-md border border-rose-400/60 text-white shadow-xl space-y-1 animate-in fade-in zoom-in-95 duration-200"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <div className="w-6 h-6 rounded-full bg-rose-500/30 flex items-center justify-center flex-shrink-0 mt-0.5 text-rose-300">
+                          <AlertCircle size={15} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-white tracking-tight">
+                            Clinic is not open for online appointments.
+                          </p>
+                          <p className="text-[11px] text-rose-200 leading-normal mt-0.5">
+                            Please select another clinic or contact Dento Care directly.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setInactiveAlertBranchId(null)}
+                          className="text-rose-300 hover:text-white p-0.5 transition-colors cursor-pointer"
+                          aria-label="Dismiss alert"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <button
                     type="button"
-                    onClick={() => onBookClick(location.name)}
-                    className="w-full py-3.5 px-6 rounded-full bg-white text-slate-900 font-bold text-sm shadow-md hover:bg-[#E5FE40] hover:text-slate-950 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                    disabled={checkingBranchId === location.id}
+                    onClick={() => handleClinicBook(location)}
+                    className="w-full py-3.5 px-6 rounded-full bg-white text-slate-900 font-bold text-sm shadow-md hover:bg-[#E5FE40] hover:text-slate-950 transition-all flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-75"
                   >
-                    <span>Book {location.shortName} Appointment</span>
-                    <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    {checkingBranchId === location.id ? (
+                      <>
+                        <RefreshCw size={15} className="animate-spin text-slate-700" />
+                        <span>Checking availability...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Book {location.shortName} Appointment</span>
+                        <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      </>
+                    )}
                   </button>
 
                   <div className="grid grid-cols-2 gap-2">

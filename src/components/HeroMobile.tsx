@@ -169,7 +169,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
               {/* Quick Contact buttons */}
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  href={`tel:${clinicInfo.phone}`}
+                  href="tel:+917510355355"
                   className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors"
                 >
                   <Phone size={13} className="text-blue-600" />
@@ -201,7 +201,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-0.5">
                 <MapPin size={11} className="text-slate-400" />
-                <span>Ponnani Flagship • Mon–Sat 9AM–8PM</span>
+                <span>Ponnani Flagship • Mon–Sat 10AM–7PM</span>
               </div>
             </div>
           </div>

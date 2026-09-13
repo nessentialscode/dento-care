@@ -25,5 +25,18 @@ export const clinicInfo: ClinicInfo = {
   whatsapp: "917510355355",
   email: "care@dentocaredental.com",
   mainAddress: "KK Junction, near ISS School, Ponnani, Kerala",
-  workingHours: "Mon – Sat: 9:00 AM – 8:00 PM | Sunday: On Appointment",
+  workingHours: "Mon – Sat: 10:00 AM – 7:00 PM | Sunday: Closed",
 };
+
+/**
+ * Official approved clinic appointment time slots.
+ * Aligns strictly with clinic operating hours: Monday-Saturday: 10:00 AM - 7:00 PM.
+ */
+export const APPOINTMENT_TIME_SLOTS = [
+  "Morning (10:00 AM - 1:00 PM)",
+  "Afternoon (2:00 PM - 5:00 PM)",
+  "Evening (5:00 PM - 7:00 PM)",
+] as const;
+
+export type AppointmentTimeSlot = typeof APPOINTMENT_TIME_SLOTS[number];
+

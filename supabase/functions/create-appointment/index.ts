@@ -34,9 +34,35 @@ interface AppointmentRecord {
 // Known valid branches matching application data
 const VALID_BRANCHES = [
   "Dento Care — Ponnani Clinic",
+  "Dento Care — Veliyancode Clinic",
   "Dento Care Multispeciality Dental Clinic",
   "Ponnani",
   "Veliyancode",
+];
+
+// Approved clinic time slots matching official operating hours (Monday-Saturday: 10:00 AM - 7:00 PM)
+const VALID_TIME_SLOTS = [
+  "Morning (10:00 AM - 1:00 PM)",
+  "Afternoon (2:00 PM - 5:00 PM)",
+  "Evening (5:00 PM - 7:00 PM)",
+];
+
+// Approved clinic services
+const VALID_SERVICES = [
+  "Dental Implants",
+  "Root Canal Treatment",
+  "Braces & Aligners",
+  "Teeth Whitening",
+  "Veneers & Crowns",
+  "Preventive & Family Care",
+  "General Consultation & Checkup",
+  "General Consultation",
+  "Emergency Tooth Pain Relief",
+  "Emergency Tooth Pain",
+  "Cosmetic Dentistry",
+  "Pediatric Dentistry",
+  "Orthodontics",
+  "Dental Checkup",
 ];
 
 /**
@@ -114,11 +140,10 @@ function isValidDate(dateStr: string): boolean {
 }
 
 /**
- * Validates preferred time format.
+ * Validates preferred appointment time slot against the approved clinic time slots.
  */
-function isValidTimeFormat(timeStr: string): boolean {
-  if (timeStr.length < 2 || timeStr.length > 60) return false;
-  return /^[a-zA-Z0-9\s:()\-–—./]+$/.test(timeStr);
+function isValidTimeSlot(timeStr: string): boolean {
+  return VALID_TIME_SLOTS.includes(timeStr);
 }
 
 /**
@@ -137,6 +162,18 @@ function isValidBranch(branchStr: string): boolean {
   if (VALID_BRANCHES.includes(branchStr)) return true;
   const lower = branchStr.toLowerCase();
   return lower.includes("ponnani") || lower.includes("veliyancode");
+}
+
+/**
+ * Validates dental service against approved clinic services.
+ */
+function isValidService(serviceStr: string | null): boolean {
+  if (!serviceStr) return true;
+  const lower = serviceStr.trim().toLowerCase();
+  return VALID_SERVICES.some((s) => {
+    const sLower = s.toLowerCase();
+    return sLower === lower || lower.includes(sLower) || sLower.includes(lower);
+  });
 }
 
 /**
@@ -329,19 +366,7 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Anti-abuse: Honeypot check
-  if (isHoneypotTriggered(body)) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "Invalid appointment submission.",
-      },
-      400,
-      origin
-    );
-  }
-
-  // Field validation: fullName (Required, 2-100 chars)
+  // 1. Required fields validation
   const fullName = sanitizeString(body.fullName, 100);
   if (!fullName || fullName.length < 2) {
     return jsonResponse(
@@ -354,7 +379,6 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Field validation: phone (Required, 7-20 digits)
   const phone = sanitizeString(body.phone, 25);
   if (!phone || !isValidPhone(phone)) {
     return jsonResponse(
@@ -367,9 +391,61 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Field validation: branch (Required, must match clinic branches)
   const branch = sanitizeString(body.branch, 120);
-  if (!branch || !isValidBranch(branch)) {
+  if (!branch) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Please select a clinic branch.",
+      },
+      400,
+      origin
+    );
+  }
+
+  const rawDate = sanitizeString(body.preferredDate, 30);
+  if (!rawDate) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Preferred appointment date is required.",
+      },
+      400,
+      origin
+    );
+  }
+
+  const rawTime = sanitizeString(body.preferredTime, 60);
+  if (!rawTime) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Preferred appointment time slot is required.",
+      },
+      400,
+      origin
+    );
+  }
+
+  // Optional fields: service, doctor, message
+  const service = sanitizeString(body.service, 120);
+  const doctor = sanitizeString(body.doctor, 120);
+  const message = sanitizeString(body.message, 1000);
+
+  // 2. Anti-abuse / Honeypot bot protection
+  if (isHoneypotTriggered(body)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Invalid appointment submission.",
+      },
+      400,
+      origin
+    );
+  }
+
+  // 3. Valid branch check
+  if (!isValidBranch(branch)) {
     return jsonResponse(
       {
         success: false,
@@ -380,40 +456,7 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Field validation: preferredDate (Required, YYYY-MM-DD, not in past)
-  const rawDate = sanitizeString(body.preferredDate, 30);
-  if (!rawDate || !isValidDate(rawDate)) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "Preferred appointment date is required in YYYY-MM-DD format.",
-      },
-      400,
-      origin
-    );
-  }
-  const preferredDate = rawDate;
-
-  // Field validation: preferredTime (Required, valid format)
-  const rawTime = sanitizeString(body.preferredTime, 60);
-  if (!rawTime || !isValidTimeFormat(rawTime)) {
-    return jsonResponse(
-      {
-        success: false,
-        error: "Preferred appointment time slot is required.",
-      },
-      400,
-      origin
-    );
-  }
-  const preferredTime = rawTime;
-
-  // Optional fields: service, doctor, message
-  const service = sanitizeString(body.service, 120);
-  const doctor = sanitizeString(body.doctor, 120);
-  const message = sanitizeString(body.message, 1000);
-
-  // Initialize Supabase Client with elevated credentials (prioritizing new Secret API key)
+  // Initialize Supabase Client with elevated credentials for database checks
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const elevatedCred = getElevatedSupabaseKey();
 
@@ -429,8 +472,7 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  // Log credential type without exposing any secret or token contents
-  console.log(`Using ${elevatedCred.isSecretKey ? "new Secret API key (sb_secret_***)" : "legacy service_role key"} for database insertion.`);
+  console.log(`Using ${elevatedCred.isSecretKey ? "new Secret API key (sb_secret_***)" : "legacy service_role key"} for database verification & insertion.`);
 
   const supabase = createClient(supabaseUrl, elevatedCred.key, {
     auth: {
@@ -439,12 +481,138 @@ Deno.serve(async (req: Request) => {
     },
   });
 
+  // 4. Branch is currently active in database
+  const branchQuery = branch.toLowerCase().includes("veliyancode") ? "Veliyancode" : "Ponnani";
+  const { data: branchRecord, error: branchLookupError } = await supabase
+    .from("clinic_branches")
+    .select("name, is_active")
+    .ilike("name", `%${branchQuery}%`)
+    .maybeSingle();
+
+  if (branchLookupError) {
+    console.error("Database error while checking clinic branch availability:", branchLookupError.message);
+    return jsonResponse(
+      {
+        success: false,
+        error: "Unable to verify clinic availability. Please try again later.",
+      },
+      500,
+      origin
+    );
+  }
+
+  if (!branchRecord || !branchRecord.is_active) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "This clinic is currently unavailable for appointment requests. Please select another clinic.",
+      },
+      400,
+      origin
+    );
+  }
+
+  const canonicalBranchName = branchRecord.name;
+
+  // 5. Valid service check
+  if (service && !isValidService(service)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Please select a valid dental service.",
+      },
+      400,
+      origin
+    );
+  }
+
+  // 6. Valid doctor & 7. Doctor is currently present check
+  let canonicalDoctorName: string | null = null;
+  const isAnySpecialist = !doctor || doctor.trim().toLowerCase() === "any available specialist";
+
+  if (!isAnySpecialist && doctor) {
+    const trimmedDoctor = doctor.trim();
+    const { data: doctorRecord, error: doctorLookupError } = await supabase
+      .from("doctors")
+      .select("name, is_present")
+      .ilike("name", trimmedDoctor)
+      .maybeSingle();
+
+    if (doctorLookupError) {
+      console.error("Database error while checking doctor availability:", doctorLookupError.message);
+      return jsonResponse(
+        {
+          success: false,
+          error: "Unable to verify doctor availability. Please try again later.",
+        },
+        500,
+        origin
+      );
+    }
+
+    // 6. Valid doctor: reject arbitrary/unknown doctor names
+    if (!doctorRecord) {
+      return jsonResponse(
+        {
+          success: false,
+          error: "The selected doctor is unavailable. Please select another doctor or Any Available Specialist.",
+        },
+        400,
+        origin
+      );
+    }
+
+    // 7. Doctor is currently present: reject absent doctors
+    if (!doctorRecord.is_present) {
+      return jsonResponse(
+        {
+          success: false,
+          error: "The selected doctor is currently unavailable. Please select another doctor or Any Available Specialist.",
+        },
+        400,
+        origin
+      );
+    }
+
+    canonicalDoctorName = doctorRecord.name;
+  } else {
+    // 2. Any Available Specialist: valid without requiring a specific doctor record
+    canonicalDoctorName = "Any Available Specialist";
+  }
+
+  // 8. Valid appointment date
+  if (!isValidDate(rawDate)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Preferred appointment date is required in YYYY-MM-DD format.",
+      },
+      400,
+      origin
+    );
+  }
+  const preferredDate = rawDate;
+
+  // 9. Valid approved time slot
+  if (!isValidTimeSlot(rawTime)) {
+    return jsonResponse(
+      {
+        success: false,
+        error: "Preferred appointment time slot must be one of the approved clinic slots: Morning (10:00 AM - 1:00 PM), Afternoon (2:00 PM - 5:00 PM), or Evening (5:00 PM - 7:00 PM).",
+      },
+      400,
+      origin
+    );
+  }
+  const preferredTime = rawTime;
+
+  // 10. Insert appointment into database
   const appointmentRecord: AppointmentRecord = {
     full_name: fullName,
     phone,
-    branch,
+    branch: canonicalBranchName,
     service: service || null,
-    doctor: doctor || null,
+    doctor: canonicalDoctorName,
     preferred_date: preferredDate,
     preferred_time: preferredTime,
     message: message || null,

@@ -5,9 +5,10 @@ import { clinicInfo } from '../data/clinicInfo';
 interface FooterProps {
   onBookClick: () => void;
   onPrivacyClick?: () => void;
+  onTermsClick?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick }) => {
+export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onTermsClick }) => {
   return (
     <footer className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 pb-6 sm:pb-10 pt-10">
       <div className="max-w-[1520px] mx-auto bg-[#111724] rounded-[34px] sm:rounded-[48px] p-8 sm:p-14 lg:p-20 text-white shadow-2xl relative overflow-hidden">
@@ -125,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick }) =
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone size={13} className="text-[#E5FE40]" />
-                <a href={`tel:${clinicInfo.phone.replace(/\s+/g, '')}`} className="hover:text-white transition-colors">{clinicInfo.phone}</a>
+                <a href="tel:+917510355355" className="hover:text-white transition-colors">+91 7510355355</a>
               </div>
             </div>
 
@@ -139,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick }) =
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone size={13} className="text-[#E5FE40]" />
-                <a href="tel:07025215151" className="hover:text-white transition-colors">070252 15151</a>
+                <a href="tel:+917510355355" className="hover:text-white transition-colors">+91 7510355355</a>
               </div>
             </div>
 
@@ -150,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick }) =
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Clock size={13} className="text-[#E5FE40]" />
-                <span>Mon – Sat: 9AM – 8PM (Veliyancode: Closes 7PM)</span>
+                <span>Mon – Sat: 10:00 AM – 7:00 PM (Sunday: Closed)</span>
               </div>
             </div>
           </div>
@@ -173,7 +174,18 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick }) =
             >
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-white transition-colors">Terms of Care</a>
+            <a
+              href="/terms"
+              onClick={(e) => {
+                if (onTermsClick) {
+                  e.preventDefault();
+                  onTermsClick();
+                }
+              }}
+              className="hover:text-white transition-colors"
+            >
+              Terms of Use
+            </a>
             <a href="#treatments" className="hover:text-white transition-colors">Patient Guidance</a>
           </div>
         </div>

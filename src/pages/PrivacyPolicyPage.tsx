@@ -318,9 +318,12 @@ export const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({
                     </a>
                   </div>
 
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <Clock size={16} className="text-[#E5FE40] flex-shrink-0" />
-                    <span>Mon – Sat: 9:00 AM – 8:00 PM</span>
+                  <div className="flex items-start gap-2.5 text-slate-300">
+                    <Clock size={16} className="text-[#E5FE40] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <div>Mon – Sat: 10:00 AM – 7:00 PM</div>
+                      <div className="text-slate-400">Sunday: Closed</div>
+                    </div>
                   </div>
                 </div>
               </div>

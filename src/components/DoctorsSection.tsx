@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUpRight, ShieldCheck, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { clinicDoctors, type DoctorProfile } from '../data/doctors';
+import { fetchDoctorAvailability, type DoctorRecord } from '../services/doctorService';
 
 interface DoctorsSectionProps {
   onBookDoctor: (doctorName: string) => void;
@@ -9,6 +10,32 @@ interface DoctorsSectionProps {
 export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [doctorPresenceMap, setDoctorPresenceMap] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchDoctorAvailability()
+      .then((records: DoctorRecord[]) => {
+        if (!isMounted) return;
+        const map: Record<string, boolean> = {};
+        records.forEach((r) => {
+          map[r.name.toLowerCase()] = r.is_present;
+        });
+        setDoctorPresenceMap(map);
+      })
+      .catch((err) => {
+        console.error('Failed to load doctor presence:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const isDocPresent = (docName: string): boolean => {
+    const key = docName.toLowerCase();
+    return doctorPresenceMap[key] !== undefined ? doctorPresenceMap[key] : true;
+  };
 
   // Exactly 2 doctor cards for the carousel
   const carouselDoctors: DoctorProfile[] = clinicDoctors.slice(0, 2);
@@ -128,8 +155,24 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
                       {/* DOCTOR DETAILS */}
                       <div className="p-6 sm:p-8 flex flex-col justify-between flex-grow">
                         <div>
-                          <div className="flex items-center gap-2 mb-1 text-xs font-bold uppercase tracking-wider text-sky-600">
-                            <span>{doc.specialization}</span>
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                              {doc.specialization}
+                            </span>
+                            <span
+                              className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                                isDocPresent(doc.name)
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+                                  : 'bg-slate-100 text-slate-500 border border-slate-200'
+                              }`}
+                            >
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  isDocPresent(doc.name) ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                                }`}
+                              />
+                              <span>{isDocPresent(doc.name) ? '● Present' : '○ Absent'}</span>
+                            </span>
                           </div>
 
                           <h3 className="text-2xl sm:text-3xl font-light tracking-tight mb-2 text-slate-900">
@@ -154,7 +197,7 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
 
                           <button
                             type="button"
-                            onClick={() => onBookDoctor(doc.name)}
+                            onClick={() => onBookDoctor(isDocPresent(doc.name) ? doc.name : 'Any Available Specialist')}
                             className="px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm bg-[#5B9DE6] text-white hover:bg-blue-600"
                           >
                             <span>Consult</span>
@@ -249,8 +292,24 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
               {/* DOCTOR DETAILS */}
               <div className="p-7 xl:p-8 flex flex-col justify-between flex-grow">
                 <div>
-                  <div className="flex items-center gap-2 mb-1.5 text-xs font-bold uppercase tracking-wider text-sky-600">
-                    <span>{doc.specialization}</span>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-sky-600">
+                      {doc.specialization}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
+                        isDocPresent(doc.name)
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+                          : 'bg-slate-100 text-slate-500 border border-slate-200'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isDocPresent(doc.name) ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
+                        }`}
+                      />
+                      <span>{isDocPresent(doc.name) ? '● Present' : '○ Absent'}</span>
+                    </span>
                   </div>
 
                   <h3 className="text-2xl xl:text-3xl font-light tracking-tight mb-2 text-slate-900">
@@ -275,7 +334,7 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
 
                   <button
                     type="button"
-                    onClick={() => onBookDoctor(doc.name)}
+                    onClick={() => onBookDoctor(isDocPresent(doc.name) ? doc.name : 'Any Available Specialist')}
                     className="px-5 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm bg-[#5B9DE6] text-white hover:bg-blue-600 hover:shadow-md active:scale-95"
                   >
                     <span>Consult</span>

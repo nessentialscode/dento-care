@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageCircle, CheckCircle2 } from 'lucide-react';
-import { clinicInfo } from '../data/clinicInfo';
+import { X, MessageCircle, CheckCircle2, AlertCircle, Phone } from 'lucide-react';
+import { clinicInfo, APPOINTMENT_TIME_SLOTS } from '../data/clinicInfo';
 import { clinicLocations } from '../data/locations';
 import { clinicServices } from '../data/services';
 import { clinicDoctors } from '../data/doctors';
 import { submitAppointment } from '../services/appointmentService';
+import { fetchActiveClinicBranches, type ClinicBranch } from '../services/clinicBranchService';
+import { fetchDoctorAvailability, type DoctorRecord } from '../services/doctorService';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -23,11 +25,16 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   initialBranch,
   onPrivacyClick
 }) => {
+  const [activeBranches, setActiveBranches] = useState<ClinicBranch[]>([]);
+  const [branchesLoading, setBranchesLoading] = useState(true);
+  const [branchesError, setBranchesError] = useState<string | null>(null);
+  const [presentDoctorNames, setPresentDoctorNames] = useState<string[]>([]);
+
   const [branch, setBranch] = useState(initialBranch || 'Dento Care — Ponnani Clinic');
   const [service, setService] = useState(initialService || 'Dental Implants');
   const [doctor, setDoctor] = useState(initialDoctor || 'Any Available Specialist');
   const [preferredDate, setPreferredDate] = useState('');
-  const [preferredTime, setPreferredTime] = useState('Morning (9:00 AM - 1:00 PM)');
+  const [preferredTime, setPreferredTime] = useState<string>(APPOINTMENT_TIME_SLOTS[0]);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
@@ -35,12 +42,16 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
+  const [consentError, setConsentError] = useState(false);
 
   const handleClose = React.useCallback(() => {
     setSubmitted(false);
     setIsSubmitting(false);
     setErrorMessage(null);
     setHoneypot('');
+    setConsentGiven(false);
+    setConsentError(false);
     onClose();
   }, [onClose]);
 
@@ -58,6 +69,8 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       setIsSubmitting(false);
       setErrorMessage(null);
       setHoneypot('');
+      setConsentGiven(false);
+      setConsentError(false);
     }
     if (initialService) setService(initialService);
     if (initialDoctor) setDoctor(initialDoctor);
@@ -84,13 +97,75 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     };
   }, [isOpen, handleClose]);
 
+  // Fetch currently active clinic branches and doctor availability whenever modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+    let active = true;
+
+    async function loadModalData() {
+      try {
+        const [branchData, doctorData] = await Promise.all([
+          fetchActiveClinicBranches(),
+          fetchDoctorAvailability().catch(() => [] as DoctorRecord[]),
+        ]);
+
+        if (!active) return;
+
+        setActiveBranches(branchData);
+        setBranchesLoading(false);
+
+        if (branchData.length > 0) {
+          setBranch((prev) => {
+            const exists = branchData.some((b) => b.name === prev);
+            return exists ? prev : branchData[0].name;
+          });
+        }
+
+        // Filter present doctors
+        const presentNames = doctorData
+          .filter((d) => d.is_present)
+          .map((d) => d.name.toLowerCase());
+        setPresentDoctorNames(presentNames);
+
+        // If current doctor is absent, fallback to Any Available Specialist
+        setDoctor((prevDoc) => {
+          if (!prevDoc || prevDoc === 'Any Available Specialist') {
+            return 'Any Available Specialist';
+          }
+          const isPresent = presentNames.includes(prevDoc.toLowerCase());
+          return isPresent ? prevDoc : 'Any Available Specialist';
+        });
+      } catch (err) {
+        if (!active) return;
+        console.error('Failed to load clinic branches:', err);
+        setBranchesError('Unable to verify clinic availability.');
+        setActiveBranches([]);
+        setBranchesLoading(false);
+      }
+    }
+
+    loadModalData();
+
+    return () => {
+      active = false;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  const selectedLocation = clinicLocations.find(l => l.name === branch || l.shortName === branch);
+  const selectedLocation = clinicLocations.find(
+    l => l.name === branch || l.shortName === branch || branch.toLowerCase().includes(l.shortName.toLowerCase())
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+
+    if (!consentGiven) {
+      setConsentError(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -121,12 +196,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     const text = encodeURIComponent(
       `Hello Dento Care,\nI would like to schedule a dental appointment:\n\n` +
       `• Patient Name: ${fullName || 'Guest'}\n` +
-      `• Phone: ${phone || 'Not provided'}\n` +
-      `• Branch: ${branch}\n` +
-      `• Treatment: ${service}\n` +
-      `• Preferred Date: ${preferredDate || 'Earliest Available'}\n` +
+      `• Clinic Branch: ${branch}\n` +
+      `• Preferred Date: ${preferredDate || 'Flexible'}\n` +
       `• Preferred Time: ${preferredTime}\n` +
-      `${message ? `• Note: ${message}` : ''}`
+      `• Service: ${service}\n` +
+      `• Specialist: ${doctor}\n` +
+      (message ? `• Notes: ${message}\n` : '')
     );
     window.open(`https://wa.me/${targetWhatsapp}?text=${text}`, '_blank');
   };
@@ -184,7 +259,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <button
                   type="button"
                   onClick={handleWhatsAppBooking}
-                  className="px-6 py-3 rounded-full bg-[#25D366] text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95 shadow-md"
+                  className="px-6 py-3 rounded-full bg-[#25D366] text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-95 shadow-md cursor-pointer"
                 >
                   <MessageCircle size={18} />
                   <span>Send via WhatsApp Now</span>
@@ -192,10 +267,42 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-6 py-3 rounded-full bg-slate-100 text-slate-800 font-semibold text-sm hover:bg-slate-200"
+                  className="px-6 py-3 rounded-full bg-slate-100 text-slate-800 font-semibold text-sm hover:bg-slate-200 cursor-pointer"
                 >
                   Done
                 </button>
+              </div>
+            </div>
+          ) : !branchesLoading && (activeBranches.length === 0 || branchesError) ? (
+            <div className="p-6 rounded-2xl bg-amber-50 border border-amber-200 text-center space-y-4 my-2">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center mx-auto">
+                <AlertCircle size={24} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-amber-900">
+                  Online appointment requests are currently unavailable.
+                </h3>
+                <p className="text-xs text-amber-700 mt-1">
+                  Please contact Dento Care directly to schedule your appointment.
+                </p>
+              </div>
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2.5">
+                <a
+                  href={`tel:${clinicInfo.phone}`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors"
+                >
+                  <Phone size={14} />
+                  <span>Call {clinicInfo.phone}</span>
+                </a>
+                <a
+                  href={`https://wa.me/${clinicInfo.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors"
+                >
+                  <MessageCircle size={14} />
+                  <span>WhatsApp Us</span>
+                </a>
               </div>
             </div>
           ) : (
@@ -209,14 +316,19 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <select
                   id="modal-branch"
                   value={branch}
+                  disabled={branchesLoading}
                   onChange={(e) => setBranch(e.target.value)}
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                 >
-                  {clinicLocations.map((loc) => (
-                    <option key={loc.id} value={loc.name} disabled={loc.status === 'upcoming'}>
-                      {loc.name} {loc.status === 'upcoming' ? '(Coming Soon)' : '— Active'}
-                    </option>
-                  ))}
+                  {branchesLoading ? (
+                    <option value="">Loading available clinics...</option>
+                  ) : (
+                    activeBranches.map((b) => (
+                      <option key={b.id} value={b.name}>
+                        {b.name} — Active
+                      </option>
+                    ))
+                  )}
                 </select>
               </div>
 
@@ -253,11 +365,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                 >
                   <option value="Any Available Specialist">Any Available Specialist</option>
-                  {clinicDoctors.map((doc) => (
-                    <option key={doc.id} value={doc.name}>
-                      {doc.name} — {doc.role}
-                    </option>
-                  ))}
+                  {clinicDoctors
+                    .filter((doc) =>
+                      presentDoctorNames.includes(doc.name.toLowerCase())
+                    )
+                    .map((doc) => (
+                      <option key={doc.id} value={doc.name}>
+                        {doc.name} — {doc.role}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -287,9 +403,11 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                     onChange={(e) => setPreferredTime(e.target.value)}
                     className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                   >
-                    <option value="Morning (9:00 AM - 1:00 PM)">Morning (9:00 AM - 1:00 PM)</option>
-                    <option value="Afternoon (2:00 PM - 5:00 PM)">Afternoon (2:00 PM - 5:00 PM)</option>
-                    <option value="Evening (5:00 PM - 8:00 PM)">Evening (5:00 PM - 8:00 PM)</option>
+                    {APPOINTMENT_TIME_SLOTS.map((slot) => (
+                      <option key={slot} value={slot}>
+                        {slot}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -360,6 +478,56 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 </div>
               )}
 
+              {/* CONSENT CHECKBOX */}
+              <div className="pt-1">
+                <div className="flex items-start gap-2.5">
+                  <input
+                    type="checkbox"
+                    id="appointment-consent"
+                    name="consent"
+                    checked={consentGiven}
+                    onChange={(e) => {
+                      setConsentGiven(e.target.checked);
+                      if (e.target.checked) {
+                        setConsentError(false);
+                      }
+                    }}
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#5B9DE6] focus:ring-2 focus:ring-[#5B9DE6] focus:ring-offset-1 cursor-pointer accent-[#5B9DE6]"
+                    required
+                    aria-describedby={consentError ? "consent-error" : undefined}
+                  />
+                  <label
+                    htmlFor="appointment-consent"
+                    className="text-xs text-slate-600 leading-relaxed cursor-pointer select-none"
+                  >
+                    I consent to Dento Care Dental Clinic processing the information I provide for the purpose of receiving, processing, and responding to my appointment request. I have read the{' '}
+                    <a
+                      href="/privacy-policy"
+                      onClick={(e) => {
+                        if (onPrivacyClick) {
+                          e.preventDefault();
+                          handleClose();
+                          onPrivacyClick();
+                        }
+                      }}
+                      className="text-[#5B9DE6] hover:underline font-semibold"
+                    >
+                      Privacy Policy
+                    </a>.
+                  </label>
+                </div>
+
+                {consentError && (
+                  <p
+                    id="consent-error"
+                    role="alert"
+                    className="text-xs font-medium text-rose-600 mt-1.5 pl-6.5"
+                  >
+                    Please provide consent to proceed with your appointment request.
+                  </p>
+                )}
+              </div>
+
               {/* ACTION BUTTONS */}
               <div className="pt-3 space-y-2">
                 <button
@@ -381,23 +549,6 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   <span>Instant Booking via WhatsApp</span>
                 </button>
               </div>
-
-              <p className="text-center text-[11px] text-slate-500 pt-1">
-                By submitting, you agree to our{' '}
-                <a
-                  href="/privacy-policy"
-                  onClick={(e) => {
-                    if (onPrivacyClick) {
-                      e.preventDefault();
-                      handleClose();
-                      onPrivacyClick();
-                    }
-                  }}
-                  className="text-[#5B9DE6] hover:underline font-semibold"
-                >
-                  Privacy Policy
-                </a>.
-              </p>
             </form>
           )}
         </div>
