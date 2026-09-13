@@ -1,14 +1,15 @@
 import React from 'react';
-import { ArrowUpRight, MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { ArrowUpRight, MapPin, Phone, Mail, Clock, MessageCircle, ShieldCheck } from 'lucide-react';
 import { clinicInfo } from '../data/clinicInfo';
 
 interface FooterProps {
   onBookClick: () => void;
   onPrivacyClick?: () => void;
   onTermsClick?: () => void;
+  onAdminClick?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onTermsClick }) => {
+export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onTermsClick, onAdminClick }) => {
   return (
     <footer className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 pb-6 sm:pb-10 pt-10">
       <div className="max-w-[1520px] mx-auto bg-[#111724] rounded-[34px] sm:rounded-[48px] p-8 sm:p-14 lg:p-20 text-white shadow-2xl relative overflow-hidden">
@@ -96,6 +97,22 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
               <li><a href="#doctors" className="hover:text-white transition-colors">Specialist Doctors</a></li>
               <li><a href="#reviews" className="hover:text-white transition-colors">Patient Reviews</a></li>
               <li><a href="#gallery" className="hover:text-white transition-colors">Clinic Gallery</a></li>
+              <li>
+                <a
+                  href="/admin"
+                  onClick={(e) => {
+                    if (onAdminClick) {
+                      e.preventDefault();
+                      onAdminClick();
+                    }
+                  }}
+                  className="hover:text-white transition-colors inline-flex items-center gap-1.5 text-slate-400 group"
+                  title="Staff Administration Portal"
+                >
+                  <ShieldCheck size={14} className="text-slate-500 group-hover:text-white transition-colors" />
+                  <span>Staff Portal</span>
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -161,7 +178,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
         {/* COPYRIGHT BOTTOM BAR */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p>© {new Date().getFullYear()} Dento Care Dental Clinic. All rights reserved.</p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <a
               href="/privacy-policy"
               onClick={(e) => {
@@ -187,6 +204,20 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
               Terms of Use
             </a>
             <a href="#treatments" className="hover:text-white transition-colors">Patient Guidance</a>
+            <a
+              href="/admin"
+              onClick={(e) => {
+                if (onAdminClick) {
+                  e.preventDefault();
+                  onAdminClick();
+                }
+              }}
+              className="hover:text-white transition-colors inline-flex items-center gap-1.5 text-slate-400 group"
+              title="Staff Administration Portal"
+            >
+              <ShieldCheck size={13} className="text-slate-500 group-hover:text-white transition-colors" />
+              <span>Staff Portal</span>
+            </a>
           </div>
         </div>
 

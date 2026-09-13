@@ -255,6 +255,7 @@ export const App: React.FC = () => {
         onBookClick={() => handleOpenBooking()}
         onPrivacyClick={() => navigateTo('/privacy-policy')}
         onTermsClick={() => navigateTo('/terms')}
+        onAdminClick={() => navigateTo('/admin')}
       />
 
         {/* INTERACTIVE APPOINTMENT MODAL */}

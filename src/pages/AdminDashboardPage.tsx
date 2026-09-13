@@ -51,7 +51,16 @@ import {
 import { clinicLocations } from '../data/locations';
 import { clinicDoctors } from '../data/doctors';
 import { clinicServices } from '../data/services';
+import { clinicInfo } from '../data/clinicInfo';
 import { clearInvalidSession } from '../services/authService';
+
+const getTodayDateString = (): string => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 interface AdminDashboardPageProps {
   adminEmail?: string;
@@ -74,6 +83,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
     action: 'confirm' | 'cancel' | 'complete';
     appt: Appointment;
   } | null>(null);
+  const [confirmedApptForWhatsApp, setConfirmedApptForWhatsApp] = useState<Appointment | null>(null);
 
   // Clinic Branch Management States
   const [branches, setBranches] = useState<ClinicBranch[]>([]);
@@ -99,13 +109,13 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
   const [feedbackTab, setFeedbackTab] = useState<FeedbackStatus>('pending');
   const [feedbackModeratingId, setFeedbackModeratingId] = useState<string | null>(null);
 
-  // Filter & Search states
+  // Filter & Search states (Default date = today)
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<AppointmentStatus | 'all'>('all');
   const [branchFilter, setBranchFilter] = useState<string | 'all'>('all');
   const [doctorFilter, setDoctorFilter] = useState<string | 'all'>('all');
   const [serviceFilter, setServiceFilter] = useState<string | 'all'>('all');
-  const [dateFilter, setDateFilter] = useState('');
+  const [dateFilter, setDateFilter] = useState<string>(() => getTodayDateString());
 
   // Load clinic branches
   const loadBranches = useCallback(async () => {
@@ -219,13 +229,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
     return filterAppointments(appointments, options);
   }, [appointments, searchQuery, statusFilter, branchFilter, doctorFilter, serviceFilter, dateFilter]);
 
+  const todayStr = getTodayDateString();
   const hasActiveFilters =
     searchQuery.trim() !== '' ||
     statusFilter !== 'all' ||
     branchFilter !== 'all' ||
     doctorFilter !== 'all' ||
     serviceFilter !== 'all' ||
-    dateFilter !== '';
+    dateFilter !== todayStr;
 
   const handleResetFilters = () => {
     setSearchQuery('');
@@ -233,7 +244,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
     setBranchFilter('all');
     setDoctorFilter('all');
     setServiceFilter('all');
-    setDateFilter('');
+    setDateFilter(getTodayDateString());
   };
 
   // Status transition handler strictly enforcing state machine and concurrency
@@ -253,6 +264,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
       }
       setConfirmModal(null);
       setUpdateMessage({ type: 'success', text: `Status successfully updated to ${newStatus}.` });
+
+      // If transition was to confirmed, prompt clear WhatsApp action
+      if (newStatus === 'confirmed') {
+        setConfirmedApptForWhatsApp(updated);
+      }
     } catch (err: unknown) {
       setUpdateMessage({
         type: 'error',
@@ -368,6 +384,37 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
     return `https://wa.me/${fullNumber}?text=${text}`;
   };
 
+  // Professional confirmed appointment WhatsApp message URL builder
+  const getConfirmedAppointmentWhatsAppUrl = (appt: Appointment) => {
+    const cleaned = appt.phone.replace(/\D/g, '');
+    const fullNumber = cleaned.length === 10 ? `91${cleaned}` : (cleaned.startsWith('91') ? cleaned : `91${cleaned}`);
+    
+    const clinicName = clinicInfo.name;
+    const dateStr = appt.preferred_date || 'Flexible Date';
+    const timeStr = appt.preferred_time || 'Clinic Hours';
+    const branchStr = appt.branch || clinicInfo.mainAddress;
+    const serviceStr = appt.service || 'General Dental Care';
+    const doctorStr = appt.doctor ? `\n👨‍⚕️ Specialist: ${appt.doctor}` : '';
+    const clinicContact = clinicInfo.phone;
+
+    const message = [
+      `Hello ${appt.full_name},`,
+      ``,
+      `Your appointment at *${clinicName}* has been *CONFIRMED*! ✅`,
+      ``,
+      `📅 *Date:* ${dateStr}`,
+      `⏰ *Time:* ${timeStr}`,
+      `📍 *Branch:* ${branchStr}`,
+      `🦷 *Service / Concern:* ${serviceStr}${doctorStr}`,
+      ``,
+      `If you need to reschedule or have questions, please reach out to us at ${clinicContact}.`,
+      ``,
+      `Thank you for choosing ${clinicName}. We look forward to welcoming you!`,
+    ].join('\n');
+
+    return `https://wa.me/${fullNumber}?text=${encodeURIComponent(message)}`;
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-[#E5FE40] selection:text-slate-900">
       
@@ -467,9 +514,27 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               branches.map((b) => (
                 <div
                   key={b.id}
-                  className="p-4 rounded-xl border border-slate-200/90 bg-slate-50/60 flex items-center justify-between gap-4"
+                  className="relative p-4 rounded-xl border border-slate-200/90 bg-slate-50/60 flex items-center justify-between gap-4"
                 >
-                  <div className="space-y-1 min-w-0">
+                  {/* Compact Status Badge in corner */}
+                  <div className="absolute top-3 right-3">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase border shadow-2xs ${
+                        b.is_active
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+                          : 'bg-slate-100 text-slate-500 border-slate-200'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          b.is_active ? 'bg-emerald-500' : 'bg-slate-400'
+                        }`}
+                      />
+                      {b.is_active ? 'ACTIVE' : 'INACTIVE'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 min-w-0 pr-2">
                     <h3 className="font-bold text-sm text-slate-900 truncate">
                       {b.name}
                     </h3>
@@ -477,23 +542,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                       <MapPin size={12} className="text-slate-400 flex-shrink-0" />
                       <span>{b.location}</span>
                     </div>
-                    <div className="pt-1 flex items-center gap-1.5">
-                      <span
-                        className={`inline-block w-2 h-2 rounded-full ${
-                          b.is_active ? 'bg-emerald-500' : 'bg-slate-400'
-                        }`}
-                      />
-                      <span
-                        className={`text-xs font-bold ${
-                          b.is_active ? 'text-emerald-700' : 'text-slate-500'
-                        }`}
-                      >
-                        {b.is_active ? 'Active' : 'Not Active'}
-                      </span>
-                    </div>
                   </div>
 
-                  <div>
+                  <div className="pt-5 flex-shrink-0">
                     <button
                       type="button"
                       disabled={branchUpdatingId === b.id}
@@ -545,32 +596,36 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
               adminDoctors.map((doc) => (
                 <div
                   key={doc.id}
-                  className="p-4 rounded-xl border border-slate-200/90 bg-slate-50/60 flex items-center justify-between gap-4"
+                  className="relative p-4 rounded-xl border border-slate-200/90 bg-slate-50/60 flex items-center justify-between gap-4"
                 >
-                  <div className="space-y-1 min-w-0">
+                  {/* Compact Status Badge in corner */}
+                  <div className="absolute top-3 right-3">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase border shadow-2xs ${
+                        doc.is_present
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+                          : 'bg-amber-50 text-amber-700 border-amber-200/80'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          doc.is_present ? 'bg-emerald-500' : 'bg-amber-500'
+                        }`}
+                      />
+                      {doc.is_present ? 'PRESENT' : 'ABSENT'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1 min-w-0 pr-2">
                     <h3 className="font-bold text-sm text-slate-900 truncate">
                       {doc.name}
                     </h3>
                     <div className="flex items-center gap-1 text-xs text-slate-500">
                       <span>{doc.specialty}</span>
                     </div>
-                    <div className="pt-1 flex items-center gap-1.5">
-                      <span
-                        className={`inline-block w-2 h-2 rounded-full ${
-                          doc.is_present ? 'bg-emerald-500' : 'bg-slate-400'
-                        }`}
-                      />
-                      <span
-                        className={`text-xs font-bold ${
-                          doc.is_present ? 'text-emerald-700' : 'text-slate-500'
-                        }`}
-                      >
-                        {doc.is_present ? 'Present' : 'Absent'}
-                      </span>
-                    </div>
                   </div>
 
-                  <div>
+                  <div className="pt-5 flex-shrink-0">
                     <button
                       type="button"
                       disabled={doctorUpdatingId === doc.id}
@@ -788,9 +843,21 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
             {/* PREFERRED DATE FILTER */}
             <div>
-              <label htmlFor="filter-date" className="block text-[10px] font-bold uppercase text-slate-500 mb-1">
-                Date
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label htmlFor="filter-date" className="block text-[10px] font-bold uppercase text-slate-500">
+                  Date {dateFilter === todayStr && <span className="text-sky-600 font-bold lowercase">(today)</span>}
+                </label>
+                {dateFilter !== '' && (
+                  <button
+                    type="button"
+                    onClick={() => setDateFilter('')}
+                    className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                    title="Clear date filter to view all dates"
+                  >
+                    All Dates
+                  </button>
+                )}
+              </div>
               <input
                 id="filter-date"
                 type="date"
@@ -861,22 +928,41 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   <Inbox size={28} />
                 </div>
                 <h3 className="text-base font-bold text-slate-900">
-                  {hasActiveFilters ? 'No matching appointments found' : 'No appointment requests yet'}
+                  {dateFilter === todayStr
+                    ? "No appointments scheduled for today"
+                    : hasActiveFilters
+                    ? 'No matching appointments found'
+                    : 'No appointment requests yet'}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
-                  {hasActiveFilters
+                  {dateFilter === todayStr
+                    ? "There are no appointment bookings scheduled for today. You can select another date or view all appointments."
+                    : hasActiveFilters
                     ? 'Try adjusting your search query or clearing filter options to see all appointment records.'
                     : 'New appointment submissions from the website will appear here in real time.'}
                 </p>
-                {hasActiveFilters && (
-                  <button
-                    type="button"
-                    onClick={handleResetFilters}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-slate-800 transition-colors"
-                  >
-                    Clear All Filters
-                  </button>
-                )}
+                <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                  {dateFilter !== '' && (
+                    <button
+                      type="button"
+                      onClick={() => setDateFilter('')}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
+                    >
+                      <Calendar size={13} />
+                      <span>View All Dates</span>
+                    </button>
+                  )}
+                  {hasActiveFilters && (
+                    <button
+                      type="button"
+                      onClick={handleResetFilters}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+                    >
+                      <RotateCcw size={13} />
+                      <span>Reset Filters (Today)</span>
+                    </button>
+                  )}
+                </div>
               </div>
             ) : (
               <>
@@ -976,18 +1062,31 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                                   </>
                                 )}
                                 {appt.status === 'confirmed' && (
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setConfirmModal({ action: 'complete', appt });
-                                    }}
-                                    title="Mark as Completed"
-                                    className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition-colors cursor-pointer"
-                                  >
-                                    <CheckCircle2 size={13} />
-                                    <span>Complete</span>
-                                  </button>
+                                  <>
+                                    <a
+                                      href={getConfirmedAppointmentWhatsAppUrl(appt)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      title="WhatsApp Patient"
+                                      className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1.5 rounded-lg border border-emerald-200 transition-colors cursor-pointer"
+                                    >
+                                      <MessageSquare size={13} />
+                                      <span>WhatsApp Patient</span>
+                                    </a>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setConfirmModal({ action: 'complete', appt });
+                                      }}
+                                      title="Mark as Completed"
+                                      className="inline-flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-200 transition-colors cursor-pointer"
+                                    >
+                                      <CheckCircle2 size={13} />
+                                      <span>Complete</span>
+                                    </button>
+                                  </>
                                 )}
                                 <button
                                   type="button"
@@ -1082,14 +1181,27 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                             </>
                           )}
                           {appt.status === 'confirmed' && (
-                            <button
-                              type="button"
-                              onClick={() => setConfirmModal({ action: 'complete', appt })}
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded-lg border border-emerald-200"
-                            >
-                              <CheckCircle2 size={12} />
-                              <span>Complete</span>
-                            </button>
+                            <>
+                              <a
+                                href={getConfirmedAppointmentWhatsAppUrl(appt)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                title="WhatsApp Patient"
+                                className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded-lg border border-emerald-200"
+                              >
+                                <MessageSquare size={12} />
+                                <span>WhatsApp Patient</span>
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => setConfirmModal({ action: 'complete', appt })}
+                                className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-lg border border-slate-200"
+                              >
+                                <CheckCircle2 size={12} />
+                                <span>Complete</span>
+                              </button>
+                            </>
                           )}
                           <button
                             type="button"
@@ -1330,21 +1442,32 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                   </div>
                 )}
 
-                {/* CONFIRMED: Mark as Completed */}
+                {/* CONFIRMED: WhatsApp Patient & Mark as Completed */}
                 {selectedAppointment.status === 'confirmed' && (
                   <div className="space-y-2 pt-1">
                     <span className="block text-[11px] text-slate-500 font-medium">
                       Appointment is confirmed and scheduled with patient.
                     </span>
-                    <button
-                      type="button"
-                      disabled={statusUpdating}
-                      onClick={() => setConfirmModal({ action: 'complete', appt: selectedAppointment })}
-                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-sm shadow-emerald-600/20 transition-all cursor-pointer disabled:opacity-60"
-                    >
-                      <CheckCircle2 size={16} />
-                      <span>Mark as Completed</span>
-                    </button>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                      <a
+                        href={getConfirmedAppointmentWhatsAppUrl(selectedAppointment)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-sm shadow-emerald-600/20 transition-all cursor-pointer"
+                      >
+                        <MessageSquare size={16} />
+                        <span>WhatsApp Patient</span>
+                      </a>
+                      <button
+                        type="button"
+                        disabled={statusUpdating}
+                        onClick={() => setConfirmModal({ action: 'complete', appt: selectedAppointment })}
+                        className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-sm shadow-emerald-600/20 transition-all cursor-pointer disabled:opacity-60"
+                      >
+                        <CheckCircle2 size={16} />
+                        <span>Mark as Completed</span>
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -1388,7 +1511,11 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                     WhatsApp Patient
                   </span>
                   <a
-                    href={getWhatsAppUrl(selectedAppointment.phone, selectedAppointment.full_name)}
+                    href={
+                      selectedAppointment.status === 'confirmed'
+                        ? getConfirmedAppointmentWhatsAppUrl(selectedAppointment)
+                        : getWhatsAppUrl(selectedAppointment.phone, selectedAppointment.full_name)
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1.5"
@@ -1593,6 +1720,76 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 4b. POST-CONFIRMATION ACTION MODAL: WHATSAPP PATIENT */}
+      {confirmedApptForWhatsApp && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setConfirmedApptForWhatsApp(null)}
+        >
+          <div
+            className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-1">
+              <CheckCircle2 size={26} />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-900">
+                Appointment Confirmed!
+              </h3>
+              <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                Appointment for <strong className="text-slate-900">{confirmedApptForWhatsApp.full_name}</strong> has been confirmed. You can now notify the patient on WhatsApp with their booking confirmation details.
+              </p>
+            </div>
+
+            <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs space-y-2 text-slate-700">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Patient:</span>
+                <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.full_name} ({confirmedApptForWhatsApp.phone})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Scheduled Date:</span>
+                <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.preferred_date || 'Flexible Date'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Time Window:</span>
+                <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.preferred_time || 'Clinic Hours'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Clinic / Branch:</span>
+                <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.branch}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Treatment:</span>
+                <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.service || 'General Consultation'}</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setConfirmedApptForWhatsApp(null)}
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer text-center"
+              >
+                Close
+              </button>
+              <a
+                href={getConfirmedAppointmentWhatsAppUrl(confirmedApptForWhatsApp)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setConfirmedApptForWhatsApp(null)}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-sm shadow-emerald-600/20 transition-all cursor-pointer"
+              >
+                <MessageSquare size={16} />
+                <span>WhatsApp Patient</span>
+              </a>
+            </div>
           </div>
         </div>
       )}
