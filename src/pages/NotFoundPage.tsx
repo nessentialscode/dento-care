@@ -32,7 +32,9 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({
           <div className="w-9 h-9 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-200">
             <img
               src="/images/dento-care-icon.png"
-              alt="Dento Care Icon"
+              alt="Dento Care logo"
+              width={36}
+              height={36}
               className="w-full h-full object-contain"
             />
           </div>

@@ -8,15 +8,36 @@ import { ReviewsSection } from './components/ReviewsSection';
 import { GallerySection } from './components/GallerySection';
 import { AppointmentModal } from './components/AppointmentModal';
 import { Footer } from './components/Footer';
-import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
-import { TermsOfUsePage } from './pages/TermsOfUsePage';
-import { FeedbackPage } from './pages/FeedbackPage';
-import { AdminLoginPage } from './pages/AdminLoginPage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
-import { NotFoundPage } from './pages/NotFoundPage';
 import { getAdminSession, onAdminAuthStateChange, isAuthorizedAdmin, signOutAdmin } from './services/authService';
+import { updateRouteSEO } from './services/seoService';
 import type { Session } from '@supabase/supabase-js';
 import { ShieldAlert, RefreshCw, ArrowLeft, LogOut } from 'lucide-react';
+
+// Route-level Code Splitting (Reduces initial JS bundle size)
+const PrivacyPolicyPage = React.lazy(() =>
+  import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage }))
+);
+const TermsOfUsePage = React.lazy(() =>
+  import('./pages/TermsOfUsePage').then((m) => ({ default: m.TermsOfUsePage }))
+);
+const FeedbackPage = React.lazy(() =>
+  import('./pages/FeedbackPage').then((m) => ({ default: m.FeedbackPage }))
+);
+const AdminLoginPage = React.lazy(() =>
+  import('./pages/AdminLoginPage').then((m) => ({ default: m.AdminLoginPage }))
+);
+const AdminDashboardPage = React.lazy(() =>
+  import('./pages/AdminDashboardPage').then((m) => ({ default: m.AdminDashboardPage }))
+);
+const NotFoundPage = React.lazy(() =>
+  import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
+);
+
+const PageFallback: React.FC = () => (
+  <div className="min-h-screen bg-[#D8EEE1] flex items-center justify-center p-4">
+    <div className="w-8 h-8 rounded-full border-2 border-slate-300 border-t-[#5B9DE6] animate-spin" />
+  </div>
+);
 
 export const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(
@@ -30,6 +51,11 @@ export const App: React.FC = () => {
   // Admin authentication state
   const [adminSession, setAdminSession] = useState<Session | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Sync route SEO metadata whenever path changes
+  useEffect(() => {
+    updateRouteSEO(currentPath);
+  }, [currentPath]);
 
   useEffect(() => {
     // Initial session check
@@ -58,11 +84,13 @@ export const App: React.FC = () => {
   }, []);
 
   const navigateTo = (path: string) => {
-    if (path !== window.location.pathname) {
-      window.history.pushState({}, '', path);
-      setCurrentPath(path);
+    // Normalize trailing slash (prefer non-trailing slash for all non-root routes)
+    const normalized = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+    if (normalized !== window.location.pathname) {
+      window.history.pushState({}, '', normalized);
+      setCurrentPath(normalized);
     } else {
-      setCurrentPath(path);
+      setCurrentPath(normalized);
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
@@ -89,10 +117,12 @@ export const App: React.FC = () => {
 
     if (!adminSession || !adminSession.user) {
       return (
-        <AdminLoginPage
-          onSuccess={() => navigateTo('/admin')}
-          onNavigateHome={() => navigateTo('/')}
-        />
+        <React.Suspense fallback={<PageFallback />}>
+          <AdminLoginPage
+            onSuccess={() => navigateTo('/admin')}
+            onNavigateHome={() => navigateTo('/')}
+          />
+        </React.Suspense>
       );
     }
 
@@ -137,20 +167,22 @@ export const App: React.FC = () => {
     }
 
     return (
-      <AdminDashboardPage
-        adminEmail={adminSession.user.email}
-        onLogout={async () => {
-          await signOutAdmin();
-          navigateTo('/admin');
-        }}
-        onNavigateHome={() => navigateTo('/')}
-      />
+      <React.Suspense fallback={<PageFallback />}>
+        <AdminDashboardPage
+          adminEmail={adminSession.user.email}
+          onLogout={async () => {
+            await signOutAdmin();
+            navigateTo('/admin');
+          }}
+          onNavigateHome={() => navigateTo('/')}
+        />
+      </React.Suspense>
     );
   }
 
   if (currentPath === '/privacy-policy' || currentPath === '/privacy-policy/') {
     return (
-      <>
+      <React.Suspense fallback={<PageFallback />}>
         <PrivacyPolicyPage
           onNavigateHome={() => navigateTo('/')}
           onBookClick={() => handleOpenBooking()}
@@ -163,13 +195,13 @@ export const App: React.FC = () => {
           initialBranch={modalBranch}
           onPrivacyClick={() => navigateTo('/privacy-policy')}
         />
-      </>
+      </React.Suspense>
     );
   }
 
   if (currentPath === '/terms' || currentPath === '/terms/') {
     return (
-      <>
+      <React.Suspense fallback={<PageFallback />}>
         <TermsOfUsePage
           onNavigateHome={() => navigateTo('/')}
           onBookClick={() => handleOpenBooking()}
@@ -183,13 +215,13 @@ export const App: React.FC = () => {
           initialBranch={modalBranch}
           onPrivacyClick={() => navigateTo('/privacy-policy')}
         />
-      </>
+      </React.Suspense>
     );
   }
 
   if (currentPath === '/feedback' || currentPath === '/feedback/') {
     return (
-      <>
+      <React.Suspense fallback={<PageFallback />}>
         <FeedbackPage
           onNavigateHome={() => navigateTo('/')}
           onBookClick={() => handleOpenBooking()}
@@ -202,7 +234,7 @@ export const App: React.FC = () => {
           initialBranch={modalBranch}
           onPrivacyClick={() => navigateTo('/privacy-policy')}
         />
-      </>
+      </React.Suspense>
     );
   }
 
@@ -212,51 +244,54 @@ export const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-[#D8EEE1] text-slate-900 flex flex-col selection:bg-[#E5FE40] selection:text-slate-900">
         
-        {/* 1. HERO DESKTOP / MAIN CANVAS (Faithful to Reference Image 1) */}
+        {/* SINGLE SEMANTIC H1 FOR THE HOMEPAGE */}
+        <h1 className="sr-only">Dento Care Dental Clinic — Dental Care in Ponnani, Kerala</h1>
+
+        {/* 1. HERO DESKTOP / MAIN CANVAS */}
         <HeroDesktop onBookClick={() => handleOpenBooking()} />
 
-      {/* 2. EDITORIAL GRID & MOBILE LAYOUT SECTION (Faithful to Reference Image 2) */}
-      <EditorialGridSection
-        onBookClick={() => handleOpenBooking()}
-        onServiceClick={(serviceId) => {
-          if (serviceId === 'dental-implants') {
-            handleOpenBooking('Dental Implants');
-          } else {
-            const el = document.getElementById('treatments');
-            el?.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}
-        onDoctorClick={() => handleOpenBooking(undefined, 'Dr. Lijeesh Kadambil')}
-      />
+        {/* 2. EDITORIAL GRID & MOBILE LAYOUT SECTION */}
+        <EditorialGridSection
+          onBookClick={() => handleOpenBooking()}
+          onServiceClick={(serviceId) => {
+            if (serviceId === 'dental-implants') {
+              handleOpenBooking('Dental Implants');
+            } else {
+              const el = document.getElementById('treatments');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          onDoctorClick={() => handleOpenBooking(undefined, 'Dr. Lijeesh Kadambil')}
+        />
 
-      {/* 3. TREATMENTS & CLINICAL CARE */}
-      <ServicesSection
-        onBookService={(serviceName) => handleOpenBooking(serviceName)}
-      />
+        {/* 3. TREATMENTS & CLINICAL CARE */}
+        <ServicesSection
+          onBookService={(serviceName) => handleOpenBooking(serviceName)}
+        />
 
-      {/* 4. MULTI-LOCATION SECTION (Ponnani Flagship & Expansion) */}
-      <LocationsSection
-        onBookClick={(branchName) => handleOpenBooking(undefined, undefined, branchName)}
-      />
+        {/* 4. MULTI-LOCATION SECTION (Ponnani Flagship & Expansion) */}
+        <LocationsSection
+          onBookClick={(branchName) => handleOpenBooking(undefined, undefined, branchName)}
+        />
 
-      {/* 5. SPECIALIST DOCTORS */}
-      <DoctorsSection
-        onBookDoctor={(docName) => handleOpenBooking(undefined, docName)}
-      />
+        {/* 5. SPECIALIST DOCTORS */}
+        <DoctorsSection
+          onBookDoctor={(docName) => handleOpenBooking(undefined, docName)}
+        />
 
-      {/* 6. VERIFIED PATIENT REVIEWS (4.9 Google Rating / 32+ Reviews) */}
-      <ReviewsSection onNavigateFeedback={() => navigateTo('/feedback')} />
+        {/* 6. VERIFIED PATIENT REVIEWS (4.9 Google Rating / 32+ Reviews) */}
+        <ReviewsSection onNavigateFeedback={() => navigateTo('/feedback')} />
 
-      {/* 7. CLINIC PHOTOGRAPHY GALLERY */}
-      <GallerySection />
+        {/* 7. CLINIC PHOTOGRAPHY GALLERY */}
+        <GallerySection />
 
-      {/* 8. DARK LUXURY FOOTER */}
-      <Footer
-        onBookClick={() => handleOpenBooking()}
-        onPrivacyClick={() => navigateTo('/privacy-policy')}
-        onTermsClick={() => navigateTo('/terms')}
-        onAdminClick={() => navigateTo('/admin')}
-      />
+        {/* 8. DARK LUXURY FOOTER */}
+        <Footer
+          onBookClick={() => handleOpenBooking()}
+          onPrivacyClick={() => navigateTo('/privacy-policy')}
+          onTermsClick={() => navigateTo('/terms')}
+          onAdminClick={() => navigateTo('/admin')}
+        />
 
         {/* INTERACTIVE APPOINTMENT MODAL */}
         <AppointmentModal
@@ -273,7 +308,7 @@ export const App: React.FC = () => {
 
   // 404 ROUTE HANDLER FOR UNKNOWN PATHS
   return (
-    <>
+    <React.Suspense fallback={<PageFallback />}>
       <NotFoundPage
         onNavigateHome={() => navigateTo('/')}
         onBookClick={() => handleOpenBooking()}
@@ -286,7 +321,7 @@ export const App: React.FC = () => {
         initialBranch={modalBranch}
         onPrivacyClick={() => navigateTo('/privacy-policy')}
       />
-    </>
+    </React.Suspense>
   );
 };
 

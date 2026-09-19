@@ -41,9 +41,9 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
         <div className="flex items-center justify-between mb-8 sm:mb-12 px-4">
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6]" />
-            <span className="text-xs sm:text-sm font-bold tracking-widest text-slate-600 uppercase">
+            <h2 className="text-xs sm:text-sm font-bold tracking-widest text-slate-600 uppercase">
               Advanced dentistry, designed around you
-            </span>
+            </h2>
           </div>
           <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500">
             <Sparkles size={14} className="text-[#3B82F6]" />
@@ -226,8 +226,11 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
               {/* Ultra-realistic 3D Dental Implant Cutout (NO square box / NO card container) */}
               <div className="relative -mr-1 sm:mr-4 w-28 min-[400px]:w-32 sm:w-36 md:w-40 flex-shrink-0 flex items-center justify-center pointer-events-none">
                 <img
-                  src="/images/dental-implant-isolated.png"
+                  src="/images/dental-implant-isolated.webp"
                   alt="Precision Medical Grade Titanium Dental Implant with Porcelain Crown"
+                  width={298}
+                  height={873}
+                  loading="lazy"
                   className="w-full h-auto max-h-[220px] sm:max-h-[250px] md:max-h-[270px] object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] transform group-hover:scale-105 group-hover:-rotate-1 transition-transform duration-500"
                 />
               </div>
@@ -247,10 +250,10 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
             </div>
           </div>
 
-          {/* 3. RIGHT BOTTOM CARD: DOCTOR PROFILES — DR. LIJEESH & DR. ABDULLAH MUFEED (Spans 7 cols, 1 row) */}
+          {/* 3. RIGHT BOTTOM CARD: DOCTOR PROFILES — DR. LIJEESH & PROF. DR. ABDULLAH MUFEED (Spans 7 cols, 1 row) */}
           <div
             onClick={onDoctorClick}
-            className="lg:col-span-7 lg:row-span-1 relative w-full h-full bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-sky-950/15 cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between min-h-[350px] sm:min-h-[370px] lg:min-h-[380px]"
+            className="lg:col-span-7 lg:row-span-1 relative w-full h-full bg-[#5B9DE6] rounded-[34px] sm:rounded-[44px] overflow-hidden shadow-xl shadow-sky-950/15 cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col justify-between min-h-[360px] sm:min-h-[380px] lg:min-h-[390px]"
           >
             {/* Card Background Gradient */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#4B90DE] via-[#5B9DE6] to-[#6FAAED]" />
@@ -269,54 +272,57 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
               </div>
             </div>
 
-            {/* DOCTOR PHOTOGRAPHS (Desktop: height-fitted so heads are never cut off; Mobile: original width scaling preserved) */}
-            <div className="absolute left-0 sm:left-1 lg:left-6 xl:left-8 bottom-0 w-[64%] min-[400px]:w-[66%] sm:w-[62%] md:w-[60%] lg:w-auto lg:h-[86%] xl:h-[90%] pointer-events-none z-10 flex items-end">
+            {/* DOCTOR PHOTOGRAPHS (Desktop: height-fitted so heads are never cut off; Mobile: shifted slightly left so card never veils face or chest) */}
+            <div className="absolute -left-1 sm:left-1 lg:left-6 xl:left-8 bottom-0 w-[60%] min-[380px]:w-[62%] min-[430px]:w-[64%] sm:w-[62%] md:w-[60%] lg:w-auto lg:h-[86%] xl:h-[90%] pointer-events-none z-10 flex items-end">
               <img
-                src="/images/doctors-duo.png"
-                alt="Dr. Lijeesh & Dr. Abdullah Mufeed - Senior Dental Faculty"
+                src="/images/doctors-duo.webp"
+                alt="Dr. Lijeesh & Prof. Dr. Abdullah Mufeed - Senior Dental Faculty"
+                width={894}
+                height={959}
+                loading="lazy"
                 className="w-full lg:w-auto h-auto lg:h-full object-contain object-bottom drop-shadow-[0_16px_30px_rgba(0,0,0,0.25)] transform group-hover:scale-[1.02] transition-transform duration-500"
               />
             </div>
 
             {/* FLOATING PILL-SHAPED CARD & RATING */}
-            <div className="absolute right-3 sm:right-4 lg:right-6 xl:right-8 bottom-3 sm:bottom-4 lg:bottom-6 z-20 flex flex-col items-end w-fit max-w-[185px] min-[400px]:max-w-[195px] sm:max-w-[215px] lg:max-w-[230px]">
+            <div className="absolute right-3 sm:right-4 lg:right-6 xl:right-8 bottom-3 sm:bottom-4 lg:bottom-6 z-20 flex flex-col items-end w-fit max-w-[195px] min-[380px]:max-w-[210px] min-[430px]:max-w-[230px] sm:max-w-[250px] lg:max-w-[300px] xl:max-w-[320px]">
               
               {/* Pill-shaped card with soft rounded corners */}
-              <div className="bg-white rounded-[22px_22px_22px_12px] sm:rounded-[24px_24px_24px_14px] p-3 sm:p-3.5 lg:p-4 shadow-2xl shadow-sky-950/20 border border-white/90 transform group-hover:-translate-y-1 transition-transform text-left">
+              <div className="bg-white rounded-[22px_22px_22px_12px] sm:rounded-[24px_24px_24px_14px] p-3 sm:p-3.5 lg:p-4.5 xl:p-5 shadow-2xl shadow-sky-950/20 border border-white/90 transform group-hover:-translate-y-1 transition-transform text-left">
                 {/* Doctor 1 */}
                 <div>
-                  <h4 className="text-[15px] sm:text-[17px] lg:text-lg font-light tracking-tight text-[#2563EB] leading-none mb-1">
+                  <h4 className="text-[14px] min-[380px]:text-[15px] sm:text-[17px] lg:text-[19px] font-medium lg:font-light tracking-tight text-[#2563EB] leading-tight mb-1">
                     Dr. Lijeesh
                   </h4>
-                  <p className="text-[10.5px] sm:text-[11.5px] font-semibold text-slate-700 leading-snug">
+                  <p className="text-[10px] min-[380px]:text-[10.5px] sm:text-[11.5px] lg:text-xs font-semibold text-slate-700 leading-snug">
                     Senior Dentist
                   </p>
                 </div>
 
                 {/* Subtle divider */}
-                <div className="w-full h-px bg-slate-100 my-2" />
+                <div className="w-full h-px bg-slate-100 my-2 lg:my-2.5" />
 
                 {/* Doctor 2 */}
                 <div>
-                  <h4 className="text-[15px] sm:text-[17px] lg:text-lg font-light tracking-tight text-[#2563EB] leading-none mb-1">
-                    Dr. Abdullah Mufeed
+                  <h4 className="text-[14px] min-[380px]:text-[15px] sm:text-[17px] lg:text-[19px] font-medium lg:font-light tracking-tight text-[#2563EB] leading-tight mb-1">
+                    Prof. Dr. Abdullah Mufeed
                   </h4>
-                  <p className="text-[9.5px] sm:text-[10.5px] font-semibold text-slate-600 leading-snug">
-                    Prof. MES Dental, Perinthalmanna
+                  <p className="text-[9.5px] min-[380px]:text-[10px] sm:text-[11px] lg:text-xs font-semibold text-slate-600 leading-snug">
+                    Prof. MES Dental College, Perinthalmanna
                   </p>
                 </div>
               </div>
 
               {/* 5 Yellow Stars + 311 reviews */}
-              <div className="mt-2.5 sm:mt-3 mr-1 flex flex-col items-end">
-                <div className="flex items-center gap-1 text-amber-300 text-sm sm:text-base drop-shadow">
+              <div className="mt-2 sm:mt-2.5 lg:mt-3 mr-1 flex flex-col items-end">
+                <div className="flex items-center gap-0.5 sm:gap-1 text-amber-300 text-xs sm:text-base drop-shadow">
                   <span>★</span>
                   <span>★</span>
                   <span>★</span>
                   <span>★</span>
                   <span>★</span>
                 </div>
-                <span className="text-white font-semibold text-xs sm:text-sm tracking-tight mt-0.5 drop-shadow">
+                <span className="text-white font-semibold text-[11px] sm:text-xs lg:text-sm tracking-tight mt-0.5 drop-shadow">
                   311 reviews
                 </span>
               </div>

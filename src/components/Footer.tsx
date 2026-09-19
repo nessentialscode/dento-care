@@ -55,11 +55,13 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
           
           {/* BRAND COLUMN (Span 4) */}
           <div className="lg:col-span-4 space-y-4">
-            <a href="#" className="inline-flex items-center gap-2.5 sm:gap-3 group select-none">
+            <a href="/" className="inline-flex items-center gap-2.5 sm:gap-3 group select-none">
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
                 <img
                   src="/images/dento-care-icon.png"
-                  alt="Dento Care Icon"
+                  alt="Dento Care logo"
+                  width={40}
+                  height={40}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -67,6 +69,8 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
                 <img
                   src="/images/dento-care-text-white.png"
                   alt="DENTO CARE"
+                  width={110}
+                  height={20}
                   className="h-[18px] sm:h-[20px] w-auto object-contain select-none"
                 />
                 <span className="text-[9px] sm:text-[9.5px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
@@ -153,7 +157,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
               </span>
               <div className="flex items-start gap-2 text-slate-300 text-xs mb-1">
                 <MapPin size={13} className="mt-0.5 text-[#E5FE40] flex-shrink-0" />
-                <span>Medcity hospital, Veliyancode, Ponnani 679579</span>
+                <span>Medcity hospital, Veliyancode, near Umar Khazi Jaram, Ponnani 679579</span>
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone size={13} className="text-[#E5FE40]" />

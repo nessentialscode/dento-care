@@ -40,14 +40,19 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ onNavigateFeedba
             </h2>
           </div>
 
-          <button
-            type="button"
-            onClick={onNavigateFeedback}
+          <a
+            href="/feedback"
+            onClick={(e) => {
+              if (onNavigateFeedback) {
+                e.preventDefault();
+                onNavigateFeedback();
+              }
+            }}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white text-slate-700 hover:bg-slate-900 hover:text-white border border-slate-200 text-xs font-bold shadow-sm transition-all cursor-pointer group"
           >
             <Plus size={14} className="text-[#3B82F6] group-hover:text-[#E5FE40] transition-colors" />
             <span>Add Feedback</span>
-          </button>
+          </a>
         </div>
 
         {/* OVERALL RATING BANNER */}
@@ -63,10 +68,10 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ onNavigateFeedba
                 <CheckCircle size={14} className="text-[#E5FE40]" />
                 <span>Verified Patient Feedback</span>
               </div>
-              <h2 className="text-5xl sm:text-7xl font-light tracking-tight leading-none">
+              <p className="text-5xl sm:text-7xl font-light tracking-tight leading-none">
                 {reviewStats.averageRating}
                 <span className="text-2xl sm:text-3xl font-normal opacity-80"> / 5.0</span>
-              </h2>
+              </p>
               <div className="flex items-center gap-1.5 text-amber-300 text-2xl">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} size={24} className="fill-amber-300 text-amber-300" />

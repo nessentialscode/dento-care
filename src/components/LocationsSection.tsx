@@ -105,7 +105,7 @@ export const LocationsSection: React.FC<LocationsSectionProps> = ({ onBookClick 
     }
   };
   return (
-    <section id="locations" className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-20">
+    <section id="locations" className="relative w-full px-3 sm:px-6 md:px-8 lg:px-10 pt-4 sm:pt-6 pb-12 sm:pb-20">
       <div className="max-w-[1520px] mx-auto">
         
         {/* SECTION HEADER */}

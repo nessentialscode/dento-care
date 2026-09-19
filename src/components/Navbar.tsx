@@ -21,11 +21,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         
         {/* LEFT: Dento Care Logo + Brand (Exact logo icon & distinctive typography) */}
-        <a href="#" className="flex items-center gap-2.5 sm:gap-3.5 group select-none">
+        <a href="/" className="flex items-center gap-2.5 sm:gap-3.5 group select-none">
           <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-[42px] lg:h-[42px] rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
             <img
               src="/images/dento-care-icon.png"
-              alt="Dento Care Icon"
+              alt="Dento Care logo"
+              width={42}
+              height={42}
               className="w-full h-full object-contain"
             />
           </div>
@@ -33,6 +35,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
             <img
               src="/images/dento-care-text-white.png"
               alt="DENTO CARE"
+              width={115}
+              height={23}
               className="h-[17px] sm:h-[19px] lg:h-[23px] w-auto object-contain select-none"
             />
             <span className="text-[8.5px] sm:text-[9.5px] lg:text-[10px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">

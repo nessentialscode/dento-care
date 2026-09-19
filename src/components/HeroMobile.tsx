@@ -81,11 +81,13 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
         <header className="relative z-30 w-full pt-4 min-[390px]:pt-5 px-5 sm:px-6">
           <div className="flex items-center justify-between pb-3 min-[390px]:pb-3.5">
             {/* LEFT: Clean Brand Logo + Exact Logo Typography & Favicon Icon */}
-            <a href="#" className="flex items-center gap-2.5 group select-none">
+            <a href="/" className="flex items-center gap-2.5 group select-none">
               <div className="relative w-8 h-8 min-[390px]:w-9 min-[390px]:h-9 rounded-xl bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
                 <img
                   src="/images/dento-care-icon.png"
                   alt="Dento Care Icon"
+                  width={36}
+                  height={36}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -93,6 +95,8 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
                 <img
                   src="/images/dento-care-text-white.png"
                   alt="DENTO CARE"
+                  width={95}
+                  height={18}
                   className="h-[16px] min-[390px]:h-[18px] w-auto object-contain select-none"
                 />
                 <span className="text-[8px] min-[390px]:text-[8.5px] uppercase tracking-[0.24em] text-sky-100 font-bold leading-none mt-1 opacity-90 select-none">
@@ -257,7 +261,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
 
         {/* 2. GRAND EDITORIAL HEADLINE (Preserving line breaks, clean thin font style, significantly increased) */}
         <div className="px-5 sm:px-6 pt-3 min-[390px]:pt-4">
-          <h1 className="text-white text-[clamp(4.6rem,20.5vw,6.5rem)] font-light tracking-[-0.04em] leading-[0.82] select-none">
+          <div className="text-white text-[clamp(4.6rem,20.5vw,6.5rem)] font-light tracking-[-0.04em] leading-[0.82] select-none">
             <span className="block whitespace-nowrap">Restore</span>
             <span className="block whitespace-nowrap">Your True</span>
             
@@ -265,18 +269,24 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
             <div className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap pt-1">
               <span className="tracking-[-0.03em]">Smile</span>
               
-              {/* Overlapping Avatars + Solid White Circular +2k Badge */}
+              {/* Overlapping Avatars + Solid White Circular +2k Badge (Separate from H1) */}
               <span className="inline-flex items-center align-middle my-0.5">
                 <span className="inline-flex -space-x-2 sm:-space-x-2.5 overflow-hidden p-0.5">
                   <img
                     className="inline-block h-8 w-8 min-[390px]:h-9 min-[390px]:w-9 sm:h-10 sm:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
-                    src="/images/hero-patient.jpg"
-                    alt="Patient review"
+                    src="/images/hero-patient.webp"
+                    alt="Patient of Dento Care Dental Clinic"
+                    width={40}
+                    height={40}
+                    loading="eager"
                   />
                   <img
                     className="inline-block h-8 w-8 min-[390px]:h-9 min-[390px]:w-9 sm:h-10 sm:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
-                    src="/images/doctor-lijeesh.jpg"
-                    alt="Doctor profile"
+                    src="/images/doctor-lijeesh.webp"
+                    alt="Dr. Lijeesh Kadambil, Chief Dental Surgeon"
+                    width={40}
+                    height={40}
+                    loading="eager"
                   />
                 </span>
                 <span className="ml-1.5 inline-flex items-center justify-center w-8 h-8 min-[390px]:w-9 min-[390px]:w-9 sm:w-10 sm:h-10 rounded-full bg-white shadow-md ring-2 ring-white">
@@ -286,7 +296,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
                 </span>
               </span>
             </div>
-          </h1>
+          </div>
 
           {/* SUPPORTING TEXT (Clean 3-line wrap left-aligned with headline) */}
           <p className="text-white/90 text-[13.5px] min-[375px]:text-[14.5px] font-normal leading-[1.38] pt-3.5 max-w-[290px] sm:max-w-[320px]">
@@ -300,10 +310,14 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
       <div className="relative z-10 w-full flex-grow flex flex-col items-center justify-end mt-2 min-[390px]:mt-3">
         
         <div className="relative w-full max-w-[440px] sm:max-w-[480px] flex justify-center items-end px-2">
-          {/* Pristine 3D Tooth with 3 specialists */}
+          {/* Pristine 3D Tooth with 3 specialists (Mobile LCP Candidate) */}
           <img
-            src="/images/hero-tooth-specialists-mobile.png"
+            src="/images/hero-tooth-specialists-mobile.webp"
             alt="Dental specialists precision treating tooth with advanced technology"
+            width={1024}
+            height={1024}
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-2xl scale-[1.08] min-[390px]:scale-[1.12] transform origin-bottom"
           />
 

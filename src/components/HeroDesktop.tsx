@@ -34,7 +34,7 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
               
               {/* TOP/LEFT: EDITORIAL HEADLINE & SUPPORTING COPY (Tuned to exactly match 90% zoom reference at 100% zoom) */}
               <div className="relative z-20 max-w-xl lg:max-w-2xl xl:max-w-[740px] space-y-2 lg:space-y-2.5">
-                <h1 className="text-white text-[2.75rem] sm:text-[3.4rem] lg:text-[3.9rem] xl:text-[4.7rem] 2xl:text-[5.35rem] font-light tracking-[-0.035em] leading-[0.92] select-none">
+                <div className="text-white text-[2.75rem] sm:text-[3.4rem] lg:text-[3.9rem] xl:text-[4.7rem] 2xl:text-[5.35rem] font-light tracking-[-0.035em] leading-[0.92] select-none">
                   Restore<br />
                   Your True<br />
                   <span className="inline-flex items-center gap-2.5 sm:gap-3.5 whitespace-nowrap">
@@ -44,13 +44,19 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                       <span className="inline-flex -space-x-2 overflow-hidden p-0.5">
                         <img
                           className="inline-block h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
-                          src="/images/hero-patient.jpg"
-                          alt="Patient review"
+                          src="/images/hero-patient.webp"
+                          alt="Patient of Dento Care Dental Clinic"
+                          width={40}
+                          height={40}
+                          loading="eager"
                         />
                         <img
                           className="inline-block h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 rounded-full ring-2 ring-white object-cover shadow-md"
-                          src="/images/doctor-lijeesh.jpg"
-                          alt="Doctor profile"
+                          src="/images/doctor-lijeesh.webp"
+                          alt="Dr. Lijeesh Kadambil, Chief Dental Surgeon"
+                          width={40}
+                          height={40}
+                          loading="eager"
                         />
                       </span>
                       <span className="ml-1 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs sm:text-[12px] font-semibold tracking-normal border border-white/30">
@@ -58,7 +64,7 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                       </span>
                     </span>
                   </span>
-                </h1>
+                </div>
 
                 {/* SUPPORTING TEXT */}
                 <p className="text-white/90 text-[13.5px] sm:text-[14px] lg:text-[15px] xl:text-[15.5px] font-normal max-w-md lg:max-w-lg leading-relaxed pt-1">
@@ -66,12 +72,15 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
                 </p>
               </div>
 
-              {/* LOWER-LEFT COMPOSITION: INTEGRATED CELEBRATING PATIENT CUTOUT (Flushed to bottom edge of canvas, zero gap) */}
+              {/* LOWER-LEFT COMPOSITION: INTEGRATED CELEBRATING PATIENT CUTOUT (Flushed to bottom edge of canvas, zero gap, transparent background) */}
               <div className="relative z-20 mt-auto flex items-end pb-0">
                 <div className="relative w-48 sm:w-56 md:w-64 lg:w-[280px] xl:w-[325px] 2xl:w-[355px] pointer-events-none select-none z-20 mb-0 ml-4 sm:ml-8 lg:ml-12 xl:ml-16">
                   <img
-                    src="/images/hero-patient.png"
-                    alt="Happy confident dental patient celebrating"
+                    src="/images/hero-patient.webp"
+                    alt="Smiling patient after dental treatment"
+                    width={1024}
+                    height={1024}
+                    loading="eager"
                     className="w-full h-auto object-contain object-bottom drop-shadow-xl block -mb-px"
                   />
                 </div>
@@ -80,8 +89,12 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
               {/* CENTER / RIGHT REGION: DOMINANT HERO DENTAL ARTWORK (Flushed to bottom edge of canvas, zero gap) */}
               <div className="mt-8 lg:mt-0 lg:absolute lg:right-1 xl:right-3 2xl:right-6 lg:top-14 xl:top-16 2xl:top-16 lg:bottom-0 xl:bottom-0 2xl:bottom-0 lg:w-[58%] xl:w-[61%] 2xl:w-[64%] flex items-end justify-center lg:justify-end pointer-events-none z-10">
                 <img
-                  src="/images/hero-tooth-specialists.png"
+                  src="/images/hero-tooth-specialists.webp"
                   alt="Precision dental implant crown crafted by specialist technicians"
+                  width={1200}
+                  height={896}
+                  loading="eager"
+                  fetchPriority="high"
                   className="w-full h-full object-contain object-bottom drop-shadow-2xl block -mb-px"
                 />
               </div>

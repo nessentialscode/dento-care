@@ -35,8 +35,11 @@ export const GallerySection: React.FC = () => {
           {/* CARD 1 (FIRST): CONSULTATION LOUNGE & RECEPTION (~60% WIDE ON DESKTOP) */}
           <div className="lg:col-span-7 relative bg-white rounded-[32px] sm:rounded-[40px] lg:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 border border-white/60 group h-[390px] min-[420px]:h-[440px] md:h-[500px] lg:h-[560px] xl:h-[600px]">
             <img
-              src="/images/clinic-lounge-dento-care.jpg"
+              src="/images/clinic-lounge-dento-care.webp"
               alt="Dento Care reception desk with branded wooden wall logo and comfortable patient consultation lounge"
+              width={773}
+              height={1024}
+              loading="lazy"
               className="w-full h-full object-cover object-[center_28%] group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />
@@ -53,8 +56,11 @@ export const GallerySection: React.FC = () => {
           {/* CARD 2 (SECOND): OPERATORY SUITE (~40% REMAINING DESKTOP SPACE) */}
           <div className="lg:col-span-5 relative bg-white rounded-[32px] sm:rounded-[40px] lg:rounded-[44px] overflow-hidden shadow-xl shadow-slate-900/10 border border-white/60 group h-[390px] min-[420px]:h-[440px] md:h-[500px] lg:h-[560px] xl:h-[600px]">
             <img
-              src="/images/clinic-operatory-dento-care.jpg"
+              src="/images/clinic-operatory-dento-care.webp"
               alt="Dento Care state-of-the-art treatment operatory and ergonomic dental chair with panoramic palm tree view"
+              width={768}
+              height={1024}
+              loading="lazy"
               className="w-full h-full object-cover object-[center_35%] group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />

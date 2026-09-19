@@ -51,7 +51,6 @@ import {
 import { clinicLocations } from '../data/locations';
 import { clinicDoctors } from '../data/doctors';
 import { clinicServices } from '../data/services';
-import { clinicInfo } from '../data/clinicInfo';
 import { clearInvalidSession } from '../services/authService';
 
 const getTodayDateString = (): string => {
@@ -265,8 +264,14 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
       setConfirmModal(null);
       setUpdateMessage({ type: 'success', text: `Status successfully updated to ${newStatus}.` });
 
-      // If transition was to confirmed, prompt clear WhatsApp action
-      if (newStatus === 'confirmed') {
+      // If transition was genuinely PENDING -> CONFIRMED, open WhatsApp and prompt clear action
+      if (appt.status === 'pending' && newStatus === 'confirmed') {
+        const whatsappUrl = getConfirmedAppointmentWhatsAppUrl(updated);
+        try {
+          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        } catch (openErr) {
+          console.warn('Could not launch WhatsApp window automatically:', openErr);
+        }
         setConfirmedApptForWhatsApp(updated);
       }
     } catch (err: unknown) {
@@ -386,30 +391,30 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
 
   // Professional confirmed appointment WhatsApp message URL builder
   const getConfirmedAppointmentWhatsAppUrl = (appt: Appointment) => {
-    const cleaned = appt.phone.replace(/\D/g, '');
+    const cleaned = appt.phone.replace(/\D/g, '').replace(/^0+/, '');
     const fullNumber = cleaned.length === 10 ? `91${cleaned}` : (cleaned.startsWith('91') ? cleaned : `91${cleaned}`);
-    
-    const clinicName = clinicInfo.name;
+
+    const patientName = appt.full_name;
+    const branchStr = appt.branch || 'Dento Care Dental Clinic';
     const dateStr = appt.preferred_date || 'Flexible Date';
     const timeStr = appt.preferred_time || 'Clinic Hours';
-    const branchStr = appt.branch || clinicInfo.mainAddress;
-    const serviceStr = appt.service || 'General Dental Care';
-    const doctorStr = appt.doctor ? `\n👨‍⚕️ Specialist: ${appt.doctor}` : '';
-    const clinicContact = clinicInfo.phone;
+    const serviceStr = appt.service || 'General Consultation';
+    const doctorStr = appt.doctor || 'Specialist On Duty';
 
     const message = [
-      `Hello ${appt.full_name},`,
+      `Hello ${patientName} 👋`,
       ``,
-      `Your appointment at *${clinicName}* has been *CONFIRMED*! ✅`,
+      `Your appointment at Dento Care Dental Clinic has been confirmed. ✅`,
       ``,
-      `📅 *Date:* ${dateStr}`,
-      `⏰ *Time:* ${timeStr}`,
-      `📍 *Branch:* ${branchStr}`,
-      `🦷 *Service / Concern:* ${serviceStr}${doctorStr}`,
+      `📍 Branch: ${branchStr}`,
+      `📅 Date: ${dateStr}`,
+      `⏰ Time: ${timeStr}`,
+      `🦷 Treatment: ${serviceStr}`,
+      `👨‍⚕️ Specialist: ${doctorStr}`,
       ``,
-      `If you need to reschedule or have questions, please reach out to us at ${clinicContact}.`,
+      `For any questions or changes, please contact us at +91 7510355355.`,
       ``,
-      `Thank you for choosing ${clinicName}. We look forward to welcoming you!`,
+      `Thank you for choosing Dento Care. We look forward to welcoming you! 🦷`,
     ].join('\n');
 
     return `https://wa.me/${fullNumber}?text=${encodeURIComponent(message)}`;
@@ -1771,6 +1776,12 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
                 <span className="text-slate-500">Treatment:</span>
                 <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.service || 'General Consultation'}</span>
               </div>
+              {confirmedApptForWhatsApp.doctor && (
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Specialist:</span>
+                  <span className="font-semibold text-slate-900">{confirmedApptForWhatsApp.doctor}</span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2.5 pt-2">

@@ -68,11 +68,11 @@ export const clinicLocations: ClinicLocation[] = [
     shortName: "Veliyancode",
     badge: "Aspel Medcity Branch",
     isFlagship: false,
-    locatedIn: "Aspel medcity",
+    locatedIn: "Aspel medcity, near Umar Khazi Jaram",
     locatedInUrl: "https://www.google.com/search?client=safari&q=Aspel+medcity",
     addressLine1: "Medcity hospital, Veliyancode",
-    addressLine2: "Ponnani",
-    cityState: "Kerala 679579",
+    addressLine2: "near Umar Khazi Jaram",
+    cityState: "Ponnani, Kerala 679579",
     phone: "+917510355355",
     displayPhone: "+91 7510355355",
     whatsapp: "917510355355",
@@ -85,7 +85,7 @@ export const clinicLocations: ClinicLocation[] = [
     facebookUrl: "https://m.facebook.com/dentocareponnani/",
     status: "active",
     features: [
-      "Located in Aspel Medcity Hospital",
+      "Located in Aspel Medcity (near Umar Khazi Jaram)",
       "Multispeciality Dental Surgery & Care",
       "Advanced Root Canal & Tooth Restorations",
       "Comprehensive Digital Dental Diagnostics"
