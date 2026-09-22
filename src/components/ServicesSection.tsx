@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowUpRight, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { clinicServices, type ClinicService } from '../data/services';
 
@@ -9,6 +9,7 @@ interface ServicesSectionProps {
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onBookService }) => {
   const [activeTab, setActiveTab] = useState<string>('all');
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const isCollapsingRef = useRef(false);
 
   // Dynamic unique categories from all services
   const categories = ['all', ...Array.from(new Set(clinicServices.map(s => s.category)))];
@@ -23,13 +24,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onBookService 
     : filteredServices;
 
   const handleToggleExpand = () => {
-    const nextState = !isExpanded;
-    setIsExpanded(nextState);
-    if (!nextState) {
-      const el = document.getElementById('treatments');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+    if (isExpanded) {
+      if (isCollapsingRef.current) return;
+      isCollapsingRef.current = true;
+
+      const sixthCard = document.getElementById('treatment-card-6');
+      if (sixthCard) {
+        sixthCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => {
+          setIsExpanded(false);
+          isCollapsingRef.current = false;
+        }, 500);
+      } else {
+        setIsExpanded(false);
+        isCollapsingRef.current = false;
       }
+    } else {
+      setIsExpanded(true);
     }
   };
 
@@ -80,9 +91,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onBookService 
 
         {/* SERVICES CARDS GRID — PRIMARY IMAGE CARD VIEW */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {displayedServices.map((service: ClinicService) => (
+          {displayedServices.map((service: ClinicService, index: number) => (
             <div
               key={service.id}
+              id={index === 5 ? 'treatment-card-6' : undefined}
               className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden text-white shadow-xl shadow-slate-950/20 flex flex-col justify-between p-7 sm:p-9 bg-slate-950 ring-1 ring-white/20 hover:ring-[#E5FE40]/50 hover:shadow-2xl transition-all duration-300 group h-[490px] sm:h-[510px]"
             >
               {/* FULL BLEED PROCEDURE IMAGE */}

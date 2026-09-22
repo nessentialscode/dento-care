@@ -6,7 +6,7 @@ import { clinicServices } from '../data/services';
 import { clinicDoctors } from '../data/doctors';
 import { submitAppointment } from '../services/appointmentService';
 import { fetchActiveClinicBranches, type ClinicBranch } from '../services/clinicBranchService';
-import { fetchDoctorAvailability, type DoctorRecord } from '../services/doctorService';
+import { fetchDoctorAvailability, type DoctorRecord, normalizeDoctorName } from '../services/doctorService';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -191,7 +191,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         // Filter present doctors
         const presentNames = doctorData
           .filter((d) => d.is_present)
-          .map((d) => d.name.toLowerCase());
+          .map((d) => normalizeDoctorName(d.name));
         setPresentDoctorNames(presentNames);
 
         // If current doctor is absent, fallback to Any Available Specialist
@@ -199,7 +199,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
           if (!prevDoc || prevDoc === 'Any Available Specialist') {
             return 'Any Available Specialist';
           }
-          const isPresent = presentNames.includes(prevDoc.toLowerCase());
+          const normPrev = normalizeDoctorName(prevDoc);
+          const isPresent =
+            presentNames.length === 0 ||
+            presentNames.some(
+              (p) => p === normPrev || p.includes(normPrev) || normPrev.includes(p)
+            );
           return isPresent ? prevDoc : 'Any Available Specialist';
         });
       } catch (err) {
@@ -447,9 +452,13 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 >
                   <option value="Any Available Specialist">Any Available Specialist</option>
                   {clinicDoctors
-                    .filter((doc) =>
-                      presentDoctorNames.includes(doc.name.toLowerCase())
-                    )
+                    .filter((doc) => {
+                      if (presentDoctorNames.length === 0) return true;
+                      const normDoc = normalizeDoctorName(doc.name);
+                      return presentDoctorNames.some(
+                        (p) => p === normDoc || p.includes(normDoc) || normDoc.includes(p)
+                      );
+                    })
                     .map((doc) => (
                       <option key={doc.id} value={doc.name}>
                         {doc.name} — {doc.role}

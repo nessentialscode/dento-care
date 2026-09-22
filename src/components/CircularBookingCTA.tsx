@@ -14,17 +14,17 @@ export const CircularBookingCTA: React.FC<CircularBookingCTAProps> = ({
   size = 'lg',
   text = '• BOOK YOUR APPOINTMENT INSTANTLY '
 }) => {
-  // Dimensions based on size
+  // Dimensions based on size (reduced for sleeker, better-proportioned aesthetic)
   const sizeClasses = {
-    sm: 'w-24 h-24 text-[9px]',
-    md: 'w-28 h-28 min-[390px]:w-[118px] min-[390px]:h-[118px]',
-    lg: 'w-32 h-32 sm:w-36 sm:h-36 lg:w-[142px] lg:h-[142px]'
+    sm: 'w-16 h-16 text-[8px]',
+    md: 'w-20 h-20 min-[390px]:w-[92px] min-[390px]:h-[92px]',
+    lg: 'w-24 h-24 sm:w-26 sm:h-26 lg:w-[104px] lg:h-[104px]'
   }[size];
 
   const iconSizes = {
-    sm: 18,
-    md: 24,
-    lg: 28
+    sm: 14,
+    md: 18,
+    lg: 20
   }[size];
 
   // Circle path circumference for r=60 is 2 * pi * 60 ~= 376.99
@@ -65,7 +65,7 @@ export const CircularBookingCTA: React.FC<CircularBookingCTAProps> = ({
       </div>
 
       {/* Center Arrow */}
-      <div className="relative z-10 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-transparent group-hover:rotate-45 transition-transform duration-300">
+      <div className="relative z-10 flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-transparent group-hover:rotate-45 transition-transform duration-300">
         <ArrowUpRight
           size={iconSizes}
           className="text-slate-900 stroke-[2.5]"
