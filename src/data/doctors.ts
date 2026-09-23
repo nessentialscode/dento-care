@@ -68,7 +68,7 @@ export const ponnaniDoctors: DoctorProfile[] = [
     role: "Chief Dental Surgeon & Implantologist",
     specialization: "Aesthetic Dentistry & Oral Surgery",
     experience: "11+ Years Clinical Experience",
-    degrees: "BDS, Fellowship in Oral Implantology",
+    degrees: "BDS",
     rating: 5.0,
     reviewCount: 311,
     image: "/images/doctors/doctor-1.jpg",
@@ -89,7 +89,6 @@ export const ponnaniDoctors: DoctorProfile[] = [
     ],
     achievements: [
       "11+ Years of Clinical Excellence in Advanced Dentistry",
-      "Fellowship in Oral Implantology from leading institutes",
       "Over 300+ Verified 5-Star Patient Reviews",
       "Pioneering digital smile workflow at Dento Care"
     ]
@@ -266,33 +265,32 @@ export const ponnaniDoctors: DoctorProfile[] = [
   {
     id: "dr-ratheesh-ponnani",
     name: "Dr. Ratheesh TK",
-    role: "Consultant Prosthodontist & Oral Surgeon",
-    specialization: "Prosthodontics & Oral Surgery",
+    role: "Oral & Maxillofacial Surgeon",
+    specialization: "Oral & Maxillofacial Surgery",
     experience: "Specialist Consultant",
     degrees: "BDS, MDS",
     rating: 4.9,
     reviewCount: 124,
     image: "/images/doctors/doctor-9.jpg",
     branch: "Ponnani Flagship Clinic",
-    bio: "Accomplished dental specialist focusing on full-mouth prosthetic rehabilitation, precision ceramic crowns, bridges, dentures, and minor oral surgical solutions tailored for optimal function and natural aesthetics.",
+    bio: "A dedicated Oral & Maxillofacial Surgeon (MDS) with advanced clinical training in oral and maxillofacial surgery, trauma management, oral implantology, surgical procedures, and emergency care. With extensive hands-on exposure across complex surgical disciplines, he provides precision-driven, evidence-based care with a strong focus on patient safety, comprehensive treatment planning, and optimal surgical outcomes.",
     fullTitle: "Dr. Ratheesh TK",
-    designation: "Consultant Dental Specialist, Dento Care Dental Clinic",
+    designation: "Oral & Maxillofacial Surgeon, Dento Care Dental Clinic",
     aboutParagraphs: [
-      "Dr. Ratheesh TK brings rich clinical expertise in prosthodontic reconstructions, restorative rehabilitation, and oral surgical management.",
-      "With a postgraduate degree in dentistry and rigorous clinical training, he is known for meticulous treatment planning, smile transformations, and rehabilitating complex functional bites.",
-      "He combines empathetic patient communication with modern digital workflows to ensure predictable, long-lasting clinical results."
+      "Dr. Ratheesh TK is a dedicated Oral & Maxillofacial Surgeon (MDS) with advanced clinical training in oral and maxillofacial surgery, trauma management, oral implantology, surgical procedures, and emergency care.",
+      "With extensive hands-on exposure across complex surgical disciplines, he provides precision-driven, evidence-based care with a strong focus on patient safety, comprehensive treatment planning, and optimal surgical outcomes."
     ],
     expertise: [
-      "Full-Mouth Rehabilitation & Occlusal Bite Correction",
-      "High-Aesthetic Ceramic & Zirconia Crowns & Bridges",
-      "Complete & Partial Removable Prosthodontics",
-      "Minor Oral Surgical Procedures & Extractions",
-      "Smile Designing & Aesthetic Smile Restorations"
+      "Oral & Maxillofacial Surgery",
+      "Trauma Management & Emergency Care",
+      "Oral Implantology & Guided Surgeries",
+      "Complex Surgical Extractions & Minor Oral Surgery",
+      "Facial Trauma & Surgical Reconstruction"
     ],
     achievements: [
-      "Postgraduate MDS Degree in Dentistry",
-      "Specialist in advanced prosthetic rehabilitations and dental surgery",
-      "Extensive clinical experience across Kerala dental institutions"
+      "Master of Dental Surgery (MDS) in Oral & Maxillofacial Surgery",
+      "Advanced clinical training in oral & maxillofacial surgery and trauma management",
+      "Extensive hands-on exposure across complex surgical disciplines"
     ]
   }
 ];
@@ -348,7 +346,7 @@ export const veliyancodeDoctors: DoctorProfile[] = [
     role: "Chief Dental Surgeon & Implantologist",
     specialization: "Aesthetic Dentistry & Oral Surgery",
     experience: "11+ Years Clinical Experience",
-    degrees: "BDS, Fellowship in Oral Implantology",
+    degrees: "BDS",
     rating: 5.0,
     reviewCount: 311,
     image: "/images/doctors/doctor-1.jpg",
@@ -369,16 +367,15 @@ export const veliyancodeDoctors: DoctorProfile[] = [
     ],
     achievements: [
       "11+ Years of Clinical Excellence in Advanced Dentistry",
-      "Fellowship in Oral Implantology from leading institutes",
       "Over 300+ Verified 5-Star Patient Reviews",
       "Pioneering digital smile workflow at Dento Care"
     ]
   },
 
-  // Card 3: Dr. Nasreen Hussain
+  // Card 3: Dr. Nasreen Nazeer Hussain
   {
     id: "dr-nasreen-veliyancode",
-    name: "Dr. Nasreen Hussain",
+    name: "Dr. Nasreen Nazeer Hussain",
     role: "Dental Surgeon & Restorative Specialist",
     specialization: "General & Restorative Dentistry",
     experience: "Resident Dental Surgeon",
@@ -388,10 +385,10 @@ export const veliyancodeDoctors: DoctorProfile[] = [
     image: "/images/doctors/doctor-nasreen.jpg",
     branch: "Veliyancode Clinic",
     bio: "Dedicated to gentle patient care, conservative restorative dentistry, and routine oral health maintenance, combining modern clinical techniques with compassionate patient guidance for families in Veliyancode.",
-    fullTitle: "Dr. Nasreen Hussain",
+    fullTitle: "Dr. Nasreen Nazeer Hussain",
     designation: "Resident Dental Surgeon, Dento Care Dental Clinic - Veliyancode",
     aboutParagraphs: [
-      "Dr. Nasreen Hussain is a dedicated Resident Dental Surgeon at Dento Care Veliyancode Clinic, committed to providing gentle, compassionate, and precise dental treatment.",
+      "Dr. Nasreen Nazeer Hussain is a dedicated Resident Dental Surgeon at Dento Care Veliyancode Clinic, committed to providing gentle, compassionate, and precise dental treatment.",
       "She emphasizes conservative tooth restorations, preventative oral hygiene, and pain-free routine treatments tailored to patients of all ages.",
       "Her friendly and patient-focused approach helps nervous patients and children feel comfortable and at ease during every appointment."
     ],
@@ -534,33 +531,32 @@ export const veliyancodeDoctors: DoctorProfile[] = [
   {
     id: "dr-ratheesh-veliyancode",
     name: "Dr. Ratheesh TK",
-    role: "Consultant Prosthodontist & Oral Surgeon",
-    specialization: "Prosthodontics & Oral Surgery",
+    role: "Oral & Maxillofacial Surgeon",
+    specialization: "Oral & Maxillofacial Surgery",
     experience: "Specialist Consultant",
     degrees: "BDS, MDS",
     rating: 4.9,
     reviewCount: 124,
     image: "/images/doctors/doctor-9.jpg",
     branch: "Veliyancode Clinic",
-    bio: "Accomplished dental specialist focusing on full-mouth prosthetic rehabilitation, precision ceramic crowns, bridges, dentures, and minor oral surgical solutions tailored for optimal function and natural aesthetics.",
+    bio: "A dedicated Oral & Maxillofacial Surgeon (MDS) with advanced clinical training in oral and maxillofacial surgery, trauma management, oral implantology, surgical procedures, and emergency care. With extensive hands-on exposure across complex surgical disciplines, he provides precision-driven, evidence-based care with a strong focus on patient safety, comprehensive treatment planning, and optimal surgical outcomes.",
     fullTitle: "Dr. Ratheesh TK",
-    designation: "Consultant Dental Specialist, Dento Care Dental Clinic",
+    designation: "Oral & Maxillofacial Surgeon, Dento Care Dental Clinic",
     aboutParagraphs: [
-      "Dr. Ratheesh TK brings rich clinical expertise in prosthodontic reconstructions, restorative rehabilitation, and oral surgical management.",
-      "With a postgraduate degree in dentistry and rigorous clinical training, he is known for meticulous treatment planning, smile transformations, and rehabilitating complex functional bites.",
-      "He combines empathetic patient communication with modern digital workflows to ensure predictable, long-lasting clinical results."
+      "Dr. Ratheesh TK is a dedicated Oral & Maxillofacial Surgeon (MDS) with advanced clinical training in oral and maxillofacial surgery, trauma management, oral implantology, surgical procedures, and emergency care.",
+      "With extensive hands-on exposure across complex surgical disciplines, he provides precision-driven, evidence-based care with a strong focus on patient safety, comprehensive treatment planning, and optimal surgical outcomes."
     ],
     expertise: [
-      "Full-Mouth Rehabilitation & Occlusal Bite Correction",
-      "High-Aesthetic Ceramic & Zirconia Crowns & Bridges",
-      "Complete & Partial Removable Prosthodontics",
-      "Minor Oral Surgical Procedures & Extractions",
-      "Smile Designing & Aesthetic Smile Restorations"
+      "Oral & Maxillofacial Surgery",
+      "Trauma Management & Emergency Care",
+      "Oral Implantology & Guided Surgeries",
+      "Complex Surgical Extractions & Minor Oral Surgery",
+      "Facial Trauma & Surgical Reconstruction"
     ],
     achievements: [
-      "Postgraduate MDS Degree in Dentistry",
-      "Specialist in advanced prosthetic rehabilitations and dental surgery",
-      "Extensive clinical experience across Kerala dental institutions"
+      "Master of Dental Surgery (MDS) in Oral & Maxillofacial Surgery",
+      "Advanced clinical training in oral & maxillofacial surgery and trauma management",
+      "Extensive hands-on exposure across complex surgical disciplines"
     ]
   }
 ];
@@ -572,7 +568,7 @@ export const veliyancodeDoctors: DoctorProfile[] = [
 export const clinicDoctors: DoctorProfile[] = [
   ...ponnaniDoctors,
   // Include doctors unique to Veliyancode
-  veliyancodeDoctors[2], // Dr. Nasreen Hussain
+  veliyancodeDoctors[2], // Dr. Nasreen Nazeer Hussain
   veliyancodeDoctors[4]  // Dr. Shoukath Ali PH
 ];
 
