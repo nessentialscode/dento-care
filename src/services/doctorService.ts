@@ -36,6 +36,16 @@ export function isDoctorMatch(nameA: string, nameB: string): boolean {
   if (normA.includes('mufeed') && normB.includes('mufeed')) return true;
   // Handle Haris / Mohammed Haris PM alias
   if (normA.includes('haris') && normB.includes('haris')) return true;
+  // Handle Nidhash / Nidhash Siddik alias
+  if (normA.includes('nidhash') && normB.includes('nidhash')) return true;
+  // Handle Aslif / Mohamed Aslif alias
+  if (normA.includes('aslif') && normB.includes('aslif')) return true;
+  // Handle Ratheesh / Ratheesh TK alias
+  if (normA.includes('ratheesh') && normB.includes('ratheesh')) return true;
+  // Handle Shoukath Ali PM / PH alias
+  if (normA.includes('shoukath') && normB.includes('shoukath')) return true;
+  // Handle Nasreen / Nasreen Hussain alias
+  if (normA.includes('nasreen') && normB.includes('nasreen')) return true;
   return false;
 }
 

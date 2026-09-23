@@ -321,8 +321,8 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
             className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-2xl scale-[1.08] min-[390px]:scale-[1.12] transform origin-bottom"
           />
 
-          {/* Signature Circular Lime Booking CTA Centered RIGHT IN THE MIDDLE OF THE TEETH IMAGE */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-[17%] min-[390px]:bottom-[18%] sm:bottom-[19%] z-30">
+          {/* Signature Circular Lime Booking CTA Centered in the middle of the teeth */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-[26%] min-[390px]:bottom-[27%] sm:bottom-[28%] z-30">
             <CircularBookingCTA
               onClick={onBookClick}
               size="md"

@@ -3,7 +3,7 @@ import { X, MessageCircle, CheckCircle2, AlertCircle, Phone } from 'lucide-react
 import { clinicInfo, APPOINTMENT_TIME_SLOTS } from '../data/clinicInfo';
 import { clinicLocations } from '../data/locations';
 import { clinicServices } from '../data/services';
-import { clinicDoctors } from '../data/doctors';
+import { clinicDoctors, ponnaniDoctors, veliyancodeDoctors } from '../data/doctors';
 import { submitAppointment } from '../services/appointmentService';
 import { fetchActiveClinicBranches, type ClinicBranch } from '../services/clinicBranchService';
 import { fetchDoctorAvailability, type DoctorRecord, normalizeDoctorName } from '../services/doctorService';
@@ -451,7 +451,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#5B9DE6]"
                 >
                   <option value="Any Available Specialist">Any Available Specialist</option>
-                  {clinicDoctors
+                  {(branch.toLowerCase().includes('veliyancode')
+                    ? veliyancodeDoctors
+                    : branch.toLowerCase().includes('ponnani')
+                    ? ponnaniDoctors
+                    : clinicDoctors
+                  )
                     .filter((doc) => {
                       if (presentDoctorNames.length === 0) return true;
                       const normDoc = normalizeDoctorName(doc.name);

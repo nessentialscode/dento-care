@@ -276,7 +276,7 @@ export const App: React.FC = () => {
 
         {/* 5. SPECIALIST DOCTORS */}
         <DoctorsSection
-          onBookDoctor={(docName) => handleOpenBooking(undefined, docName)}
+          onBookDoctor={(docName, branchName) => handleOpenBooking(undefined, docName, branchName)}
         />
 
         {/* 6. VERIFIED PATIENT REVIEWS (4.9 Google Rating / 32+ Reviews) */}

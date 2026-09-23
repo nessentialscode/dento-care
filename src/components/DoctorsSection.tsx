@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ArrowUpRight, ShieldCheck, MapPin, ChevronLeft, ChevronRight, Sparkles, X, Award, GraduationCap, CheckCircle2, Calendar } from 'lucide-react';
-import { clinicDoctors, type DoctorProfile } from '../data/doctors';
+import { ArrowUpRight, ShieldCheck, MapPin, ChevronLeft, ChevronRight, Sparkles, X, Award, GraduationCap, CheckCircle2, Calendar, ArrowLeftRight } from 'lucide-react';
+import { ponnaniDoctors, veliyancodeDoctors, type DoctorProfile } from '../data/doctors';
 import { fetchDoctorAvailability, type DoctorRecord, normalizeDoctorName } from '../services/doctorService';
 
 interface DoctorsSectionProps {
-  onBookDoctor: (doctorName: string) => void;
+  onBookDoctor: (doctorName: string, branchName?: string) => void;
 }
 
 export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) => {
@@ -14,6 +14,22 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
   const [activeDotIndex, setActiveDotIndex] = useState(0);
   const [doctorPresenceMap, setDoctorPresenceMap] = useState<Record<string, boolean>>({});
   const [selectedDoctorForModal, setSelectedDoctorForModal] = useState<DoctorProfile | null>(null);
+  const [selectedBranch, setSelectedBranch] = useState<'ponnani' | 'veliyancode'>('ponnani');
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  const visibleDoctors = selectedBranch === 'veliyancode' ? veliyancodeDoctors : ponnaniDoctors;
+
+  const handleToggleBranch = () => {
+    setIsFlipped((prev) => {
+      const nextFlipped = !prev;
+      setSelectedBranch(nextFlipped ? 'veliyancode' : 'ponnani');
+      return nextFlipped;
+    });
+    setActiveDotIndex(0);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ left: 0, behavior: 'instant' });
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -51,6 +67,31 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
         if (k.includes('haris')) return v;
       }
     }
+    if (norm.includes('aslif')) {
+      for (const [k, v] of Object.entries(doctorPresenceMap)) {
+        if (k.includes('aslif')) return v;
+      }
+    }
+    if (norm.includes('nidhash')) {
+      for (const [k, v] of Object.entries(doctorPresenceMap)) {
+        if (k.includes('nidhash')) return v;
+      }
+    }
+    if (norm.includes('ratheesh')) {
+      for (const [k, v] of Object.entries(doctorPresenceMap)) {
+        if (k.includes('ratheesh')) return v;
+      }
+    }
+    if (norm.includes('shoukath')) {
+      for (const [k, v] of Object.entries(doctorPresenceMap)) {
+        if (k.includes('shoukath')) return v;
+      }
+    }
+    if (norm.includes('nasreen')) {
+      for (const [k, v] of Object.entries(doctorPresenceMap)) {
+        if (k.includes('nasreen')) return v;
+      }
+    }
     return true;
   };
 
@@ -65,9 +106,9 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
     if (firstChild && clientWidth > 0) {
       const cardWidth = firstChild.offsetWidth + 24; // card width + gap
       const index = Math.round(scrollLeft / cardWidth);
-      setActiveDotIndex(Math.min(Math.max(index, 0), clinicDoctors.length - 1));
+      setActiveDotIndex(Math.min(Math.max(index, 0), visibleDoctors.length - 1));
     }
-  }, []);
+  }, [visibleDoctors.length]);
 
   useEffect(() => {
     updateScrollState();
@@ -117,19 +158,99 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
             </p>
           </div>
 
-          {/* DESKTOP & TABLET CAROUSEL NAVIGATION CONTROLS */}
-          <div className="flex items-center gap-3 self-start md:self-end">
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 font-semibold mr-2">
-              <Sparkles size={14} className="text-[#3B82F6]" />
-              <span>Scroll to view specialists</span>
+          {/* DESKTOP & TABLET CAROUSEL NAVIGATION CONTROLS & FLIP SWITCHER */}
+          <div className="flex items-center gap-2.5 sm:gap-3 self-start md:self-end">
+            
+            {/* FLIP CARD SWITCHER */}
+            <div
+              onClick={handleToggleBranch}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleToggleBranch();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              title="Click to flip clinic branch"
+              className="order-last sm:order-first relative select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#3B82F6] rounded-full group flex-shrink-0"
+              style={{ perspective: '1000px' }}
+              aria-label={`Switch branch location. Currently displaying ${isFlipped ? 'Veliyancode Clinic' : 'Ponnani Clinic'}`}
+            >
+              <div
+                className="relative transition-transform duration-500 ease-out"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                  width: '100%',
+                  minWidth: '190px',
+                  height: '44px',
+                }}
+              >
+                {/* FRONT FACE: PONNANI */}
+                <div
+                  className="absolute inset-0 flex items-center justify-between gap-2.5 pl-1.5 pr-2.5 sm:pl-2 sm:pr-3 bg-white/95 backdrop-blur-md rounded-full border border-slate-200/90 shadow-[0_2px_12px_-2px_rgba(37,99,235,0.12)] group-hover:shadow-[0_4px_18px_-2px_rgba(37,99,235,0.2)] group-hover:border-blue-300 transition-all"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                  }}
+                >
+                  <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#2563EB] to-[#3B82F6] text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                      <MapPin size={15} strokeWidth={2.4} />
+                    </div>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-xs sm:text-[13px] font-bold text-slate-800 tracking-tight leading-tight">
+                        Ponnani
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium leading-none mt-0.5 truncate max-w-[95px] sm:max-w-[125px]">
+                        KK Junction, Ponnani
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-7 h-7 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center flex-shrink-0 border border-blue-200/60 group-hover:bg-blue-100 group-hover:rotate-180 transition-all duration-300">
+                    <ArrowLeftRight size={13} strokeWidth={2.2} />
+                  </div>
+                </div>
+
+                {/* BACK FACE: VELIYANCODE */}
+                <div
+                  className="absolute inset-0 flex items-center justify-between gap-2.5 pl-1.5 pr-2.5 sm:pl-2 sm:pr-3 bg-white/95 backdrop-blur-md rounded-full border border-slate-200/90 shadow-[0_2px_12px_-2px_rgba(37,99,235,0.12)] group-hover:shadow-[0_4px_18px_-2px_rgba(37,99,235,0.2)] group-hover:border-blue-300 transition-all"
+                  style={{
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    transform: 'rotateY(180deg)',
+                  }}
+                >
+                  <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#2563EB] to-[#3B82F6] text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                      <MapPin size={15} strokeWidth={2.4} />
+                    </div>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-xs sm:text-[13px] font-bold text-slate-800 tracking-tight leading-tight">
+                        Veliyancode
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium leading-none mt-0.5 truncate max-w-[95px] sm:max-w-[125px]">
+                        Medcity, Veliyancode
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="w-7 h-7 rounded-full bg-blue-50 text-[#2563EB] flex items-center justify-center flex-shrink-0 border border-blue-200/60 group-hover:bg-blue-100 group-hover:-rotate-180 transition-all duration-300">
+                    <ArrowLeftRight size={13} strokeWidth={2.2} />
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* Left Scroll Arrow */}
             <button
               type="button"
               onClick={() => scrollByAmount('left')}
               disabled={!canScrollLeft}
               aria-label="Scroll left"
-              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
+              className={`order-1 sm:order-2 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer flex-shrink-0 ${
                 canScrollLeft
                   ? 'bg-white text-slate-900 hover:bg-[#E5FE40] hover:border-[#E5FE40] shadow-md hover:scale-105 active:scale-95 border-slate-200'
                   : 'bg-slate-100 text-slate-400 border-slate-200/60 cursor-not-allowed opacity-50'
@@ -138,12 +259,13 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
               <ChevronLeft size={20} strokeWidth={2.5} />
             </button>
 
+            {/* Right Scroll Arrow */}
             <button
               type="button"
               onClick={() => scrollByAmount('right')}
               disabled={!canScrollRight}
               aria-label="Scroll right"
-              className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer ${
+              className={`order-2 sm:order-3 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 border cursor-pointer flex-shrink-0 ${
                 canScrollRight
                   ? 'bg-white text-slate-900 hover:bg-[#E5FE40] hover:border-[#E5FE40] shadow-md hover:scale-105 active:scale-95 border-slate-200'
                   : 'bg-slate-100 text-slate-400 border-slate-200/60 cursor-not-allowed opacity-50'
@@ -157,12 +279,13 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
         {/* HORIZONTAL SCROLLABLE DOCTOR GRIDS (~3 GRIDS VISIBLE ON DESKTOP) */}
         <div className="relative">
           <div
+            key={selectedBranch}
             ref={scrollRef}
             onScroll={updateScrollState}
-            className="flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none py-4 px-1 -mx-1"
+            className="flex items-stretch gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-none py-4 px-1 -mx-1 animate-in fade-in duration-300"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {clinicDoctors.map((doc: DoctorProfile) => (
+            {visibleDoctors.map((doc: DoctorProfile) => (
               <div
                 key={doc.id}
                 className="w-[85vw] sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] min-w-[290px] sm:min-w-[320px] lg:min-w-[350px] flex-shrink-0 snap-start flex flex-col"
@@ -249,7 +372,10 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
 
                       <button
                         type="button"
-                        onClick={() => onBookDoctor(isDocPresent(doc.name) ? doc.name : 'Any Available Specialist')}
+                        onClick={() => {
+                          const branchName = selectedBranch === 'veliyancode' ? 'Dento Care — Veliyancode Clinic' : 'Dento Care — Ponnani Clinic';
+                          onBookDoctor(isDocPresent(doc.name) ? doc.name : 'Any Available Specialist', branchName);
+                        }}
                         className="px-5 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm bg-[#5B9DE6] text-white hover:bg-blue-600 hover:shadow-md active:scale-95"
                       >
                         <span>Consult</span>
@@ -268,7 +394,7 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
         {/* DOTS & MOBILE HELPER */}
         <div className="flex flex-col items-center justify-center gap-3 mt-8">
           <div className="flex items-center gap-2">
-            {clinicDoctors.map((doc: DoctorProfile, idx: number) => (
+            {visibleDoctors.map((doc: DoctorProfile, idx: number) => (
               <button
                 key={`dot-${doc.id}`}
                 type="button"
@@ -283,7 +409,7 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
             ))}
           </div>
           <span className="text-xs font-semibold text-slate-500">
-            Showing all {clinicDoctors.length} specialist faculty • Swipe or use arrows to explore
+            Showing all {visibleDoctors.length} specialist faculty • {selectedBranch === 'veliyancode' ? 'Veliyancode Clinic' : 'Ponnani Flagship Clinic'} • Swipe or use arrows to explore
           </span>
         </div>
 
@@ -431,8 +557,9 @@ export const DoctorsSection: React.FC<DoctorsSectionProps> = ({ onBookDoctor }) 
                   type="button"
                   onClick={() => {
                     const docName = selectedDoctorForModal.name;
+                    const branchName = selectedBranch === 'veliyancode' ? 'Dento Care — Veliyancode Clinic' : 'Dento Care — Ponnani Clinic';
                     setSelectedDoctorForModal(null);
-                    onBookDoctor(isDocPresent(docName) ? docName : 'Any Available Specialist');
+                    onBookDoctor(isDocPresent(docName) ? docName : 'Any Available Specialist', branchName);
                   }}
                   className="px-6 py-2.5 rounded-full text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md bg-[#5B9DE6] text-white hover:bg-blue-600 hover:shadow-lg active:scale-95 w-full sm:w-auto"
                 >
