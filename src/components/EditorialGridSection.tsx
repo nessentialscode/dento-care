@@ -324,7 +324,7 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
                     Dr. Lijeesh Kadambil
                   </h4>
                   <p className="text-[11.5px] sm:text-[12.5px] lg:text-[13px] text-slate-600 font-medium leading-snug">
-                    Consultant Oral & Maxillofacial Surgeon
+                    Chief Dental Surgeon
                   </p>
                 </div>
               </div>

@@ -161,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ onBookClick, onPrivacyClick, onT
               </div>
               <div className="flex items-center gap-2 text-slate-300">
                 <Phone size={13} className="text-[#E5FE40]" />
-                <a href="tel:+917510355355" className="hover:text-white transition-colors">+91 7510355355</a>
+                <a href="tel:+917025215151" className="hover:text-white transition-colors">+91 7025215151</a>
               </div>
             </div>
 

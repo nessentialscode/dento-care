@@ -401,6 +401,9 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
     const serviceStr = appt.service || 'General Consultation';
     const doctorStr = appt.doctor || 'Specialist On Duty';
 
+    const isVeliyancode = branchStr.toLowerCase().includes('veliyancode');
+    const branchContactPhone = isVeliyancode ? '+91 7025215151' : '+91 7510355355';
+
     const message = [
       `Hello ${patientName} 👋`,
       ``,
@@ -412,7 +415,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({
       `🦷 Treatment: ${serviceStr}`,
       `👨‍⚕️ Specialist: ${doctorStr}`,
       ``,
-      `For any questions or changes, please contact us at +91 7510355355.`,
+      `For any questions or changes, please contact us at ${branchContactPhone}.`,
       ``,
       `Thank you for choosing Dento Care. We look forward to welcoming you! 🦷`,
     ].join('\n');

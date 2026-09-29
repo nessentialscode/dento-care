@@ -359,6 +359,9 @@ Deno.serve(async (req: Request) => {
 
   if (metaMessageType === "text") {
     // Freeform text message (usable within 24-hour service window or Meta developer test numbers)
+    const isVeliyancode = branchName.toLowerCase().includes("veliyancode");
+    const branchContactPhone = isVeliyancode ? "+91 7025215151" : "+91 7510355355";
+
     const textBody = [
       `Hello ${patientName} 👋`,
       ``,
@@ -369,7 +372,7 @@ Deno.serve(async (req: Request) => {
       `🦷 Treatment: ${serviceName}`,
       `👨‍⚕️ Specialist: ${doctorName}`,
       ``,
-      `If you need to reschedule or have any questions, please contact us at +91 7510355355.`,
+      `If you need to reschedule or have any questions, please contact us at ${branchContactPhone}.`,
       ``,
       `Thank you for choosing Dento Care. We look forward to welcoming you. 🦷`,
     ].join("\n");

@@ -65,27 +65,25 @@ export const ponnaniDoctors: DoctorProfile[] = [
   {
     id: "dr-lijeesh-ponnani",
     name: "Dr. Lijeesh Kadambil",
-    role: "Chief Dental Surgeon & Implantologist",
-    specialization: "Aesthetic Dentistry & Oral Surgery",
+    role: "Chief Dental Surgeon",
+    specialization: "Aesthetic Dentistry",
     experience: "11+ Years Clinical Experience",
     degrees: "BDS",
     rating: 5.0,
     reviewCount: 311,
     image: "/images/doctors/doctor-1.jpg",
     branch: "Ponnani Flagship Clinic",
-    bio: "With 11 years of clinical excellence, Dr. Lijeesh combines loupes-assisted precision micro-dentistry and modern surgical technologies to deliver painless smile corrections, root canals, and comprehensive personalized care.",
+    bio: "With 11 years of clinical excellence, Dr. Lijeesh combines loupes-assisted precision micro-dentistry to deliver painless smile corrections, root canals, and comprehensive personalized care.",
     fullTitle: "Dr. Lijeesh Kadambil",
-    designation: "Chief Dental Surgeon & Implantologist, Dental Care Dental Clinic",
+    designation: "Chief Dental Surgeon, Dental Care Dental Clinic",
     aboutParagraphs: [
-      "Dr. Lijeesh Kadambil is the Chief Dental Surgeon and Implantologist at Dental Care Dental Clinic. With 11 years of clinical excellence, he combines loupes-assisted precision micro-dentistry and modern surgical technologies.",
-      "He delivers painless smile corrections, root canals, dental implants, and comprehensive personalized care with a gentle, patient-first approach."
+      "Dr. Lijeesh Kadambil is the Chief Dental Surgeon at Dental Care Dental Clinic. With 11 years of clinical excellence, he combines loupes-assisted precision micro-dentistry.",
+      "He delivers painless smile corrections, root canals, and comprehensive personalized care with a gentle, patient-first approach."
     ],
     expertise: [
-      "Oral Implantology & Guided Bone Regeneration",
       "Loupes-Assisted Precision Micro-Dentistry",
       "Painless Single-Sitting Root Canal Treatments",
-      "Aesthetic Smile Makeovers & Ceramic Veneers",
-      "Wisdom Tooth Surgery & Minor Oral Surgery"
+      "Aesthetic Smile Makeovers & Ceramic Veneers"
     ],
     achievements: [
       "11+ Years of Clinical Excellence in Advanced Dentistry",
@@ -99,7 +97,7 @@ export const ponnaniDoctors: DoctorProfile[] = [
     id: "dr-jasmine-ponnani",
     name: "Dr. Jasmin TP",
     role: "Dental Surgeon & Restorative Specialist",
-    specialization: "Conservative Dentistry & Endodontics",
+    specialization: "Conservative Dentistry",
     experience: "Resident Dental Surgeon",
     degrees: "BDS",
     rating: 4.9,
@@ -111,7 +109,6 @@ export const ponnaniDoctors: DoctorProfile[] = [
     designation: "Resident Dental Surgeon, Dento Care Dental Clinic",
     expertise: [
       "Conservative Restorative Dentistry",
-      "Endodontic Consultations",
       "Gentle Patient Anxiety Management",
       "Oral Health Maintenance & Fluoride Therapy"
     ]
@@ -343,27 +340,25 @@ export const veliyancodeDoctors: DoctorProfile[] = [
   {
     id: "dr-lijeesh-veliyancode",
     name: "Dr. Lijeesh Kadambil",
-    role: "Chief Dental Surgeon & Implantologist",
-    specialization: "Aesthetic Dentistry & Oral Surgery",
+    role: "Chief Dental Surgeon",
+    specialization: "Aesthetic Dentistry",
     experience: "11+ Years Clinical Experience",
     degrees: "BDS",
     rating: 5.0,
     reviewCount: 311,
     image: "/images/doctors/doctor-1.jpg",
     branch: "Veliyancode Clinic",
-    bio: "With 11 years of clinical excellence, Dr. Lijeesh combines loupes-assisted precision micro-dentistry and modern surgical technologies to deliver painless smile corrections, root canals, and comprehensive personalized care.",
+    bio: "With 11 years of clinical excellence, Dr. Lijeesh combines loupes-assisted precision micro-dentistry to deliver painless smile corrections, root canals, and comprehensive personalized care.",
     fullTitle: "Dr. Lijeesh Kadambil",
-    designation: "Chief Dental Surgeon & Implantologist, Dental Care Dental Clinic",
+    designation: "Chief Dental Surgeon, Dental Care Dental Clinic",
     aboutParagraphs: [
-      "Dr. Lijeesh Kadambil is the Chief Dental Surgeon and Implantologist at Dental Care Dental Clinic. With 11 years of clinical excellence, he combines loupes-assisted precision micro-dentistry and modern surgical technologies.",
-      "He delivers painless smile corrections, root canals, dental implants, and comprehensive personalized care with a gentle, patient-first approach."
+      "Dr. Lijeesh Kadambil is the Chief Dental Surgeon at Dental Care Dental Clinic. With 11 years of clinical excellence, he combines loupes-assisted precision micro-dentistry.",
+      "He delivers painless smile corrections, root canals, and comprehensive personalized care with a gentle, patient-first approach."
     ],
     expertise: [
-      "Oral Implantology & Guided Bone Regeneration",
       "Loupes-Assisted Precision Micro-Dentistry",
       "Painless Single-Sitting Root Canal Treatments",
-      "Aesthetic Smile Makeovers & Ceramic Veneers",
-      "Wisdom Tooth Surgery & Minor Oral Surgery"
+      "Aesthetic Smile Makeovers & Ceramic Veneers"
     ],
     achievements: [
       "11+ Years of Clinical Excellence in Advanced Dentistry",

@@ -311,11 +311,20 @@ export const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({
                     </a>
                   </div>
 
-                  <div className="flex items-center gap-2.5 text-slate-300">
-                    <Phone size={16} className="text-[#E5FE40] flex-shrink-0" />
-                    <a href="tel:+917510355355" className="hover:text-white transition-colors">
-                      +91 7510355355 (Phone / WhatsApp)
-                    </a>
+                  <div className="flex items-start gap-2.5 text-slate-300">
+                    <Phone size={16} className="text-[#E5FE40] flex-shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <div>
+                        <a href="tel:+917510355355" className="hover:text-white transition-colors">
+                          +91 7510355355 (Ponnani)
+                        </a>
+                      </div>
+                      <div>
+                        <a href="tel:+917025215151" className="hover:text-white transition-colors">
+                          +91 7025215151 (Veliyancode)
+                        </a>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex items-start gap-2.5 text-slate-300">
