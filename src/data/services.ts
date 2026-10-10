@@ -6,6 +6,7 @@ export interface ClinicService {
   fullDesc: string;
   features: string[];
   image: string;
+  imagePosition?: string;
   isKeyService?: boolean;
 }
 
@@ -17,7 +18,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Permanent, natural-feeling titanium implants to replace missing teeth with lifelong durability.",
     fullDesc: "Our computer-guided implantology ensures sub-millimeter precision, minimal discomfort, and rapid healing for seamless single, multiple, or full-arch restorations.",
     features: ["Titanium Grade V Posts", "Computer-Guided Surgery", "Same-Day Temporary Crowns", "Lifelong Stability"],
-    image: "/images/treatments/dental-implants.jpg",
+    image: "/images/treatments/dental-implants.png",
+    imagePosition: "50% 20%",
     isKeyService: true
   },
   {
@@ -27,7 +29,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Gentle microscopic root canal therapy saving infected teeth in single comfortable sessions.",
     fullDesc: "Utilizing rotary endodontic instruments and apex locators to eliminate infection painlessly, preserving your natural tooth structure.",
     features: ["Single-Sitting RCT Available", "Digital Apex Locators", "Virtually Painless Anesthesia", "Crown Fitting"],
-    image: "/images/treatments/root-canal.jpg"
+    image: "/images/treatments/root-canal.png",
+    imagePosition: "50% 28%"
   },
   {
     id: "braces-aligners",
@@ -36,7 +39,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Discreet clear aligners and modern ceramic braces to gently align your teeth into harmony.",
     fullDesc: "Custom 3D scanned treatment paths provide predictable tooth movement with nearly invisible aligners or precision ceramic brackets.",
     features: ["Custom 3D Digital Scans", "Invisible Clear Aligners", "Self-Ligating Ceramic Braces", "Teens & Adults"],
-    image: "/images/treatments/braces-aligners.jpg"
+    image: "/images/treatments/braces-aligners.png",
+    imagePosition: "50% 35%"
   },
   {
     id: "teeth-whitening",
@@ -45,7 +49,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "In-office LED power whitening lifting deep stains by up to 8 shades in just 45 minutes.",
     fullDesc: "Enamel-safe, pH-balanced professional whitening gel activated with cold LED light gives you an instantly radiant smile without tooth sensitivity.",
     features: ["Up to 8 Shades Whiter", "Enamel-Safe Formula", "No Sensitivity Guarantee", "Custom Take-Home Trays"],
-    image: "/images/treatments/teeth-whitening.jpg"
+    image: "/images/treatments/teeth-whitening.jpg",
+    imagePosition: "50% 35%"
   },
   {
     id: "veneers-crowns",
@@ -54,7 +59,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Handcrafted ultra-thin porcelain veneers and zirconia crowns for flawless symmetry.",
     fullDesc: "Custom designed to match your facial profile, correcting gaps, chips, uneven edges, and deep discoloration with lifelike translucency.",
     features: ["E-Max & Zirconia Porcelain", "Natural Light Translucency", "Stain Resistant", "Minimally Invasive"],
-    image: "/images/treatments/veneers-crowns.jpg"
+    image: "/images/treatments/veneers-crowns.png",
+    imagePosition: "50% 45%"
   },
   {
     id: "pediatric-general",
@@ -63,7 +69,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Comprehensive oral prophylaxis, fissure sealants, and caring pediatric dental visits.",
     fullDesc: "A warm, gentle clinic environment designed to make visits relaxed and positive for children and adults alike.",
     features: ["Gentle Ultrasonic Scaling", "Fluoride Treatments", "Cavity Prevention", "Family Wellness Plans"],
-    image: "/images/treatments/preventive-family.jpg"
+    image: "/images/treatments/preventive-family.jpg",
+    imagePosition: "50% 35%"
   },
   {
     id: "periodontal-therapy",
@@ -72,7 +79,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Specialized gum care, laser pocket disinfection, and regenerative gum surgeries to restore gingival health.",
     fullDesc: "Comprehensive clinical care for bleeding gums, bone loss, and periodontitis using minimally invasive ultrasonic cleaning, laser sterilization, and regenerative surgical grafting.",
     features: ["Laser Pocket Decontamination", "Deep Subgingival Scaling", "Flap Surgery & Bone Grafts", "Receding Gum Therapy"],
-    image: "/images/treatments/periodontal-therapy.jpg"
+    image: "/images/treatments/periodontal-therapy.png",
+    imagePosition: "50% 22%"
   },
   {
     id: "maxillofacial-surgery",

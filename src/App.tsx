@@ -4,6 +4,7 @@ import { EditorialGridSection } from './components/EditorialGridSection';
 import { ServicesSection } from './components/ServicesSection';
 import { LocationsSection } from './components/LocationsSection';
 import { DoctorsSection } from './components/DoctorsSection';
+import { DentalInsightsSection } from './components/DentalInsightsSection';
 import { ReviewsSection } from './components/ReviewsSection';
 import { GallerySection } from './components/GallerySection';
 import { AppointmentModal } from './components/AppointmentModal';
@@ -31,6 +32,12 @@ const AdminDashboardPage = React.lazy(() =>
 );
 const NotFoundPage = React.lazy(() =>
   import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage }))
+);
+const BlogPage = React.lazy(() =>
+  import('./pages/BlogPage').then((m) => ({ default: m.BlogPage }))
+);
+const BlogArticlePage = React.lazy(() =>
+  import('./pages/BlogArticlePage').then((m) => ({ default: m.BlogArticlePage }))
 );
 
 const PageFallback: React.FC = () => (
@@ -238,6 +245,49 @@ export const App: React.FC = () => {
     );
   }
 
+  if (currentPath === '/blog' || currentPath === '/blog/') {
+    return (
+      <React.Suspense fallback={<PageFallback />}>
+        <BlogPage
+          onNavigateHome={() => navigateTo('/')}
+          onNavigateArticle={(slug) => navigateTo(`/blog/${slug}`)}
+          onBookClick={() => handleOpenBooking()}
+        />
+        <AppointmentModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialService={modalService}
+          initialDoctor={modalDoctor}
+          initialBranch={modalBranch}
+          onPrivacyClick={() => navigateTo('/privacy-policy')}
+        />
+      </React.Suspense>
+    );
+  }
+
+  if (
+    currentPath === '/blog/sharp-teeth-oral-cancer-awareness' ||
+    currentPath === '/blog/sharp-teeth-oral-cancer-awareness/'
+  ) {
+    return (
+      <React.Suspense fallback={<PageFallback />}>
+        <BlogArticlePage
+          onNavigateHome={() => navigateTo('/')}
+          onNavigateBlog={() => navigateTo('/blog')}
+          onBookClick={() => handleOpenBooking()}
+        />
+        <AppointmentModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          initialService={modalService}
+          initialDoctor={modalDoctor}
+          initialBranch={modalBranch}
+          onPrivacyClick={() => navigateTo('/privacy-policy')}
+        />
+      </React.Suspense>
+    );
+  }
+
   const isHomeRoute = currentPath === '/' || currentPath === '' || currentPath === '/index.html';
 
   if (isHomeRoute) {
@@ -248,7 +298,10 @@ export const App: React.FC = () => {
         <h1 className="sr-only">Dento Care Dental Clinic — Dental Care in Ponnani, Kerala</h1>
 
         {/* 1. HERO DESKTOP / MAIN CANVAS */}
-        <HeroDesktop onBookClick={() => handleOpenBooking()} />
+        <HeroDesktop
+          onBookClick={() => handleOpenBooking()}
+          onNavigate={(path) => navigateTo(path)}
+        />
 
         {/* 2. EDITORIAL GRID & MOBILE LAYOUT SECTION */}
         <EditorialGridSection
@@ -279,7 +332,10 @@ export const App: React.FC = () => {
           onBookDoctor={(docName, branchName) => handleOpenBooking(undefined, docName, branchName)}
         />
 
-        {/* 6. VERIFIED PATIENT REVIEWS (4.9 Google Rating / 32+ Reviews) */}
+        {/* 6. DENTAL INSIGHTS (HOMEPAGE BLOG ENTRY SECTION) */}
+        <DentalInsightsSection onNavigateBlog={() => navigateTo('/blog')} />
+
+        {/* 7. VERIFIED PATIENT REVIEWS (4.9 Google Rating / 32+ Reviews) */}
         <ReviewsSection onNavigateFeedback={() => navigateTo('/feedback')} />
 
         {/* 7. CLINIC PHOTOGRAPHY GALLERY */}

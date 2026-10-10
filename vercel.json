@@ -2,7 +2,7 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/(privacy-policy|terms|feedback|admin)(/.*)?",
+      "source": "/(privacy-policy|terms|feedback|admin|blog)(/.*)?",
       "destination": "/index.html"
     }
   ],

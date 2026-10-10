@@ -3,18 +3,31 @@ import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   onBookClick: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onBookClick, onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: 'Treatments', href: '#treatments' },
     { label: 'Locations', href: '#locations' },
     { label: 'Doctors', href: '#doctors' },
+    { label: 'Blog', href: '/blog' },
     { label: 'Reviews', href: '#reviews' },
     { label: 'Gallery', href: '#gallery' },
   ];
+
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/')) {
+      e.preventDefault();
+      if (onNavigate) {
+        onNavigate(href);
+      } else {
+        window.location.href = href;
+      }
+    }
+  };
 
   return (
     <header className="w-full pt-4 sm:pt-5 lg:pt-6 px-6 sm:px-10 lg:px-12 relative z-30">
@@ -51,6 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
             <a
               key={link.label}
               href={link.href}
+              onClick={(e) => handleLinkClick(e, link.href)}
               className="text-white/90 hover:text-white text-[14px] lg:text-[15px] font-medium transition-all duration-200 hover:-translate-y-0.5"
             >
               {link.label}
@@ -92,7 +106,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
             <a
               key={link.label}
               href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleLinkClick(e, link.href);
+              }}
               className="text-slate-800 font-medium text-base hover:text-blue-600 transition-colors py-1"
             >
               {link.label}

@@ -7,14 +7,15 @@ import { HeroMobile } from './HeroMobile';
 
 interface HeroDesktopProps {
   onBookClick: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
+export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick, onNavigate }) => {
   return (
     <>
       {/* MOBILE HERO: Only rendered on screens under lg (<1024px) - Exactly replicates Image 3 */}
       <div className="block lg:hidden">
-        <HeroMobile onBookClick={onBookClick} />
+        <HeroMobile onBookClick={onBookClick} onNavigate={onNavigate} />
       </div>
 
       {/* DESKTOP HERO: only rendered on lg and above (>=1024px) */}
@@ -27,7 +28,7 @@ export const HeroDesktop: React.FC<HeroDesktopProps> = ({ onBookClick }) => {
             <div className="absolute inset-0 bg-gradient-to-tr from-[#4B91E0]/60 via-[#5B9DE6] to-[#72AEF1]/80 pointer-events-none" />
 
             {/* INTEGRATED NAVBAR */}
-            <Navbar onBookClick={onBookClick} />
+            <Navbar onBookClick={onBookClick} onNavigate={onNavigate} />
 
             {/* HERO CONTENT AREA */}
             <div className="relative z-10 px-6 sm:px-10 lg:px-12 xl:px-14 pt-2 sm:pt-2.5 lg:pt-3 pb-0 flex-grow flex flex-col justify-between min-h-0">

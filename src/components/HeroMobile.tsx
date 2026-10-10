@@ -6,9 +6,10 @@ import { clinicInfo } from '../data/clinicInfo';
 
 interface HeroMobileProps {
   onBookClick: () => void;
+  onNavigate?: (path: string) => void;
 }
 
-export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
+export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick, onNavigate }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Lock body/page scroll completely and handle Escape key when mobile menu is open
@@ -64,6 +65,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
     { label: 'Treatments', href: '#treatments', note: 'Specialties' },
     { label: 'Locations', href: '#locations', note: 'Ponnani' },
     { label: 'Specialist Doctors', href: '#doctors', note: 'Team' },
+    { label: 'Blog', href: '/blog', note: 'Insights' },
     { label: 'Patient Reviews', href: '#reviews', note: '4.9 ★' },
     { label: 'Clinic Gallery', href: '#gallery', note: 'Inside View' },
   ];
@@ -186,7 +188,17 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick }) => {
                       <a
                         key={link.label}
                         href={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
+                        onClick={(e) => {
+                          setMobileMenuOpen(false);
+                          if (link.href.startsWith('/')) {
+                            e.preventDefault();
+                            if (onNavigate) {
+                              onNavigate(link.href);
+                            } else {
+                              window.location.href = link.href;
+                            }
+                          }
+                        }}
                         className="group flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-700 hover:text-blue-600 hover:bg-blue-50/70 font-semibold text-[15px] transition-all"
                       >
                         <span>{link.label}</span>

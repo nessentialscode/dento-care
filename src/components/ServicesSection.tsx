@@ -101,12 +101,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onBookService 
               <img
                 src={service.image}
                 alt={`${service.title} clinical procedure`}
-                className="absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-700 group-hover:scale-105"
+                className="absolute inset-0 w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                style={{ objectPosition: service.imagePosition || 'center center' }}
                 loading="lazy"
               />
 
               {/* GRADIENT OVERLAY */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/65 to-slate-900/40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/20" />
 
               {/* CARD TOP BAR */}
               <div className="relative z-10 flex items-center justify-between">
