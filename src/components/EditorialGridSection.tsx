@@ -294,7 +294,7 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
             <div className="absolute -left-1 sm:left-1 lg:left-6 xl:left-8 bottom-0 w-[60%] min-[380px]:w-[62%] min-[430px]:w-[64%] sm:w-[62%] md:w-[60%] lg:w-auto lg:h-[90%] xl:h-[94%] pointer-events-none z-10 flex items-end">
               <img
                 src="/images/doctors-duo.webp"
-                alt="Prof. Dr. Abdul Mufeed & Dr. Lijeesh Kadambil - Senior Dental Faculty"
+                alt="Prof. Dr. Abdullah Mufeed & Dr. Lijeesh Kadambil - Senior Dental Faculty"
                 width={894}
                 height={959}
                 loading="lazy"
@@ -305,10 +305,10 @@ export const EditorialGridSection: React.FC<EditorialGridSectionProps> = ({
             {/* FLOATING PILL-SHAPED CARD (NAME LOG) */}
             <div className="absolute right-4 sm:right-6 lg:right-9 bottom-4 sm:bottom-6 lg:bottom-7 z-20">
               <div className="bg-white rounded-[24px] sm:rounded-[28px] p-5 sm:p-6 shadow-2xl border border-white/90 transform group-hover:-translate-y-1 transition-transform text-left min-w-[230px] sm:min-w-[270px] lg:min-w-[310px] max-w-[330px]">
-                {/* 1st: Prof. Dr. Abdul Mufeed */}
+                {/* 1st: Prof. Dr. Abdullah Mufeed */}
                 <div>
                   <h4 className="text-[16px] sm:text-[18px] lg:text-[19.5px] font-semibold text-[#2563EB] leading-tight mb-1">
-                    Prof. Dr. Abdul Mufeed
+                    Prof. Dr. Abdullah Mufeed
                   </h4>
                   <p className="text-[11.5px] sm:text-[12.5px] lg:text-[13px] text-slate-600 font-medium leading-snug">
                     Prof. & HoD of MES Perinthalmanna

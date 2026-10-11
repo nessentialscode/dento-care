@@ -21,10 +21,10 @@ export interface DoctorProfile {
 // 1. PONNANI FLAGSHIP CLINIC DOCTORS (Cards 1 to 9 in exact specified order)
 // ============================================================================
 export const ponnaniDoctors: DoctorProfile[] = [
-  // Card 1: Dr. Abdulla Mufeed
+  // Card 1: Prof. Dr. Abdullah Mufeed
   {
     id: "dr-mufeed-ponnani",
-    name: "Dr. Abdulla Mufeed",
+    name: "Prof. Dr. Abdullah Mufeed",
     role: "Professor & Head, Oral Medicine & Radiology • Co-Founder",
     specialization: "Oral Medicine & Radiology",
     experience: "23+ Years Clinical Experience",
@@ -34,10 +34,10 @@ export const ponnaniDoctors: DoctorProfile[] = [
     image: "/images/doctors/doctor-2.jpg",
     branch: "Ponnani Flagship Clinic",
     bio: "Senior dental clinician, academician, and co-founder with over 23 years of experience. Professor & HOD of Oral Medicine & Radiology at MES Dental College and founder of 3Di Scans, specializing in oral mucosal disorders, orofacial pain, oral malignancies, and advanced maxillofacial diagnostics.",
-    fullTitle: "Dr. Abdulla Mufeed",
+    fullTitle: "Prof. Dr. Abdullah Mufeed",
     designation: "Professor & Head, Department of Oral Medicine & Radiology, MES Dental College | Co-Founder, Dental Care Dental Clinic",
     aboutParagraphs: [
-      "Professor Dr. Abdulla Mufeed is a senior dental clinician, academician, researcher, and mentor with over 23 years of experience in dental care and 18 years in dental education and research.",
+      "Professor Dr. Abdullah Mufeed is a senior dental clinician, academician, researcher, and mentor with over 23 years of experience in dental care and 18 years in dental education and research.",
       "As a Professor and Head of the Department of Oral Medicine & Radiology at MES Dental College, he brings extensive clinical and academic experience to the diagnosis and management of complex oral and dental conditions.",
       "Dr. Mufeed has authored 23 scientific publications in national and international journals and has regularly conducted continuing dental education programmes and professional training sessions for dental practitioners.",
       "A Passion for Teaching & Mentorship: Education has been an important part of Dr. Mufeed's professional journey. Over the years, he has trained approximately 1,000 dental graduates, many of whom are now practicing across India and the Middle East. His approach combines clinical experience, evidence-based practice, and mentorship, with a strong emphasis on helping the next generation of dental professionals provide compassionate and quality patient care.",
@@ -296,10 +296,10 @@ export const ponnaniDoctors: DoctorProfile[] = [
 // 2. VELIYANCODE CLINIC DOCTORS (Cards 1 to 8 in exact specified order)
 // ============================================================================
 export const veliyancodeDoctors: DoctorProfile[] = [
-  // Card 1: Dr. Abdullah Mufeed
+  // Card 1: Prof. Dr. Abdullah Mufeed
   {
     id: "dr-mufeed-veliyancode",
-    name: "Dr. Abdullah Mufeed",
+    name: "Prof. Dr. Abdullah Mufeed",
     role: "Professor & Head, Oral Medicine & Radiology • Co-Founder",
     specialization: "Oral Medicine & Radiology",
     experience: "23+ Years Clinical Experience",
@@ -309,7 +309,7 @@ export const veliyancodeDoctors: DoctorProfile[] = [
     image: "/images/doctors/doctor-2.jpg",
     branch: "Veliyancode Clinic",
     bio: "Senior dental clinician, academician, and co-founder with over 23 years of experience. Professor & HOD of Oral Medicine & Radiology at MES Dental College and founder of 3Di Scans, specializing in oral mucosal disorders, orofacial pain, oral malignancies, and advanced maxillofacial diagnostics.",
-    fullTitle: "Dr. Abdullah Mufeed",
+    fullTitle: "Prof. Dr. Abdullah Mufeed",
     designation: "Professor & Head, Department of Oral Medicine & Radiology, MES Dental College | Co-Founder, Dental Care Dental Clinic",
     aboutParagraphs: [
       "Professor Dr. Abdullah Mufeed is a senior dental clinician, academician, researcher, and mentor with over 23 years of experience in dental care and 18 years in dental education and research.",

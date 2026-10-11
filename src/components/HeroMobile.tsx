@@ -334,7 +334,7 @@ export const HeroMobile: React.FC<HeroMobileProps> = ({ onBookClick, onNavigate 
           />
 
           {/* Signature Circular Lime Booking CTA Centered in the middle of the teeth */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-[26%] min-[390px]:bottom-[27%] sm:bottom-[28%] z-30">
+          <div className="absolute left-[calc(50%+5px)] -translate-x-1/2 bottom-[12.5%] min-[390px]:bottom-[13%] sm:bottom-[13.5%] z-30">
             <CircularBookingCTA
               onClick={onBookClick}
               size="md"

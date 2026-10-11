@@ -49,8 +49,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "In-office LED power whitening lifting deep stains by up to 8 shades in just 45 minutes.",
     fullDesc: "Enamel-safe, pH-balanced professional whitening gel activated with cold LED light gives you an instantly radiant smile without tooth sensitivity.",
     features: ["Up to 8 Shades Whiter", "Enamel-Safe Formula", "No Sensitivity Guarantee", "Custom Take-Home Trays"],
-    image: "/images/treatments/teeth-whitening.jpg",
-    imagePosition: "50% 35%"
+    image: "/images/treatments/teeth-whitening.png",
+    imagePosition: "50% 40%"
   },
   {
     id: "veneers-crowns",
@@ -89,7 +89,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Expert surgical extractions, impacted wisdom tooth removals, cyst enucleations, and minor oral surgeries.",
     fullDesc: "Painless in-office oral surgical procedures performed under profound local anesthesia in sterile operatory suites with fast-healing clinical protocols.",
     features: ["Impacted Wisdom Tooth Surgery", "Atraumatic Surgical Extractions", "Cyst & Benign Lesion Removal", "Frenectomy & Bone Contouring"],
-    image: "/images/treatments/maxillofacial-surgery.jpg"
+    image: "/images/treatments/maxillofacial-surgery.png",
+    imagePosition: "50% 40%"
   },
   {
     id: "dentures-prosthetics",
@@ -116,7 +117,8 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Gentle, stress-free dental care for children and teens with painless fillings, fluoride care, and habit guidance.",
     fullDesc: "Compassionate dental care tailored for young smiles in a cheerful, fear-free atmosphere, focusing on cavity prevention, comfortable treatment, and healthy smile development.",
     features: ["Child-Friendly Gentle Care", "Milk Tooth Pulpectomies & Crowns", "Fluoride Varnish & Sealants", "Space Maintainers & Habit Correction"],
-    image: "/images/treatments/pediatric-care.jpg"
+    image: "/images/treatments/pediatric-care.png",
+    imagePosition: "50% 30%"
   },
   {
     id: "mucosal-pathology",
@@ -125,6 +127,7 @@ export const clinicServices: ClinicService[] = [
     shortDesc: "Screening, diagnostic evaluations, and minor biopsy procedures for oral ulcers, lesions, and mucosal disorders.",
     fullDesc: "Precise clinical evaluations and minor soft-tissue biopsies for persistent mouth sores, white or red mucosal patches, and oral lesions with dedicated histopathological diagnosis.",
     features: ["Oral Premalignancy Screening", "Diagnostic Soft-Tissue Biopsy", "Oral Ulcer & Stomatitis Care", "Histopathological Laboratory Analysis"],
-    image: "/images/treatments/mucosal-pathology.jpg"
+    image: "/images/treatments/mucosal-pathology.png",
+    imagePosition: "50% 40%"
   }
 ];
